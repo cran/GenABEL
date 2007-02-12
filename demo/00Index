@@ -1,0 +1,4 @@
+srdta		Demonstrate functionality of GWAA using data 
+		for a 2.5 Mb region
+srdtawin	The same as srdta, but starts with data(srdta) as 
+		under Windows one could have no writing rights

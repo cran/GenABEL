@@ -1,0 +1,99 @@
+***** v. 1.0.1
+
+is resolving the issue of 
+
+2006.07.20 	need fast exact test for HWE, along the lines of fastcc, 
+		as HWE.exact is too slow (Yurii)
+
+and
+
+2006.10.11	gwaa.data should be easily sub-settable -- now one 
+		needs to extract @gtdata and subset and @phdata and 
+		subset and then merge (also using base R things) (Yurii)
+
+
+***** v 1.0.2
+
+Function scan.glm is introduced; this allows to scan for interactions in 
+an easy way. This is essentially a modified scan.gwaa. 
+
+New function to convert ped-files type of data to internal format, 
+convert.snp.ped, was arranged
+
+Function add.plot.scan.gwaa was added
+
+Library "methods" loaded on start-up
+
+last modified 01.11.2006
+
+
+***** v 1.1.2
+
+scan.glm patched (it did not work with df=2 when a SNP had only 2 genotypes)
+
+minor fix in sub-setting of snp.data class
+
+ccfast, qtscore, scan.glm, emp.ccfast, emp.qtscore and plot.scan.gwaa are modified.
+Major change concerns ccfast and qtscore: now, 1-df and 2-df tests are 
+computed simultaneously within the C functions. 
+The class "scan.gwaa" now contains both 1- and 2-df P-values. 
+This also addresses the point on TODO:
+
+2006.08.17	implement qtscore function with 2df
+
+Small fix in qtscore and ccfast (to act on 1 d.f. when # genotypic classes is 2)
+
+The function scan.gwaa removed as redundant
+
+qtscore now allows for analysis using strata (Cochran-Mantel-Haenszel)
+
+Added average/median chi2 to the "scan.gwaa" class (to be used for genomic
+control)
+
+TODO fixed:
+2006.10.11	q-value returned by qvaluebh95() is wrong
+
+emp.qtscore and emp.qtfast optimised (runs 3-10 times faster) by
+removing unnecessary checks and calling C function directly 
+(instead of calling ccfast/qtscore)
+
+NAMESPACE introduced
+
+Update of documentation: now R CMD check passes all checks
+
+Formal class introduced for scan.gwaa-class
+
+demo(srdta): demo(srdtawin) is made by removing load-data from demo(srdta)
+because this may not work when there are no administrator's priviliges
+
+last modified 08.11.2006
+
+***** v 1.1.3
+
+scan.glm.2D and scan.haplo.2D functions added
+
+run.haplo.score.slide renamed to scan.haplo for consistency
+
+heteroz() added
+
+scan.gwaa-class is modified: effects are also returned. 
+This led to modification of C code for fastcc, qtscore, R
+code for qtscore(), ccfast(), fcc(), emp.qtscore(), emp.ccfast(), 
+scan.glm()
+
+improved memory management in functions ccfats(), emp.ccfast(), 
+qtscore(), emp.qtscore(), summary()
+
+show.ncbi() added
+
+v 1.1-4 
+
+Due to accumulated changes, version number updated.
+
+Multiple improvements and fixes + catable() function
+
+v 1.1-6
+
+Improved memory managmenet. In particular, @chromosome slot is now 
+stored as a factor. Extensive changes may have led to some (not yet 
+discoevered) bugs...

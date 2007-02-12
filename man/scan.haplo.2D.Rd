@@ -1,0 +1,50 @@
+\name{scan.haplo.2D}
+\alias{scan.haplo.2D}
+\title{runs haplo.score.slide with all pairs of markers in a region}
+\description{
+	Runs \code{\link[haplo.stats]{haplo.score.slide}} from the package 
+	\code{haplo.stats} on all pairs of markers in a region 
+	and presents output as \code{\link{scan.gwaa.2D-class}} object
+}
+\usage{
+scan.haplo.2D(y, data, snpsubset, idsubset, bcast = 25, simulate=FALSE, ...)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{y}{character name of the vector of trait values}
+  \item{data}{object of calss \code{\link{gwaa.data-class}}}
+  \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
+		If missing, all SNPs from \code{data} are used for analysis.}
+  \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
+		If missing, all people from \code{data/cc} are used for analysis.}
+  \item{bcast}{show progress every \code{bcast} SNPs}
+  \item{simulate}{if simulated P-values should be generated}
+  \item{\dots}{other arguments to be passed to \code{\link[haplo.stats]{haplo.score.slide}}}
+}
+\details{
+List element P2df is set equal to P1df, as only allelic results are returned. This has 
+nothing to do with actual degrees of freedom of the test.
+}
+\value{
+	Object of class \code{\link{scan.gwaa.2D-class}}
+}
+\references{
+For haplo.stats (scan.haplo, scan.haplo.2D), please cite:
+
+Schaid DJ, Rowland CM, Tines DE, Jacobson RM, Poland GA. (2002) Score tests for association between traits and haplotypes when linkage phase is ambiguous. Am J Hum Genet, 70: 425-434.
+}
+\author{Yurii Aulchenko}
+%\note{}
+\seealso{
+\code{\link{scan.gwaa.2D-class}},
+\code{\link{scan.haplo}},
+\code{\link{scan.glm.2D}},
+\code{\link[haplo.stats]{haplo.score.slide}}
+}
+\examples{
+data(srdta)
+c <- scan.haplo.2D("bt",data=srdta,snps=(717:733),
+		ids=(srdta@phdata$age<40),trait.type="binomial")
+plot(c)
+}
+\keyword{htest}% at least one, from doc/KEYWORDS
