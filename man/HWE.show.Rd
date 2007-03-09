@@ -28,7 +28,7 @@ HWE.show(data, idsubset = c(1:data@gtdata@nids),
 }
 \examples{
 data(srdta)
-mc <- check.marker(srdta,p.lev=0.01)
+mc <- check.marker(srdta,p.lev=0.01,ibs.mrk=0)
 mc$nohwe
 HWE.show(data=srdta,snps=mc$nohwe)
 }

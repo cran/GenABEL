@@ -1,5 +1,5 @@
 "scan.glm.2D" <- 
-function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=200) {
+function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=50) {
   if (class(data)!="gwaa.data") {
 	stop("wrong data class: should be gwaa.data")
   }
@@ -125,9 +125,13 @@ function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=200) {
     } 
     }
     donan<-donan+1
-    if (bcast && round((donan)/bcast) == (donan)/bcast) print(100*donan/((nsnps-1)*nsnps/2),dig=2);
+    if (bcast && round((donan)/bcast) == (donan)/bcast) {
+		cat("\b\b\b\b\b\b\b\b",round(100*donan/((nsnps-1)*nsnps/2),digits=2),"%",sep="");
+		flush.console();
+		}
   }
   }
+  if (bcast && donan>=bcast) cat("\n")
 
   map <- gtdata@map
   chromosome <- gtdata@chromosome
@@ -135,7 +139,7 @@ function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=200) {
   med2df <- median(qchisq(1.-P2df,df=2))
   colnames(P1df) <- snpsubset
   rownames(P1df) <- snpsubset #[length(snpsubset):1]
-  out <- list(P1df = P1df, Pint1df=Pint1df, P2df=P2df, Pint2df=Pint2df, medChi1df = med1df, medChi2df = med2df, name = snpsubset, ids = idsubset, formula = formula, family = family, map = map, chromosome = chromosome)
+  out <- list(P1df = P1df, Pint1df=Pint1df, P2df=P2df, Pint2df=Pint2df, medChi1df = med1df, medChi2df = med2df, snpnames = snpsubset, idnames = idsubset, formula = match.call(), family = family, map = map, chromosome = chromosome)
   class(out) <- "scan.gwaa.2D"
   out
 }

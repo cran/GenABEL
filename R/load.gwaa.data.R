@@ -70,32 +70,12 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=F
 		xmrk <- (a@chromosome == "X")
 		mlst <- (a@male == 1)
 		rxm <- a[mlst,xmrk]
-		rm(xmrk,mlst);gc(verbose=FALSE)
-		xerr <- 0
-		for (snpX in (1:rxm@nsnps)) {
-		 xmdta <- as.double(rxm[,snpX])
-		 xm <- (xmdta == 1)
-		 xm <- replace(xm,is.na(xm),FALSE)
-		 if (any(xm,na.rm=TRUE)) {
-			if (!xerr) {
-				xerr=1
-				tmpoe <- matrix(rep(NA,2*sum(xm)),ncol=2)
-				tmpoe[,1] <- rxm@idnames[xm]
-				tmpoe[,2] <- rep(rxm@snpnames[snpX],sum(xm))
-				outerr <- tmpoe
-			}
-			tmpoe <- matrix(rep(NA,2*sum(xm)),ncol=2)
-			tmpoe[,1] <- rxm@idnames[xm]
-			tmpoe[,2] <- rep(rxm@snpnames[snpX],sum(xm))
-			outerr <- rbind(outerr,tmpoe)
-		  }
-		}
-		rm(rxm);gc(verbose=FALSE)
-		if (xerr) {
-			colnames(outerr) <- c("ID","SNP")
-			cat("Wrong male X genotypes (heterozygous) found in",dim(outerr)[1],"cases\n")
+		Xch <- Xcheck(rxm)
+		rm(rxm,xmrk,mlst);gc(verbose=FALSE)
+		if (Xch$xerr) {
+			cat("Wrong male X genotypes (heterozygous) found in",dim(Xch$tab)[1],"occasions\n")
 			cat("Error table is saved as the output object\n")
-			return(outerr)
+			return(Xch$tab)
 		}
 	}
 	if (force) cat("assignment of gwaa.data object FORCED; X-errors were not checked!\n")
@@ -103,13 +83,21 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=F
 # make map
 	if (makemap) {
 		cat("increase in map order FORCED\n")
-		gsize <- max(a@map[a@chromosome=="1"])/5
-		for (i in 2:22) {
-			inc <- max(a@map[a@chromosome==as.character(i-1)]) + gsize
-			a@map[a@chromosome==as.character(i)] <- a@map[a@chromosome==as.character(i)] + inc
+		chun <- levels(a@chromosome)
+		if (any(chun != "X")) {
+			numchun <- sort(as.numeric(chun[chun!="X"]))
+			gsize <- max(a@map[a@chromosome == as.character(numchun[1])])/5
+			if (length(numchun)>1) {
+			for (i in c(2:(length(numchun)))) {
+				inc <- max(a@map[a@chromosome==as.character(numchun[i-1])]) + gsize
+				a@map[a@chromosome==as.character(numchun[i])] <- a@map[a@chromosome==as.character(numchun[i])] + inc
+			}
+			}
+			if (any(chun=="X")) {
+				inc <- max(a@map[a@chromosome==as.character(numchun[length(numchun)])]) + gsize
+				a@map[a@chromosome=="X"] <- a@map[a@chromosome=="X"] + inc
+			}
 		}
-		inc <- max(a@map[a@chromosome=="22"]) + gsize
-		a@map[a@chromosome=="X"] <- a@map[a@chromosome=="X"] + inc
 	}	
 
 	out <- new("gwaa.data",phdata=newdta,gtdata=a)

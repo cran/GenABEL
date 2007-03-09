@@ -221,7 +221,7 @@ min(r1.1.glm$P2df)
 ymax <- -log10(min(r1.1.glm$P1df))+.1
 ymax
 plot(r1.fcc,ylim=c(0,ymax))
-add.plot.scan.gwaa(r1.score,df=1,col="red",type="l")
+add.plot(r1.score,df=1,col="red",type="l")
 a<-readline("PRESS <Enter> TO CONTINUE...")
 plot(r1.fcc,ylim=c(0,ymax))
 points(r1.score$map,-log10(r1.score$P1df),col="red",type="l")
@@ -229,8 +229,8 @@ points(r1.1.glm$map,-log10(r1.1.glm$P1df),col="green",type="l")
 a<-readline("PRESS <Enter> TO CONTINUE...")
 plot(r1.fcc,ylim=c(0,ymax))
 points(r1.score$map,-log10(r1.score$P1df),col="red",type="l")
-add.plot.scan.gwaa(r1.1.glm,df=1,col="green",type="l")
-add.plot.scan.gwaa(r1.1.glm,df=2,col="blue",type="l")
+add.plot(r1.1.glm,df=1,col="green",type="l")
+add.plot(r1.1.glm,df=2,col="blue",type="l")
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
 g2d <- scan.glm.2D("bt ~ sex + age + CRSNP",family=binomial(),data=srdta,snps=reg[10:30],bcast=20)
@@ -287,7 +287,7 @@ r.aqts <- qtscore("qt2~age+sex+CRSNP",data=srdta,snps=mymrk)
 min(r.aqts$P1df)
 which.min(r.aqts$P1df)
 plot(r.aqts)
-add.plot.scan.gwaa(r.aqts,col="red",cex=2.)
+add.plot(r.aqts,col="red",cex=2.)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 r.booqts <- emp.qtscore("qt2~age+sex+CRSNP",data=srdta,snps=mymrk,times=200)
 min(r.booqts$P1df)
@@ -316,9 +316,9 @@ r.3.hap <- scan.haplo("qt2",data=srdta,snps=reg,x.adj=x.adj,n.slide=3)
 min(r.3.hap$P1df)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 plot(rr.glm)
-add.plot.scan.gwaa(rr.qts,col="cyan")
-add.plot.scan.gwaa(r.2.hap,col="red",type="l")
-add.plot.scan.gwaa(r.3.hap,col="green",type="l")
+add.plot(rr.qts,col="cyan")
+add.plot(r.2.hap,col="red",type="l")
+add.plot(r.3.hap,col="green",type="l")
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
 
@@ -342,3 +342,63 @@ ld <- LD(gdta)
 plot(ld)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
+#
+# generating combined 2D - LD heatmaps
+#
+
+?"figure out best SNP P-value"
+qts <- qtscore("qt2~sex+age+CRSNP",data=srdta)
+min(qts$P1df)
+
+?"get index of the best SNP"
+a<-which.min(qts$P1df)
+a
+a<-readline("PRESS <Enter> TO CONTINUE...")
+
+?"get names of SNPs in +/- 25 kbp region"
+reg1 <- snp.names(srdta,beg=srdta@gtdata@map[a]-25000,end=srdta@gtdata@map[a]+25000)
+reg1
+a<-readline("PRESS <Enter> TO CONTINUE...")
+
+?"2D haplo analysis"
+?"2D haplo analysis will be adjusted for sex and age"
+cov <- data.frame(sex=srdta@phdata$sex,age=srdta@phdata$age)
+?"2D haplo analysis"
+reg1.h2D <- scan.haplo.2D("qt2",data=srdta,x.adj=cov,snps=reg1)
+min(reg1.h2D$P1df,na.rm=T)
+a<-readline("PRESS <Enter> TO CONTINUE...")
+
+
+?"LD analysis of the region"
+?"get regional data in genetics format"
+reg1.gen <- as.genotype(srdta@gtdata[,reg1])
+?"get LD"
+reg1.LD <- LD(reg1.gen)
+a<-readline("PRESS <Enter> TO CONTINUE...")
+
+?"now let us plot this stuff"
+?"first, only 2D association"
+?"get map"
+reg1.map <- srdta@gtdata@map[reg1]
+reg1.map
+?"get -log10-P for association"
+lgP <- -log10(reg1.h2D$P1df)
+?"get color scheme"
+maxP <- ceiling(max(lgP,na.rm=T))
+maxP
+brk <- c(0:(maxP+1))
+brk
+a<-readline("PRESS <Enter> TO CONTINUE...")
+?"draw image"
+image(x=reg1.map,y=reg1.map,z=lgP,breaks=brk,col=heat.colors(length(brk)-1))
+a<-readline("PRESS <Enter> TO CONTINUE...")
+?"now let us draw LD"
+?"get D' and transpose"
+Dp <- t(reg1.LD$"D'")
+?"draw it"
+image(x=reg1.map,y=reg1.map,z=Dp,breaks=c(-.1,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.1),col=heat.colors(10))
+a<-readline("PRESS <Enter> TO CONTINUE...")
+?"now let us put these together"
+image(x=reg1.map,y=reg1.map,z=lgP,breaks=brk,col=heat.colors(length(brk)-1))
+image(x=reg1.map,y=reg1.map,z=Dp,breaks=c(-.1,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.1),col=heat.colors(10),add=T)
+a<-readline("PRESS <Enter> TO CONTINUE...")

@@ -15,7 +15,8 @@ summary.check.marker(object, ...)
 }
 %\details{}
 \value{
-	Screen output
+	A list containing 2 tables: per-marker and per-person 
+	inconsistencies
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{Yurii Aulchenko}

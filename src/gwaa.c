@@ -229,14 +229,14 @@ void snp_summary(char *indata, int *Nids, int *Nsnps, double *out) {
 	}
 }
 
-void snp_summary_exhwe(char *indata, int *Nids, int *Nsnps, double *out) {
-	int i,j,m,idx;
-	int nids = (*Nids);
-	int nsnps = (*Nsnps);
-	int gt[nids];
+void snp_summary_exhwe(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) {
+	unsigned int i,j,m,idx;
+	unsigned int nids = (*Nids);
+	unsigned int nsnps = (*Nsnps);
+	unsigned int gt[nids];
 	char str;
-	int count[3];
-	int nbytes;
+	unsigned int count[3];
+	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	double meaids,p;
 	for (m=0;m<nsnps;m++) {
@@ -248,7 +248,8 @@ void snp_summary_exhwe(char *indata, int *Nids, int *Nsnps, double *out) {
 				gt[idx++] >>= ofs[j];
 				if (idx>=nids) {idx=0;break;}
 			}
-		}		count[0]=count[1]=count[2]=0.;
+		}
+		count[0]=count[1]=count[2]=0.;
 		p = 0.;
 		for (i=0;i<nids;i++)
 			if (gt[i]) {
@@ -265,7 +266,10 @@ void snp_summary_exhwe(char *indata, int *Nids, int *Nsnps, double *out) {
 		out[(nsnps)*3+m] = count[0];
 		out[(nsnps)*4+m] = count[1];
 		out[(nsnps)*5+m] = count[2];
-		out[(nsnps)*6+m] = SNPHWE(count[1],count[0],count[2]);
+		if (meaids>0) 
+			out[(nsnps)*6+m] = SNPHWE(count[1],count[0],count[2]);
+		else 
+			out[(nsnps)*6+m] = 1.0;
 	}
 }
 
@@ -317,6 +321,63 @@ void redundant(char *indata, int *Nids, int *Nsnps, double *Minc, int *outlist) 
 					}
 				}
 			}
+	}
+}
+
+void fastcc_new(char *indata, int *cc, int *Nids, int *Nsnps, double *chi2) {
+	unsigned int i,j,m,idx;
+	unsigned int nids = (*Nids);
+	unsigned int nsnps = (*Nsnps);
+	unsigned int gt[nids];
+	unsigned int count[2][4],R,S,N,r1,r2,n1,n2;
+	double mul, a, b, c, den;
+	char str;
+	unsigned int nbytes;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+	for (m=0;m<nsnps;m++) {
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			str = indata[m*nbytes + i];
+			for (j=0;j<4;j++) {
+				gt[idx] = str & msk[j]; 
+				gt[idx++] >>= ofs[j];
+				if (idx>=nids) {idx=0;break;}
+			}
+		}
+		count[0][0]=count[0][1]=count[0][2]=count[0][3]=0;
+		count[1][0]=count[1][1]=count[1][2]=count[1][3]=0;
+		R=N=r1=r2=n1=n2=0;
+		for (i=0;i<nids;i++) count[cc[i]][gt[i]]++;
+		for (j=0;j<2;j++) for (i=1;i<4;i++) {
+			N+=count[j][i];
+		}
+		r1 = count[1][2]; r2 = count[1][3];
+		n1 = r1 + count[0][2]; n2 = r2 + count[0][3];
+		R = r1 + r2 + count[1][1];
+		S = count[0][1]+count[0][2]+count[0][3];
+		if (N>0 && R>0 && R<N) {
+			mul = (1.*N)/(1.*R*(N-R));
+			a = 1.*(n1+2.*n2);
+			c = 1.*(r1+2.*r2);
+			b = 1.*N*c-R*a;
+			den = 1.*(N*(n1+4.*n2)-a*a);
+			if (den!=0.) {chi2[m] = mul*b*b/den;} else {chi2[m]=-1.;}
+			chi2[m+3*nsnps] = (count[0][1])*c/((R-c)*(count[0][2]+2.*count[0][3]));
+			a = 1.*(n1+n2);
+			c = 1.*(r1+r2);
+			b = 1.*N*c-R*a;
+			den = 1.*(N*a-a*a);
+			if (den!=0.) {chi2[m+nsnps] = mul*b*b/den;} else {chi2[m+nsnps]=-1.;}
+			chi2[m+4*nsnps] = (count[0][1])*c/((R-c)*(count[0][2]+count[0][3]));
+			a = 1.*n2;
+			c = 1.*r2;
+			b = 1.*N*c-R*a;
+			den = 1.*(N*a-a*a);
+			if (den!=0.) {chi2[m+2*nsnps] = mul*b*b/den;} else {chi2[m+2*nsnps]=-1.;}
+			chi2[m+5*nsnps] = (count[0][1]+count[0][2])*c/((R-c)*(count[0][3]));
+		} else {
+			chi2[m] = chi2[m+nsnps] = chi2[m+2*nsnps] = chi2[m+3*nsnps] = chi2[m+4*nsnps] = chi2[m+5*nsnps] = -1.;
+		}
 	}
 }
 
@@ -404,11 +465,12 @@ void fastcc(char *indata, int *cc, int *Nids, int *Nsnps, double *chi2) {
 	}
 }
 
-void qtscore(char *gdata, double *pheno, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2) 
+void qtscore(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2) 
 {
 	int nsnps = (*Nsnps);
 	int nstra = (*Nstra);
 	int nids = (*Nids);
+	int type = (*Type);
 	int gt[nids];
 	int i, j, cstr, igt, i1=1;
 	int nbytes;
@@ -462,7 +524,10 @@ void qtscore(char *gdata, double *pheno, int *Nids, int *Nsnps, int *Nstra, int 
 			u1 = u2 = v11 = v12 = v22 = 0.;
 			for (j=0;j<nstra;j++) if (totg[j]>0) {
 				mx = sumx[j]/totg[j];
-				bb = (x2[j]/totg[j])-mx*mx;
+				if (type == 0) 
+					bb = (x2[j]/totg[j])-mx*mx;
+				else
+					bb = mx*(1.-mx);
 				u1 += (xg1[j]-sg1[j]*mx);
 				u2 += (xg2[j]-sg2[j]*mx);
 				v11 += bb*(sg1[j]-sg1[j]*sg1[j]/totg[j]);
@@ -496,6 +561,118 @@ void qtscore(char *gdata, double *pheno, int *Nids, int *Nsnps, int *Nstra, int 
 		}
 	}
 }
+
+void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Option, double *out) {
+	unsigned int i,j,m,idx;
+	unsigned int nids = (*Nids);
+	unsigned int nsnps = (*Nsnps);
+	unsigned int option = (*Option);
+	unsigned int gt[nids];
+	unsigned int count[4],sumgt;
+	double homweight[4] = {0.,1.,0.,1.};
+	char str;
+	unsigned int nbytes;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+	for (m=0;m<nsnps;m++) {
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			str = indata[m*nbytes + i];
+			for (j=0;j<4;j++) {
+				gt[idx] = str & msk[j]; 
+				gt[idx++] >>= ofs[j];
+				if (idx>=nids) {idx=0;break;}
+			}
+		}
+		if (option > 0) {
+			count[0]=count[1]=count[2]=count[3]=sumgt=0;
+			for (i=0;i<nids;i++) count[gt[i]]++;
+			sumgt = count[1]+count[2]+count[3];
+			homweight[1] = 1.-(count[1]*2.+count[2]*1.)/(2.*sumgt);
+			homweight[3] = 1.-homweight[1];
+		}
+		for (i=0;i<nids;i++) {
+			if (gt[i]!=0) {
+				out[i]+=1.;
+				out[nids+i] += homweight[gt[i]];
+			}
+		}
+	}
+}
+
+void ibs(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Option, double *out) {
+	unsigned int i,j,m,idx;
+	unsigned int nids = (*Nids);
+	unsigned int nsnps = (*Nsnps);
+	unsigned int option = (*Option);
+	unsigned int gt[nids];
+	unsigned int count[4],sumgt;
+	double freq[4],p,q;
+	double ibssum[4][4] = {{0.,0.,0.,0.},{0.,1.,.5,.0},{0.,.5,1.,.5},{0.,0.,.5,1.}};
+	char str;
+	unsigned int nbytes;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+	for (m=0;m<nsnps;m++) {
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			str = indata[m*nbytes + i];
+			for (j=0;j<4;j++) {
+				gt[idx] = str & msk[j]; 
+				gt[idx++] >>= ofs[j];
+				if (idx>=nids) {idx=0;break;}
+			}
+		}
+		if (option > 0) {
+			count[0]=count[1]=count[2]=count[3]=sumgt=0;
+			for (i=0;i<nids;i++) count[gt[i]]++;
+			sumgt = count[1]+count[2]+count[3];
+			for (i=0;i<4;i++) freq[i] = (1.*count[i])/(1.*sumgt);
+			p = (count[1]*2+count[2])/(2*sumgt);
+			q = 1.-p;
+			ibssum[1][1] = 1.-p*p;
+			ibssum[2][2] = 1.-2*p*q;
+			ibssum[3][3] = 1.-q*q;
+			ibssum[2][1] = ibssum[0][1] = 1.-p;
+			ibssum[2][3] = ibssum[2][1] = 1.-q;
+		}
+		for (i=0;i<(nids-1);i++)
+		for (j=(i+1);j<nids;j++) {
+		if (gt[i]!=0 && gt[j]!=0) {
+			out[i*nids+j]+=1.;
+			out[j*nids+i]+=ibssum[gt[i]][gt[j]];
+		}
+		}
+	}
+	for (i=0;i<(nids-1);i++)
+	for (j=(i+1);j<nids;j++) {
+		if (out[i*nids+j]>0) 
+			out[j*nids+i]=out[j*nids+i]/(1.*out[i*nids+j]);
+		else
+			out[j*nids+i]=-1.;
+	}
+}
+
+void comp_qval(double *p, int *Length, double *out) {
+	int length = (*Length);
+	int i,j;
+	double sum,max=-1,min;
+	for (i=0;i<length;i++) out[i]=0.;
+	for (i=0;i<length;i++) {
+		sum = 0.;
+		for (j=0;j<length;j++) {
+			if (p[j]<=p[i]) sum += 1.;
+		}
+		out[i] = p[i]*(1.0*length)/sum;
+		if (out[i]>max) max=out[i];
+	}
+	for (i=0;i<length;i++) {
+		min = max;
+		for (j=0;j<length;j++) {
+			if (p[j]>=p[i] && out[j]<min) min = out[j];
+		}
+		out[i] = min;
+	}
+}
+
 
 /*
 // This code implements an exact SNP test of Hardy-Weinberg Equilibrium as described in

@@ -1,5 +1,5 @@
 "scan.glm" <- 
-function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=200) {
+function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=50) {
   if (class(data)!="gwaa.data") {
 	stop("wrong data class: should be gwaa.data")
   }
@@ -100,15 +100,19 @@ function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=200) {
       if (is.na(P2df[(w-1)*chsize+i])) P2df[(w-1)*chsize+i] = 1.0
     } 
     }
-    if (bcast && round(((w-1)*chsize+i)/bcast) == ((w-1)*chsize+i)/bcast) {cat("progress: ",(w-1)*chsize+i,"\n"); flush.console();}
+    if (bcast && round(((w-1)*chsize+i)/bcast) == ((w-1)*chsize+i)/bcast) {
+		cat("\b\b\b\b\b\b\b\b",round(100*(((w-1)*chsize+i)/gtdata@nsnps),digits=2),"%",sep="");
+		flush.console();
+	}
   }
   }
+  if (bcast && gtdata@nsnps >= bcast) cat("\n")
 
   map <- gtdata@map
   chromosome <- gtdata@chromosome
   med1df <- median(qchisq(1.-P1df,df=1))
   med2df <- median(qchisq(1.-P2df,df=2))
-  out <- list(P1df = P1df, P2df=P2df, medChi1df = med1df, medChi2df = med2df, name = snpsubset, ids = idsubset, formula = formula, family = family, map = map, chromosome = chromosome, effB=effB, effAB=effAB,effBB=effBB)
+  out <- list(P1df = P1df, P2df=P2df, medChi1df = med1df, medChi2df = med2df, name = snpsubset, ids = idsubset, formula = match.call(), family = family, map = map, chromosome = chromosome, effB=effB, effAB=effAB,effBB=effBB)
   class(out) <- "scan.gwaa"
   out
 }

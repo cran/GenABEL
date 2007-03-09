@@ -1,6 +1,6 @@
 \name{as.character.snp.data}
 \alias{as.character.snp.data}
-\title{Attempts toconvert snp.data to character}
+\title{Attempts to convert snp.data to character}
 \description{
 	A function to convert an object of \code{\link{snp.data-class}}
 	to "character"
@@ -22,9 +22,9 @@
 \note{
 }
 \seealso{
-\code{link{as.double.snp.data}},
-\code{link{as.hsgeno}},
-\code{link{as.genotype.snp.data}}
+\code{\link{as.double.snp.data}},
+\code{\link{as.hsgeno}},
+\code{\link{as.genotype.snp.data}}
 }
 \examples{
 data(srdta)

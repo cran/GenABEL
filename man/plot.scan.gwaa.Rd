@@ -24,7 +24,7 @@ plot.scan.gwaa(x, y, ..., df=1)
 %\note{}
 \seealso{
 	\code{\link{scan.gwaa-class}}, 
-	\code{\link{add.plot.scan.gwaa}}, 
+	\code{\link{add.plot}}, 
 	\code{\link{snp.subset}}, 
 	\code{\link{scan.glm}}, 
 	\code{\link{qtscore}}, 
@@ -35,10 +35,10 @@ plot.scan.gwaa(x, y, ..., df=1)
 }
 \examples{
 data(srdta)
-a <- ccfast("bt",srdta,snps=c(1:100))
+a <- ccfast("bt",srdta,snps=c(1:250))
 plot(a)
-plot(a,df=2)
-a1 <- snp.subset(a,snps=c(21:30))
+plot(a,df="all")
+a1 <- snp.subset(a,snps=c(20:100))
 plot(a1,df="all")
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS

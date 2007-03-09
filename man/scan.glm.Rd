@@ -6,7 +6,7 @@ Scan GWA data using glm
 }
 \usage{
 scan.glm(formula, family = gaussian(), data, snpsubset, idsubset, 
-		bcast = 200)
+		bcast = 50)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,7 +46,6 @@ maposnp
 reg <- snp.names(srdta,begin=maposnp-100000,end=maposnp+100000,chrom="1")
 a <- scan.glm("qt3~sex+age+CRSNP",data=srdta,snps=reg)
 plot(a)
-plot(a,df=2)
 plot(a,df="all")
 
 # interaction with sex

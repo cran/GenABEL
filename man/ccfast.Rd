@@ -3,24 +3,30 @@
 \title{fast case-control analysis}
 \description{
 Fast case-control analysis by computing chi-square test 
-from 2x2 or 2x3 tables
+from 2x2 (allelic) or 2x3 (genotypic) tables
 }
 \usage{
-ccfast(y, data, snpsubset, idsubset, quiet = FALSE)
+ccfast(y, data, snpsubset, idsubset, times=1, quiet=FALSE,bcast=10,clambda=TRUE)
 }
 \arguments{
-  \item{y}{character name of vector of case-control status. Cases are denoted as 1 and controls as 0.}
-  \item{data}{object of class "gwaa.data"}
+  \item{y}{character name of the vector of case-control status. Cases are denoted as 1 and controls as 0.}
+  \item{data}{An object of \code{\link{gwaa.data-class}}}
   \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
 		If missing, all SNPs from \code{data} are used for analysis.}
   \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
-		If missing, all people from \code{data/cc} are used for analysis.}
+		If missing, all people from \code{data} are used for analysis.}
+  \item{times}{If more then one, the number of replicas to be used in derivation of 
+		empirical genome-wide significance. See \code{\link{emp.qtscore}}, which
+		calls qtscore with times>1 for details}
   \item{quiet}{do not print warning messages}
+  \item{bcast}{If the argument times > 1, progress is reported once in bcast replicas}
+  \item{clambda}{If inflation facot Lambda is estimated as lower then one, this parameter 
+		controls if the original P1df (clambda=TRUE) to be reported in Pc1df, 
+		or the original 1df statistics is to be multiplied onto this "deflation" 
+		facor (clambda=FALSE)}
 }
-\details{
-	This is yet not a valid function to analyse data including X chromosome. 
-	Use \code{qtscore} for this purpose.
-}
+%\details{
+%}
 \value{
   Object of class \code{\link{scan.gwaa-class}}
 }
@@ -35,9 +41,8 @@ ccfast(y, data, snpsubset, idsubset, quiet = FALSE)
 }
 \examples{
 data(srdta)
-a <- ccfast("bt",data=srdta,snps=c(1:10))
+a <- ccfast("bt",data=srdta,snps=c(1:10),ids=c(1:100))
 a
-plot(a)
 a <- ccfast("bt",data=srdta)
 plot(a)
 }

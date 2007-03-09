@@ -10,19 +10,25 @@ of the genotypes (including missing values).
 }
 \usage{
 check.marker(data, snpsubset, idsubset, callrate = 0.95, 
-		maf = 0.01, p.level = -1, fdrate = 0.2, 
-		hweidsubset, redundant = "bychrom", 
-		minconcordance = 2, qoption = "bh95", 
-		bcast = 10000)
+		perid.call=0.95, het.fdr = 0.01, ibs.threshold = 0.95, ibs.mrk = 2000, maf, p.level = -1, fdrate = 0.2, 
+		odds = 100, hweidsubset, redundant = "no", 
+		minconcordance = 2.0, qoption = "bh95") 
 }
 \arguments{
   \item{data}{gwaa.data or snp.data object}
   \item{snpsubset}{a subset of SNPs to check (names, indexes, logical), default is all from \code{data}}
   \item{idsubset}{a subset of people to check (names, indexes, logical), default is all from \code{data}}
-  \item{callrate}{cut-off call rate}
-  \item{maf}{cut-off Minor Allele Frequency}
+  \item{callrate}{cut-off SNP call rate}
+  \item{perid.call}{cut-off individual call rate (maximum percent of missing genotypes in a person)}
+  \item{het.fdr}{FDR rate for unacceptably high individual heterozygosity}
+  \item{ibs.threshold}{threshold value for acceptable IBS}
+  \item{ibs.mrk}{How many random markers should be used to estimate IBS. When ibs.mrk < 1, IBS checks are turned off.
+		When "all" all markers are used.
+		}
+  \item{maf}{cut-off Minor Allele Frequency. If not specified, the default value is 5 chromosomes (5/data@nsnpa)}
   \item{p.level}{cut-off p-value in check for Hardy-Weinberg Equilibrium. If negative, FDR is applied}
   \item{fdrate}{cut-off FDR level in check for Hardy-Weinberg Equilibrium}
+  \item{odds}{cut-off odds to decide whether marker/person should be excluded based on sex/X-linked marker data inconsistency}
   \item{hweidsubset}{a subset of people to check (names, indexes, logical) to use for HWE check}
   \item{redundant}{if "bychrom", redundancy is checked within chromosomes; "all" -- all pairs of markers; "no" -- no redundancy checks}
   \item{minconcordance}{a parameter passed to "redundant" function. If "minconcordance" is > 1.0 
@@ -32,10 +38,31 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 			see \code{\link{redundant}} for details. Note that if "minconcordance" < 1
 			the program will take much longer time to run}
   \item{qoption}{if "bh95", BH95 FDR used; if "storey", qvalue package is used}
-  \item{bcast}{report progress every bcast SNPs}
 }
-%\details{
-%}
+\details{
+	In this procedure, sex errors are identified initally and then 
+	possible residual errors are removed iteratively. 
+	At the first step, of the iterative procedure, 
+	per-marker (minor allele frequency, call rate,
+	exact P-value for Hardy-Weinberg equilibrium) and between-marker 
+	statistics are generated and controlled for, mostly using the 
+	internal call to the function \code{\link{summary.snp.data}}.
+	
+	At the second step of the iterative procedure, 
+	per-person statistics, such call rate within 
+	a person, heterozygosity and and between-person statistics 
+	(identity by state across a random sample of markers) are generated, 
+	using \code{\link{perid.summary}} and \code{\link{ibs}} functions. 
+	Heterozygosity and IBS are estimated using only autosomal data. 
+	If IBS is over ibs.threshold for a pair, one person from the 
+	pair is added to the ibsfail list and excluded from the idok list. 
+	At the second step, only the markers passing the first step are used. 
+
+	The procedure is applied recursively till no further markers and 
+	people are eliminated.
+%	For IBS computations, only people passing personla call rate and 
+%	heterozygosity checks are used. 
+}
 \value{
   Object of class \code{\link{check.marker-class}}
 }
@@ -45,6 +72,9 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 %}
 \seealso{
 	\code{\link{check.trait}},
+	\code{\link{ibs}},
+	\code{\link{summary.snp.data}},
+	\code{\link{perid.summary}},
 	\code{\link{plot.check.marker}},
 	\code{\link{summary.check.marker}},
 	\code{\link{redundant}},
@@ -52,13 +82,30 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 	\code{\link{check.marker-class}}
 }
 \examples{
+# usual way
+data(ge03d2c)
+# many errors
+mc0 <- check.marker(ge03d2c)
+# take only people and markers passing QC
+fixed0 <- ge03d2c[mc0$idok,mc0$snpok]
+# major errors fixed, still few males are heterozygous for X-chromsome markers
+mc1 <- check.marker(fixed0)
+# fix minor X-chromosome problems
+fixed1 <- Xfix(fixed0)
+# no errors
+mc2 <- check.marker(fixed1)
+summary(mc2)
+# ready to use fixed1 for analysis
+
+# let us look into redundancy
 data(srdta)
-mc <- check.marker(data=srdta)
+mc <- check.marker(data=srdta,ids=c(1:300),call=.92,perid.call=.92)
 names(mc)
 mc$nohwe
-mc <- check.marker(data=srdta@gtdata[,1:100],call=0.98,maf=0.01,minconcordance=0.9,fdr=.1)
+mc <- check.marker(data=srdta@gtdata[,1:100],call=0.95,perid.call=0.9,maf=0.02,minconcordance=0.9,fdr=0.1,redundant="all",ibs.mrk=0)
 summary(mc)
 HWE.show(data=srdta,snps=mc$nohwe)
 plot(mc)
+
 }
 \keyword{misc}% at least one, from doc/KEYWORDS

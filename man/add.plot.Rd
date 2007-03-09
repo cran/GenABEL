@@ -1,16 +1,18 @@
-\name{add.plot.scan.gwaa}
-\alias{add.plot.scan.gwaa}
+\name{add.plot}
+\alias{add.plot}
 \title{function to plot additional GWAA results}
 \description{
 Add plot of results of GWA analysis
 }
 \usage{
-add.plot.scan.gwaa(x, ..., df = 1)
+add.plot(x, ..., df = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{object of type scan.gwaa-class, as returned by \code{\link{scan.glm}}, \code{\link{qtscore}},
-		\code{\link{ccfast}}, \code{\link{emp.ccfast}}, \code{\link{emp.qtscore}}, or \code{\link{scan.haplo}}}
+		\code{\link{ccfast}}, \code{\link{emp.ccfast}}, \code{\link{emp.qtscore}}, or \code{\link{scan.haplo}}; 
+	   or of type scan.gwaa.2D-class, as returned by \code{\link{scan.haplo.2D}} or \code{\link{scan.glm.2D}}.
+	}
   \item{\dots}{additional arguments to be passed to plot}
   \item{df}{P-value at which df to add (1 or 2)}
 }
@@ -22,20 +24,22 @@ add.plot.scan.gwaa(x, ..., df = 1)
 \author{Yurii Aulchenko}
 %\note{}
 \seealso{
-	\code{\link{plot.scan.gwaa}}, 
+	\code{\link{plot}}, 
 	\code{\link{snp.subset}}, 
 	\code{\link{scan.glm}}, 
 	\code{\link{qtscore}}, 
 	\code{\link{ccfast}},
 	\code{\link{emp.qtscore}}, 
 	\code{\link{emp.ccfast}},
-	\code{\link{scan.haplo}}
+	\code{\link{scan.haplo}},
+	\code{\link{scan.haplo.2D}},
+	\code{\link{scan.glm.2D}}
 }
 \examples{
 data(srdta)
 a <- ccfast("bt",srdta,snps=c(1:100))
 plot(a)
 a1 <- qtscore("bt~CRSNP",srdta,snps=c(1:100))
-add.plot.scan.gwaa(a1,col="red",type="l")
+add.plot(a1,col="red",type="l")
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS

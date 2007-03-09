@@ -29,7 +29,7 @@ qvaluebh95(p, fdrate=0.1)
 }
 \examples{
 data(srdta)
-a<-ccfast("bt",data=srdta)
+a<-qtscore("qt2 ~ CRSNP",data=srdta)
 qv <- qvaluebh95(a$P1df)
 plot(a$map,-log10(qv$qvalue))
 }

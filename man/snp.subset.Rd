@@ -2,7 +2,7 @@
 \alias{snp.subset}
 \title{function to subset objects of class scan.gwaa and check.marker}
 \description{
-Computing obejcts of class scan.gwaa may take long, especially when 
+Computing objects of class scan.gwaa may take long, especially when 
 haplotypic analysis is performed. Therefore this function helps substracting 
 results on some region (indicated by list of SNPs)
 }
@@ -27,7 +27,7 @@ snp.subset(data, snpsubset)
 \examples{
 data(srdta)
 # processing check.marker object
-mc <- check.marker(srdta,snps=c(1:100),mincon=0.8)
+mc <- check.marker(data=srdta@gtdata[,1:100],redundant="all",maf=0.01,minconcordance=0.9,fdr=.1,ibs.mrk=0)
 plot(mc)
 mc1 <- snp.subset(mc,snps=srdta@gtdata@snpnames[20:50])
 plot(mc1)

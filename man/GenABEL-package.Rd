@@ -21,19 +21,19 @@ Imbedding GenABEL into R environment allows for easy data characterisation, expl
 \tabular{ll}{
 Package: \tab GenABEL\cr
 Type: \tab Package\cr
-Version: \tab 1.1-6\cr
-Date: \tab 2007-02-12\cr
+Version: \tab 1.1-8\cr
+Date: \tab 2007-03-09\cr
 License: \tab GNU GPL v. 2.0 or later\cr
 }
 
 To see (more or less complete) functionality of GenABEL, try running
 
-demo(srdta)
+demo(ge03d2).
 
-Depending on your priveleges in Windows, it may well not run. In this
+Other demo of interest could be run with demo(srdta). 
+Depending on your user priveleges in Windows, it may well not run. In this
 case, try
-
-demo(srdtawin)
+demo(srdtawin).
 
 The most important functions and classes are:
 
@@ -51,11 +51,13 @@ For data managment, and manipulations see
 \code{\link{snp.subset}}.
 
 For quality control, see
-\code{\link{summary.snp.data}},
 \code{\link{check.trait}},
 \code{\link{check.marker}},
 \code{\link{HWE.show}},
-\code{\link{heteroz}}.
+\code{\link{summary.snp.data}},
+\code{\link{perid.summary}},
+\code{\link{ibs}},
+\code{\link{hom}}.
 
 For fast analysis function, see
 \code{\link{scan.gwaa-class}},
@@ -64,9 +66,14 @@ For fast analysis function, see
 \code{\link{emp.ccfast}},
 \code{\link{emp.qtscore}}
 
-For graphical facilities, see
-\code{\link{plot.scan.gwaa}},
-\code{\link{plot.check.marker}}.
+For specific tools facilitating analysis of the data with stratification, see
+\code{\link{ibs}}. Principle components analysis (\code{\link{cmdscale}} 
+is a very useful function in this context.
+
+For functions facilitating construction of tables for your manuscript, see
+\code{\link{descriptives.marker}},
+\code{\link{descriptives.trait}},
+\code{\link{descriptives.scan}}.
 
 For link to WEB databases, see
 \code{\link{show.ncbi}}.
@@ -80,6 +87,10 @@ also for 2D scans, see
 \code{\link{scan.gwaa-class}},
 \code{\link{scan.gwaa.2D-class}}.
 
+For graphical facilities, see
+\code{\link{plot.scan.gwaa}},
+\code{\link{plot.check.marker}}.
+
 }
 \author{
 Yurii Aulchenko
@@ -89,7 +100,7 @@ Maintainer: Yurii Aulchenko <i.aoultchenko@erasmusmc.nl>
 \references{
 If you use the package in your analysis, please cite the following work:
 
-Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. (submitted) GenABEL: an R package for genome-wide association analysis.
+Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. (in press) GenABEL: an R package for genome-wide association analysis. Bioinformatics.
 
 For exact HWE, please cite:
 

@@ -1,38 +1,40 @@
 \name{emp.ccfast}
 \alias{emp.ccfast}
-\title{Bootstrap analysis of case-control GWA scan}
+\title{Genome-wide significance for a case-control GWA scan}
 \description{
-Bootstrap analysis of case-control GWA scan. Analysis 
+Genome-wide significance for a case-control GWA scan. Analysis 
 function is \code{\link{ccfast}}. 
 }
 \usage{
-emp.ccfast(y, data, snpsubset, idsubset, times = 100, 
-		bcast = 25)
+emp.ccfast(y, data, snpsubset, idsubset, times = 100, quiet=FALSE,
+		bcast = 10)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
 
-  Only last two arguments are specific for \code{emp.ccfast} and others are 
-  passed intact to \code{\link{ccfast}}.
-
-  \item{y}{vector of case-control status. Cases are denoted as 1 and controls as 0.}
-  \item{data}{object of class "gwaa.data"}
+  All arguments are the same as in and passed intact to the \code{\link{ccfast}}.
+  See help for this function. 
+  \item{y}{character name of the vector of case-control status. Cases are denoted as 1 and controls as 0.}
+  \item{data}{An object of \code{\link{gwaa.data-class}}}
   \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
 		If missing, all SNPs from \code{data} are used for analysis.}
   \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
 		If missing, all people from \code{data} are used for analysis.}
-  \item{times}{number of times to do resampling analysis, 100 by default}
-  \item{bcast}{progress is reported every \code{bcast} resumpling analyses}
+  \item{times}{If more then one, the number of replicas to be used in derivation of 
+		empirical genome-wide significance. See \code{\link{emp.qtscore}}, which
+		calls qtscore with times>1 for details}
+  \item{quiet}{do not print warning messages}
+  \item{bcast}{If the argument times > 1, progress is reported once in bcast replicas}
 }
 \details{
 In the analysis of empirical significance, first time the function 
 \code{\link{ccfast}} is called and result object is 
 saved. Later, the function \code{\link{ccfast}} is called 
-\code{times} times with \code{resample=TRUE} in order to generate 
-distribution under the null. Each call, minimal P-value is extracted 
+\code{times} times with \code{replace=FALSE} in order to generate 
+the distribution under the null. Each call, minimal P-value is extracted 
 and compared with original P-values. For a particular SNP, empirical 
-P-value is obtained as a proportion of times minimal P from resampled data 
-was less then original P.
+P-value is obtained as a proportion of times minimal Ps from resampled data 
+was less then the original P.
 
 The list elements effB, effAB and effBB are the ones obtained from the 
 analysis of the original (not permuted) data set
@@ -43,8 +45,6 @@ analysis of the original (not permuted) data set
 %\references{}
 \author{Yurii Aulchenko}
 \note{
-The list elements medChi1df and medChi2df returned contain the median 
-of the null distribution. 
 }
 \seealso{
 \code{\link{ccfast}},
@@ -53,16 +53,16 @@ of the null distribution.
 }
 \examples{
 data(srdta)
-a<-ccfast("bt",data=srdta,snps=c(719:733))
+a<-ccfast("bt",data=srdta,snps=c(500:800))
 plot(a)
 # this does not make sense, as the whole experiment must be analysed, not a small region!
-b<-emp.ccfast("bt",data=srdta,snps=c(719:733),bcast=10)
+b<-emp.ccfast("bt",data=srdta,snps=c(500:800),bcast=10)
 plot(b)
 # compare qvalues and empirical P
 qv<-qvaluebh95(a$P1df)$qval
 qv
 b$P1df
-plot(qv,b$P1df)
+plot(qv,b$P1df,xlim=c(0,1),ylim=c(0,1))
 abline(a=0,b=1)
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

@@ -7,18 +7,29 @@
 	and presents output as \code{\link{scan.gwaa.2D-class}} object
 }
 \usage{
-scan.haplo.2D(y, data, snpsubset, idsubset, bcast = 25, simulate=FALSE, ...)
+scan.haplo.2D(formula, data, snpsubset, idsubset, bcast = 10, simulate=FALSE, trait.type, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{y}{character name of the vector of trait values}
+  \item{formula}{Formula to be used in analysis. It should be a character string 
+	following standard notation. On the left-had side, there should be outcome. 
+	On the right-hand side, covariates are liste, with "+" separating the 
+	covariates (additive action). The left- and right-hand sides are separated by "~". 
+	You should put CRSNP argument in the formula.
+	For example "qt3~CRSNP" would analyse asociation between SNPs and trait "qt3", 
+	without any adjustment. To adjust for age and sex, use "qt3~age+sex+CRSNP".
+	Currently, only additive effects ("+") are allowed.}
   \item{data}{object of calss \code{\link{gwaa.data-class}}}
   \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
 		If missing, all SNPs from \code{data} are used for analysis.}
   \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
 		If missing, all people from \code{data/cc} are used for analysis.}
-  \item{bcast}{show progress every \code{bcast} SNPs}
+  \item{bcast}{show progress every \code{bcast} percents of progress}
   \item{simulate}{if simulated P-values should be generated}
+  \item{trait.type}{Character string defining type of trait, 
+	with values of "gaussian", "binomial", "poisson", "ordinal" (see help for 
+	\code{\link[haplo.stats]{haplo.score.slide}} for details). If not specified, 
+	the routine picks up "gaussian" or "binomial" (two levels of trait).}
   \item{\dots}{other arguments to be passed to \code{\link[haplo.stats]{haplo.score.slide}}}
 }
 \details{
@@ -43,8 +54,8 @@ Schaid DJ, Rowland CM, Tines DE, Jacobson RM, Poland GA. (2002) Score tests for 
 }
 \examples{
 data(srdta)
-c <- scan.haplo.2D("bt",data=srdta,snps=(717:733),
-		ids=(srdta@phdata$age<40),trait.type="binomial")
+c <- scan.haplo.2D("bt~sex+age+CRSNP",data=srdta,snps=(717:733),
+	ids=(srdta@phdata$age<40))
 plot(c)
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

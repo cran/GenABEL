@@ -1,4 +1,11 @@
-srdta		Demonstrate functionality of GWAA using data 
+srdta		Demonstrate functionality of GenABEL using data 
 		for a 2.5 Mb region
+
 srdtawin	The same as srdta, but starts with data(srdta) as 
 		under Windows one could have no writing rights
+
+ge03d2		Demonstrate functionality of GenABEL using data 
+		on 1000 cases/controls typed for ~8,000 SNPs 
+		across 3 chromosomes
+
+exge03d2	Exercise for the students of Ge03 (day 2)

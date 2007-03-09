@@ -22,9 +22,13 @@
 \note{
 }
 \seealso{
-\code{link{as.character.snp.data}},
-\code{link{as.double.snp.data}},
-\code{link{as.hsgeno.snp.data}}
+\code{\link{as.character.gwaa.data}},
+\code{\link{as.character.snp.data}},
+\code{\link{as.double.gwaa.data}},
+\code{\link{as.double.snp.data}},
+\code{\link{as.hsgeno}},
+\code{\link{as.genotype.gwaa.data}},
+\code{\link{as.genotype.snp.data}}
 }
 \examples{
 data(srdta)

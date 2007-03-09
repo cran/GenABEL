@@ -5,12 +5,17 @@ import(genetics)
 importClasses(genetics)
 
 export(
-	add.plot.scan.gwaa,
+	add.plot,
+	as.character.gwaa.data,
 	as.character.snp.data,
+	as.data.frame.gwaa.data,
+	as.double.gwaa.data,
 	as.double.snp.data,
 	as.genotype,
+	as.genotype.gwaa.data,
 	as.genotype.snp.data,
 	as.hsgeno,
+	as.hsgeno.gwaa.data,
 	as.hsgeno.snp.data,
 	catable,
 	ccfast,
@@ -18,11 +23,17 @@ export(
 	check.trait,
 	convert.snp.ped,
 	convert.snp.text,
+	descriptives.marker,
+	descriptives.scan,
+	descriptives.trait,
 	emp.ccfast,
 	emp.qtscore,
+	estlambda,
 	HWE.show,
-	heteroz,
+	hom,
+	ibs,
 	load.gwaa.data,
+	perid.summary,
 	plot.check.marker,
 	plot.scan.gwaa,
 	plot.scan.gwaa.2D,
@@ -41,7 +52,8 @@ export(
 	sset,
 	summary.check.marker,
 	summary.gwaa.data,
-	summary.snp.data
+	summary.snp.data,
+	Xfix
        )
 
 exportClasses(
@@ -67,7 +79,12 @@ S4method('[',snp.data)
 S4method('[',gwaa.data)
 S4method('[',snp.mx)
 
-S3method(as.double,snp.data)
+S3method(as.character,gwaa.data)
 S3method(as.character,snp.data)
+S3method(as.data.frame,gwaa.data)
+S3method(as.double,snp.data)
+S3method(as.double,gwaa.data)
+S3method(as.hsgeno,gwaa.data)
 S3method(as.hsgeno,snp.data)
+S3method(as.genotype,gwaa.data)
 S3method(as.genotype,snp.data)

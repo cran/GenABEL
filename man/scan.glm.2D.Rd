@@ -6,7 +6,7 @@ Scans regional data allowing for gene-gene interaction using glm
 }
 \usage{
 scan.glm.2D(formula, family = gaussian(), data, snpsubset, idsubset, 
-		bcast = 200)
+		bcast = 50)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

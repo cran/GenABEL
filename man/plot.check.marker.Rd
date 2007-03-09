@@ -39,7 +39,7 @@ No value returned. Explanatory note is shown on the screen.
 }
 \examples{
 data(srdta)
-mc <- check.marker(data=srdta@gtdata[,1:100],call=0.95,maf=0.01,minconcordance=0.9)
+mc <- check.marker(data=srdta@gtdata[,1:100],redundant="all",maf=0.01,minconcordance=0.9,fdr=.1,ibs.mrk=0)
 plot(mc)
 mc1 <- snp.subset(mc,snps=srdta@gtdata@snpnames[20:40])
 plot(mc1)

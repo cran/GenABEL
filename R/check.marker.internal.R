@@ -1,0 +1,197 @@
+"check.marker.internal" <-
+function(data, snpsubset, idsubset,
+			callrate=0.95,perid.call=0.95,
+			het.fdr=0.01, ibs.threshold = 0.95, ibs.mrk = 2000, maf, p.level=-1, 
+			fdrate = 0.2, hweidsubset, redundant="no", minconcordance = 2.0, 
+			qoption="bh95") {
+
+# qoption = "bh95" (Benjamini & Hochberg 1995) or "storey" (Storey 2003, requires qvalue library)
+	if (class(data) == "gwaa.data") {
+		if (!missing(snpsubset)) data <- data@gtdata[,snpsubset]
+		if (!missing(idsubset)) data <- data@gtdata[idsubset,]
+		if (missing(idsubset) & missing(snpsubset)) data <- data@gtdata
+	} else if (class(data) == "snp.data") {
+		if (!missing(snpsubset)) data <- data[,snpsubset]
+		if (!missing(idsubset)) data <- data[idsubset,]
+	} else {
+		stop("data argument should be of type gwaa.data or snp.data");
+	}
+	if (missing(maf)) maf <- 5/(2*data@nids)
+
+	nts <- data@nsnps
+	cat(nts,"markers and",data@nids,"people in total\n")
+	flush.console()
+	out <- list()
+# check redundancy
+#	browser()
+	redok <- rep(1,data@nsnps)
+	if (redundant != "no" && (redundant == "bychrom" || redundant=="all")) {
+		out$details.redundancy <- redundant(data,pairs=redundant, minconcordance = minconcordance)
+		out$redundant <- out$details.redundancy[["all"]]
+		redok[match(out$details.redundancy$all,data@snpnames)] <- 0
+	} else {
+		out$details.redundancy[["all"]] <- NULL;
+	}
+	ntmp <- length(out$redundant); ptmp <- 100*ntmp/nts
+	cat(ntmp," (",ptmp,"%) markers excluded as redundant (option = \"",redundant,"\")\n",sep="")
+	flush.console()
+# run summary
+	s <- summary(data)
+# check frequency
+	freqok <- pmin(s$Q.2,1-s$Q.2)
+	freqok <- (freqok>=maf)
+	out$nofreq <- data@snpnames[which(freqok == FALSE)]
+	ntmp <- length(out$nofreq); ptmp <- 100*ntmp/nts
+	cat(ntmp," (",ptmp,"%) markers excluded as having low (<",maf*100,"%) minor allele frequency\n",sep="")
+	flush.console()
+# check call rate
+	callok <- (s[,"CallRate"]>=callrate)
+	out$nocall <- data@snpnames[which(callok == FALSE)]
+	ntmp <- length(out$nocall); ptmp <- 100*ntmp/nts
+	cat(ntmp," (",ptmp,"%) markers excluded because of low (<",callrate*100,"%) call rate\n",sep="")
+	flush.console()
+# check HWE
+	if (!missing(hweidsubset)) {
+		s <- summary(data[hweidsubset,])
+	}
+	Pexact <- s$Pexact
+	rm(s);gc(verbose=FALSE)
+	if (p.level < 0) {
+		if (qoption == "storey") {
+			qobj <- qvalue(Pexact,fdr.level=fdrate)
+			hweok <- !(qobj$significant)
+		} else {
+			hweok <- !(qvaluebh95(Pexact,fdrate)$significant)
+		}
+	} else {
+		hweok <- (Pexact >= p.level)
+	}
+
+# make output object
+	out$nohwe <- data@snpnames[which(hweok == FALSE)]
+#	cat("nohwe: ",out$nohwe,"\n")
+	ntmp <- length(out$nohwe); ptmp <- 100*ntmp/nts
+	if (p.level>=0)
+		cat(ntmp," (",ptmp,"%) markers excluded because they are out of HWE (P <",p.level,")\n",sep="")
+	else
+		cat(ntmp," (",ptmp,"%) markers excluded because they are out of HWE (FDR <",fdrate*100,"%)\n",sep="")
+	flush.console();
+# all together
+	out$snpok <- data@snpnames[(callok & freqok & redok & hweok)]
+#	cat("ok: ",out$snpok,"\n")
+
+# check call rate per person and heterozygosity
+	spp <- perid.summary(data[,out$snpok])
+	idcallok <- (spp[,"CallPP"]>=perid.call)
+	out$idnocall <- data@idnames[which(idcallok == FALSE)]
+	ntmp <- length(out$idnocall); ptmp <- 100*ntmp/data@nids
+	cat(ntmp," (",ptmp,"%) people excluded because of low (<",perid.call*100,"%) call rate\n",sep="")
+	flush.console();
+	ssdata <- data[,out$snpok]
+	ssdata <- ssdata[,ssdata@chromosome!="X"]
+	spp <- perid.summary(ssdata)
+	rm(ssdata);gc(verbose=FALSE)
+	het <- spp[,"Het"]; 
+	mh <- mean(het); 
+	sdh <- sd(het)
+	Zhet <- (het-mh)/sdh; 
+	Zhet <- replace(Zhet,(Zhet<0),0);
+	Zhet <- Zhet*Zhet
+	Zhet <- (1. - pchisq(Zhet,1))
+	if (qoption == "storey") {
+		qobj <- qvalue(Zhet,fdr.level=het.fdr)
+		hetok <- !(qobj$significant)
+	} else {
+		hetok <- !(qvaluebh95(Zhet,het.fdr)$significant)
+	}
+#	hetok <- ((length(Zhet)*Zhet)>het.fdr)
+	out$hetfail <- data@idnames[which(hetok == FALSE)]
+	ntmp <- length(out$hetfail); ptmp <- 100*ntmp/data@nids
+	cat(ntmp," (",ptmp,"%) people excluded because too high autosomal heterozygosity (FDR <",het.fdr*100,"%)\n",sep="")
+	flush.console()
+	cat("Mean autosomal HET was ",mh," (s.e. ",sdh,")",sep="");
+	flush.console()
+	if (ntmp>0) 
+		cat(", people excluded had HET >= ",max(het[!hetok]),"\n",sep="")
+	else 
+		cat("\n")
+	flush.console();
+	rm(spp);gc(verbose=FALSE)
+
+# check IBS
+	if (ibs.mrk<1) {
+		out$ibsfail <- NULL;
+		ibsok <- rep(TRUE,data@nids)
+	} else {
+	fromset <- match(data@snpnames,out$snpok)
+	fromset <- fromset[!is.na(fromset)]
+	fromset <- fromset[data@chromosome[fromset]!="X"]
+	if (length(fromset) > ibs.mrk) {
+		ibsset <- sort(sample(x=fromset,size=ibs.mrk,replace=FALSE))
+		saibs <- ibs(data[,ibsset],weight="no")
+	} else {
+		saibs <- ibs(data[,fromset],weight="no")
+		ibs.mrk <- length(fromset)
+	}
+	wids <- colnames(saibs)
+	saibs <- saibs[lower.tri(saibs)]
+	mibs <- mean(saibs)
+	sdibs <- sd(saibs)
+#	Zibs <- (saibs-mibs)/sdibs; 
+#	Zibs <- replace(Zibs,(Zibs<0),0);
+#	Zibs <- Zibs*Zibs
+#	Zibs <- (1. - pchisq(Zibs,1))
+#	if (qoption == "storey") {
+#		qobj <- qvalue(Zibs,fdr.level=ibs.fdr)
+#		ibsok <- !(qobj$significant)
+#	} else {
+#		ibsok <- !(qvaluebh95(Zibs,ibs.fdr)$significant)
+#	}
+#	ibsok <- ((length(Zibs)*Zibs)>ibs.fdr)
+	saibs1 <- matrix(ncol=data@nids,nrow=data@nids)
+	saibs1[lower.tri(saibs1)] <- (saibs<ibs.threshold)
+	ibsfail <- which(!saibs1) %% data@nids
+	rm(saibs1);gc(verbose=FALSE)
+	ibsfail <- replace(ibsfail,(ibsfail==0),data@nids)
+	ibsfail <- unique(ibsfail)
+	ibsok <- rep(TRUE,data@nids)
+	ibsok[ibsfail] <- FALSE
+	ibsfail <- data@idnames[ibsfail]
+	out$ibsfail <- ibsfail
+	ntmp <- length(out$ibsfail); ptmp <- 100*ntmp/data@nids
+	cat(ntmp," (",ptmp,"%) people excluded because of too high IBS (>=",ibs.threshold,")\n",sep="")
+	flush.console()
+	cat("Mean IBS was ",mibs," (s.e. ",sdibs,"), as based on ",ibs.mrk," autosomal markers\n",sep="")
+	rm(saibs);gc(verbose=FALSE)
+	flush.console();
+	}
+
+	out$idok <- data@idnames[(idcallok & hetok & ibsok)]
+
+	ntmp <- length(out$snpok); ptmp <- 100*ntmp/nts
+	cat("In total, ",ntmp," (",ptmp,"%) markers passed all criteria\n",sep="")
+	flush.console();
+
+	ntmp <- length(out$idok); ptmp <- 100*ntmp/data@nids
+	cat("In total, ",ntmp," (",ptmp,"%) people passed all criteria\n",sep="")
+	flush.console();
+
+#Chi2 for the ones out of HWE, sorted
+	out$Pex.nohwe <- Pexact[match(out$nohwe,data@snpnames)]
+#	cat("Pex.nohwe: ",out$Pex.nohwe,"\n")
+	idx <- sort(out$Pex.nohwe,dec=FALSE,ind=TRUE)$ix
+	out$nohwe <- out$nohwe[idx]
+#	cat("nohwe: ",out$nohwe,"\n")
+	out$Pex.nohwe <- out$Pex.nohwe[idx]
+#	cat("Pex.nohwe: ",out$Pex.nohwe,"\n")
+# what was the call
+	out$call$call <- match.call()
+	out$call$name <- data@snpnames
+	out$call$ids <- data@idnames
+	out$call$map <- data@map
+	out$call$chromosome <- data@chromosome
+# output
+	class(out) <- "check.marker"
+	out
+}
+

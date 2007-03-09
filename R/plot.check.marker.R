@@ -5,20 +5,15 @@ function(x, y, ...) {
 	y <- c()
 	g <- c()
 	gid <- 1
-	lims <- c (min(x$call$map),max(x$call$map))
+	lims <- c(min(x$call$map),max(x$call$map))
 	plot(lims[1],lims[1],col=NA,xlim=lims,ylim=lims,xlab="",ylab="", ...)
-    if (length(x$details.redundancy)>0) {
+    if (length(x$details.redundancy)>1) {
 	for (i in 1:length(x$details)) {
-		namx <- names(x$details[i])
+		namx <- names(x$details.redundancy[i])
 		if (namx == "all") next;
-#		if (!all && any(x$nofreq==namx)) next;
-#		if (!all && any(x$nohwe==namx)) next;
-#		if (!all && any(x$nocall==namx)) next;
 		namy <- x$details[[i]]
 		cooy <- x$call$map[match(namx,x$call$name)]
-#		if (names) {
-			text(x=cooy,y=cooy,labels=c(namx),adj=c(1,0),col="#000000",cex=.75)
-#		}
+		text(x=cooy,y=cooy,labels=c(namx),adj=c(1,0),col="#000000",cex=.75)
 		xx <- c(xx,cooy)
 		exty <- x$call$map[match(namy,x$call$name)]
 		if (length(exty) == 0) next
