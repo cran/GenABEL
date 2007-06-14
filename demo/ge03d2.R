@@ -28,7 +28,7 @@ s[1:10,]
 estlambda(s[,"Pexact"])
 
 ?"LET US FIRST TRY ANALYSIS OF RAW DATA"
-an0 <- qtscore("dm2~CRSNP",ge03d2)
+an0 <- qtscore(dm2,ge03d2)
 ?"PLOT THE ANALYSIS RESULTS"
 plot(an0)
 ?"CHECK IF POPULATION IS HOMOGENIOUS (Lambda=1)"
@@ -36,7 +36,7 @@ an0$lambda
 ?"DESCRIBE TOP 10 SNPs"
 descriptives.scan(an0)
 ?"ACCESS EXPERIMENT-WIDE SIGNIFICANCE"
-an0.e <- emp.qtscore("dm2~CRSNP",ge03d2)
+an0.e <- emp.qtscore(dm2,ge03d2)
 ?"CHECK THE RESULTS"
 descriptives.scan(an0.e)
 descriptives.scan(an0.e,sort="Pc1df")
@@ -91,12 +91,12 @@ s <- summary(data2@gtdata[(dm2==0),])
 estlambda(s[,"Pexact"])
 
 ?"PERFORM GWA ANALYSIS"
-data2.qt <- qtscore("dm2~CRSNP",data2)
+data2.qt <- qtscore(dm2,data2)
 data2.qt$lambda
 plot(data2.qt)
 descriptives.scan(data2.qt)
 ?"ANALYSE EMPIRICAL GWA SIGNIFICANCE"
-data2.qte <- emp.qtscore("dm2~CRSNP",data2)
+data2.qte <- emp.qtscore(dm2,data2)
 descriptives.scan(data2.qte,sort="Pc1df")
 
 ?"TRY FURTHER ADJUSTMENT FOR GENETIC STRATAS (PCA)"
@@ -116,30 +116,30 @@ hist(data2.pca)
 ?"BIND PC1 TO THE PHEOTYPIC DATA OF DATA2"
 data2@phdata$pc1 <- data2.pca[,1]
 ?"PERFORM GWA ANALYSIS ADJUSTING FOR PC1"
-data2.qtp <- qtscore("dm2~pc1+CRSNP",data2)
+data2.qtp <- qtscore(dm2~pc1,data2)
 ?"CHECK IF THERE IS STILL ANY INFLATION"
 data2.qtp$lambda
 descriptives.scan(data2.qtp)
 ?"ANALYSE EMPIRICAL GWA SIGNIFICANCE"
-data2.qtpe <- emp.qtscore("dm2~pc1+CRSNP",data2)
+data2.qtpe <- emp.qtscore(dm2~pc1,data2)
 descriptives.scan(data2.qtpe)
 
 ?"TRY ADJUSTMENT FOR SEX AND AGE"
-data2.qta <- qtscore("dm2~sex+age+pc1+CRSNP",data2)
+data2.qta <- qtscore(dm2~sex+age+pc1,data2)
 data2.qta$lambda
 plot(data2.qta)
 descriptives.scan(data2.qta)
 ?"EMPIRICAL GW SIGNIFICANCE WITH ADJUSTMENT"
-data2.qtae <- emp.qtscore("dm2~sex+age+pc1+CRSNP",data2)
+data2.qtae <- emp.qtscore(dm2~sex+age+pc1,data2)
 descriptives.scan(data2.qtae)
 
 ?"STRATIFIED ANLYSIS WITH OBESE CASES"
-data2.qts <- qtscore("dm2~sex+age+pc1+CRSNP",data2,ids=((bmi>30 & dm2==1) | dm2==0))
+data2.qts <- qtscore(dm2~sex+age+pc1,data2,ids=((bmi>30 & dm2==1) | dm2==0))
 data2.qts$lambda
 plot(data2.qts)
 descriptives.scan(data2.qts)
 ?"EMPIRICAL GW SIGNIFICANCE IN STRATIFIED ANLYSIS"
-data2.qtse <- emp.qtscore("dm2~sex+age+pc1+CRSNP",data2,ids=((bmi>30 & dm2==1) | dm2==0))
+data2.qtse <- emp.qtscore(dm2~sex+age+pc1,data2,ids=((bmi>30 & dm2==1) | dm2==0))
 descriptives.scan(data2.qtse,sort="Pc1df")
 
 ?"TRY REPLICATION IN OTHER DATA SET"
@@ -148,10 +148,10 @@ top10 <- rownames(descriptives.scan(data2.qta))
 top10
 ?"TRY TO REPLICATE IN THE SMALL DATA SET"
 data(ge03d2c)
-confirm <- qtscore("dm2~sex+age+CRSNP",ge03d2c[,top10])
+confirm <- qtscore(dm2~sex+age,ge03d2c[,top10])
 descriptives.scan(confirm)
 ?"IS EMPIRICAL EXPERIMENT-WISE P-VALUE ALSO OK?"
-confirm.e <- emp.qtscore("dm2~sex+age+CRSNP",ge03d2c[,top10],times=10000,bcast=100)
+confirm.e <- emp.qtscore(dm2~sex+age,ge03d2c[,top10],times=10000,bcast=100)
 descriptives.scan(confirm.e)
 ?"CONFIRMED SNPs"
 csnps <- rownames(descriptives.scan(confirm))[c(1,3,4)]
@@ -166,14 +166,14 @@ snppos <- data2@gtdata@map[which(data2@gtdata@snpnames==snp)]
 reg <- snp.names(data2,begin=snppos-150000,end=snppos+150000)
 reg
 ?"ONE SNP ANALYSES"
-reg.qt <- qtscore("dm2~sex+age+pc1+CRSNP",data2[,reg],trait.type="binomial")
+reg.qt <- qtscore(dm2~sex+age+pc1,data2[,reg],trait.type="binomial")
 print(min(reg.qt$P1df))
-reg.glm <- scan.glm("dm2~sex+age+pc1+CRSNP",data=data2[,reg],family=binomial())
+reg.glm <- scan.glm(dm2~sex+age+pc1,data=data2[,reg],family=binomial())
 print(min(reg.glm$P1df))
 ?"HAPLOTYPE ANALYSIS IN SLIDING WINDOW"
-reg.h2 <- scan.haplo("dm2~sex+age+pc1+CRSNP",data2[,reg],trait.type="binomial")
+reg.h2 <- scan.haplo(dm2~sex+age+pc1,data2[,reg],trait.type="binomial")
 print(min(reg.h2$P1df))
-reg.h3 <- scan.haplo("dm2~sex+age+pc1+CRSNP",data2[,reg],n.slide=3,trait.type="binomial")
+reg.h3 <- scan.haplo(dm2~sex+age+pc1,data2[,reg],n.slide=3,trait.type="binomial")
 print(min(reg.h3$P1df))
 ?"PLOT RESULTS"
 minp <- min(reg.qt$P1df,reg.glm$P1df,reg.h2$P1df,reg.h3$P1df)
@@ -186,7 +186,7 @@ add.plot(reg.h3,col="blue",typ="l")
 bpos <- reg.h2$map[which.min(reg.h2$P1df)]
 sreg <- snp.names(data2,begin=bpos-25000,end=bpos+25000)
 sreg
-sreg.h2D <- scan.haplo.2D("dm2~age+sex+pc1+CRSNP",data2[,sreg],trait.type="binomial")
+sreg.h2D <- scan.haplo.2D(dm2~age+sex+pc1,data2[,sreg],trait.type="binomial")
 print(min(sreg.h2D$P1df,na.rm=T))
 plot(sreg.h2D)
 ?"DO LD ANALYSIS AND UPDATE THE PLOT"

@@ -1,3 +1,87 @@
+***** v 1.2-4 (2007.07.10)
+
+Few small fixes done for compatibility with R 2.6.0-devel
+
+convert.snp.tped() procedure by Toby Johnson added. 
+This procedure facilitates fast and effective conversion 
+from PLINK TPED ("transposed pedigree") format to the 
+GenABEL format. See help(convert.snp.tped).
+
+Few other small improvements. This is beta release version 
+for procedures facilitating analyses using genomic 
+kinship (IBD) matrix, such as polygenic(), mmscore() and 
+grammar(). We tested these procedures with quantitative traits
+and they worked fine; for binary traits there may be few 
+bugs yet.
+
+***** v 1.2-2 (2007.06.07)
+
+Improvement in polygenic() to ensure convergence, two 
+optimisation methods are now allowed.
+
+"Formula" part in qtscore changed to more standard format 
+(now one can use any terms allowed in glm, no CRSNP term 
+needed).
+
+Bugs in grammar and mmscore fixed. Previous version tended 
+to produse some very wrong results. 
+
+Polygenic silightly modified (new output objects added).
+A fix in polygenic with covariates.
+
+Other bug fix in stratified analysis with X-chromosome.
+
+***** v 1.2-1 (2007.06.04)
+
+A set of new procedures to do analysis in samples of related 
+individuals. They also can be used for analysis of samples 
+with population staratification and cryptic relations.
+
+polygenic() provides means to estimate "heritability" and effects 
+of covariates, in data having some correlation, as described by 
+(genomic) kinship matrix.
+
+Mixed-model score test mmscore() added. This implements the test
+for association between the vector of phenotypes y and vector of genotypes 
+g by computing
+
+((y-E[y]) Inverse[V] (g-E[g])^2/((g-E[g]) Inverse[V] (g-E[g])
+
+where Inverse[V] is the inverse of variance-covariance matrix 
+and E[y] is expectation of the trait, as provided by polygenic().
+
+grammar() procedure implements fast variant of the above score test
+
+((y-E[y]) Inverse[V] (g-E[g])^2/((g-E[g]) (g-E[g])
+
+This statistics does not have chi-squared distribution, but becomes 
+distributed so after GC (thus Pc1df are fine P-values to use)
+
+NOTE: grammar is still experimental.
+
+An error in qtscore, which led to using always only 2 strata 
+(male/female) in analysis of X-chromosome fixed. 
+
+***** v 1.2-0 (2007.04.17)
+
+Large improvement in the speed of the qvaluebh95() procedure.
+The time used to grow quadratic with the number of P-values to 
+evaluate, now reduced to linear. 
+
+ibs() procedure "freq" option is updated to provide weighted 
+measure of genomic identity. 
+
+dprfast() facilitating fast D' computations added. The results 
+produced are not exacly the same with D's from LD/genetics.
+
+***** v 1.1-9 (2007.04.04)
+
+A procedure for fast r2 computations (r2fast()) added.
+It seems that this procedure results in r2s which are biased upward 
+at small values, compared to r2s from LD/genetics.
+
+A procedure to estimate Morton-Collins rho added (rhofast()) 
+
 ***** v 1.1-8 (2007.03.12)
 
 empirical derivation of GW significance is now embedded into 

@@ -39,7 +39,7 @@ add.plot(x, ..., df = 1)
 data(srdta)
 a <- ccfast("bt",srdta,snps=c(1:100))
 plot(a)
-a1 <- qtscore("bt~CRSNP",srdta,snps=c(1:100))
+a1 <- qtscore(bt,srdta,snps=c(1:100))
 add.plot(a1,col="red",type="l")
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS

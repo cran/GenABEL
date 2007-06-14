@@ -17,10 +17,19 @@ function(data,snpsubset,idsubset,weight="no") {
 
   totsnps <- data@nsnps
   totids <- data@nids
-  out <- .C("hom",as.raw(data@gtps),as.integer(data@nids),as.integer(data@nsnps),as.integer(match(weight,wargs)-1),sout = double(2*data@nids), PACKAGE="GenABEL")$sout
-  dim(out) <- c(data@nids,2)
+  opt <- match(weight,wargs)-1
+  out <- .C("hom",as.raw(data@gtps),as.integer(data@nids),as.integer(data@nsnps),as.integer(opt),sout = double((2+opt)*data@nids), PACKAGE="GenABEL")$sout
+  if (weight=="freq") {
+    dim(out) <- c(data@nids,3)
+    F <- (out[,2]-out[,3])/(out[,1]-out[,3])
+    out <- cbind(out,F)
+    out[,2] <- out[,2]/out[,1]
+    colnames(out) <- c("NoMeasured","Hom","E(Hom)","F")
+  } else {
+    dim(out) <- c(data@nids,2)
+    out[,2] <- out[,2]/out[,1]
+    colnames(out) <- c("NoMeasured","Hom")
+  }
   rownames(out) <- data@idnames
-  colnames(out) <- c("NoMeasured","Hom")
-  out[,2] <- out[,2]/out[,1]
   out
 }

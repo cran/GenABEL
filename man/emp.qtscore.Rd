@@ -6,22 +6,17 @@ Genome-wide significance for a GWA scan. Analysis
 function is \code{\link{qtscore}}. 
 }
 \usage{
-emp.qtscore(formula , data, snpsubset, idsubset, strata, trait.type, times = 100, 
+emp.qtscore(formula , data, snpsubset, idsubset, strata, trait.type="gaussian", times = 100, 
 		quiet=FALSE, bcast = 10)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   All arguments are the same as in and passed intact to the \code{\link{qtscore}}.
   See help for this function. 
-  \item{formula}{Formula to be used in analysis. It should be a character string 
-	(thus quotation marks from both sides) 
-	following the standard notation. On the left-had side, there should be outcome. 
-	On the right-hand side, covariates are liste, with "+" separating the 
-	covariates (additive action). The left- and right-hand sides are separated by "~". 
-	You should put CRSNP argument in the formula.
-	For example "qt3~CRSNP" assumes a crude analysis of association between SNPs and 
-	trait "qt3". To adjust for e.g. age and sex, use "qt3~age+sex+CRSNP".
-	At current stage, only additive effects ("+") are allowed.
+  \item{formula}{Formula describing fixed effects to be used in analysis, e.g. 
+	y ~ a + b means that outcome (y) depends on two covariates, a and b. 
+	If no covariates used in analysis, skip the right-hand side of the 
+	equation.
 	}
   \item{data}{An object of \code{\link{gwaa.data-class}}}
   \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
@@ -66,10 +61,10 @@ emp.qtscore(formula , data, snpsubset, idsubset, strata, trait.type, times = 100
 }
 \examples{
 data(srdta)
-a<-qtscore("qt3~age+sex+CRSNP",data=srdta,snps=c(1:200))
+a<-qtscore(qt3~age+sex,data=srdta,snps=c(1:200))
 plot(a)
 # this does not make sense, as the whole experiment must be analysed, not a small region!
-b<-emp.qtscore("qt3~age+sex+CRSNP",data=srdta,snps=c(1:200))
+b<-emp.qtscore(qt3~age+sex,data=srdta,snps=c(1:200))
 plot(b)
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

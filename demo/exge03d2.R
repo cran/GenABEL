@@ -28,7 +28,7 @@ s[1:10,]
 estlambda(s[,"Pexact"])
 
 ?"LET US FIRST TRY ANALYSIS OF RAW DATA"
-an0 <- qtscore("dm2~CRSNP",ge03d2)
+an0 <- qtscore(dm2,ge03d2)
 ?"PLOT THE ANALYSIS RESULTS"
 plot(an0)
 ?"CHECK IF POPULATION IS HOMOGENIOUS (Lambda=1)"
@@ -36,7 +36,7 @@ an0$lambda
 ?"DESCRIBE TOP 10 SNPs"
 descriptives.scan(an0)
 ?"ACCESS EXPERIMENT-WIDE SIGNIFICANCE"
-an0.e <- emp.qtscore("dm2~CRSNP",ge03d2)
+an0.e <- emp.qtscore(dm2,ge03d2)
 ?"CHECK THE RESULTS"
 descriptives.scan(an0.e)
 descriptives.scan(an0.e,sort="Pc1df")
@@ -91,39 +91,39 @@ s <- summary(data2@gtdata[(dm2==0),])
 estlambda(s[,"Pexact"])
 
 ?"PERFORM GWA ANALYSIS"
-data2.qt <- qtscore("dm2~CRSNP",data2)
+data2.qt <- qtscore(dm2,data2)
 data2.qt$lambda
 plot(data2.qt)
 descriptives.scan(data2.qt)
 ?"ANALYSE EMPIRICAL GWA SIGNIFICANCE"
-data2.qte <- emp.qtscore("dm2~CRSNP",data2)
+data2.qte <- emp.qtscore(dm2,data2)
 descriptives.scan(data2.qte,sort="Pc1df")
 
 ?"TRY ADJUSTMENT FOR SEX AND AGE"
-data2.qta <- qtscore("dm2~sex+age+CRSNP",data2)
+data2.qta <- qtscore(dm2~sex+age,data2)
 data2.qta$lambda
 plot(data2.qta)
 descriptives.scan(data2.qta)
 ?"EMPIRICAL GW SIGNIFICANCE WITH ADJUSTMENT"
-data2.qtae <- emp.qtscore("dm2~sex+age+CRSNP",data2)
+data2.qtae <- emp.qtscore(dm2~sex+age,data2)
 descriptives.scan(data2.qtae)
 
 ?"CHECK WHAT HAPPENS IF ADJUSTMENT IS MADE FOR BMI"
-data2.qtabmi <- qtscore("dm2~sex+age+bmi+CRSNP",data2)
+data2.qtabmi <- qtscore(dm2~sex+age+bmi,data2)
 data2.qtabmi$lambda
 plot(data2.qtabmi)
 descriptives.scan(data2.qtabmi)
 ?"EMPIRICAL GW SIGNIFICANCE WITH ADJUSTMENT"
-data2.qtabmie <- emp.qtscore("dm2~sex+age+bmi+CRSNP",data2)
+data2.qtabmie <- emp.qtscore(dm2~sex+age+bmi,data2)
 descriptives.scan(data2.qtabmie)
 
 ?"STRATIFIED ANLYSIS WITH OBESE CASES"
-data2.qts <- qtscore("dm2~sex+age+CRSNP",data2,ids=((bmi>30 & dm2==1) | dm2==0))
+data2.qts <- qtscore(dm2~sex+age,data2,ids=((bmi>30 & dm2==1) | dm2==0))
 data2.qts$lambda
 plot(data2.qts)
 descriptives.scan(data2.qts)
 ?"EMPIRICAL GW SIGNIFICANCE IN STRATIFIED ANLYSIS"
-data2.qtse <- emp.qtscore("dm2~sex+age+CRSNP",data2,ids=((bmi>30 & dm2==1) | dm2==0))
+data2.qtse <- emp.qtscore(dm2~sex+age,data2,ids=((bmi>30 & dm2==1) | dm2==0))
 descriptives.scan(data2.qtse,sort="Pc1df")
 
 ?"TRY REPLICATION IN OTHER DATA SET"
@@ -132,10 +132,10 @@ top10 <- rownames(descriptives.scan(data2.qta))
 top10
 ?"TRY TO REPLICATE IN THE SMALL DATA SET"
 data(ge03d2c)
-confirm <- qtscore("dm2~sex+age+CRSNP",ge03d2c[,top10])
+confirm <- qtscore(dm2~sex+age,ge03d2c[,top10])
 descriptives.scan(confirm)
 ?"IS EMPIRICAL EXPERIMENT-WISE P-VALUE ALSO OK?"
-confirm.e <- emp.qtscore("dm2~sex+age+CRSNP",ge03d2c[,top10],times=10000,bcast=100)
+confirm.e <- emp.qtscore(dm2~sex+age,ge03d2c[,top10],times=10000,bcast=100)
 descriptives.scan(confirm.e)
 ?"CONFIRMED SNPs"
 csnps <- rownames(descriptives.scan(confirm))[1:3]

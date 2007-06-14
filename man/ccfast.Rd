@@ -6,7 +6,7 @@ Fast case-control analysis by computing chi-square test
 from 2x2 (allelic) or 2x3 (genotypic) tables
 }
 \usage{
-ccfast(y, data, snpsubset, idsubset, times=1, quiet=FALSE,bcast=10,clambda=TRUE)
+ccfast(y, data, snpsubset, idsubset, times=1, quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0)
 }
 \arguments{
   \item{y}{character name of the vector of case-control status. Cases are denoted as 1 and controls as 0.}
@@ -23,7 +23,9 @@ ccfast(y, data, snpsubset, idsubset, times=1, quiet=FALSE,bcast=10,clambda=TRUE)
   \item{clambda}{If inflation facot Lambda is estimated as lower then one, this parameter 
 		controls if the original P1df (clambda=TRUE) to be reported in Pc1df, 
 		or the original 1df statistics is to be multiplied onto this "deflation" 
-		facor (clambda=FALSE)}
+		factor (clambda=FALSE)}
+  \item{propPs}{proportion of non-corrected P-values used to estimate the inflation factor Lambda,
+		passed directly to the \code{\link{estlambda}}}
 }
 %\details{
 %}

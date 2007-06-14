@@ -22,17 +22,28 @@ ibs(data, snpsubset, idsubset, weight="no")
 	duplicated samples (or twins), simply high values of IBS may 
 	indicate relatives. 
 
-	When weight "freq" is used, IBS is weighted by (1-freq) where 
-	freq is the expected (under HWE) frequency of the genotype,
-	if the genotypes are identical, and allele, if alleles are 
-	identical.
+	When weight "freq" is used, IBS for a pair of people i and j is computed as
+
+	$$
+	f_{i,j} = \Sigma_k \frac{(x_{i,k} - p_k) * (x_{j,k} - p_k)}{(p_k * (1 - p_k))}
+	$$
+
+	where k changes from 1 to N = number of SNPs GW, $x_{i,k}$ is 
+	a genotype of ith person at the kth SNP, coded as 0, 1/2, 1 and 
+	$p_k$ is the frequency 
+	of the "+" allele. This apparently provides an unbiased estimate of the 
+	kinship coefficient.
+
+	Only with "freq" option monomorphic SNPs are regarded as non-informative.
 
 	ibs() operation may be very lengthy for a large number of people.
 }
 \value{
-	A (Npeople X Npeople) matrix giving average IBS values
+	A (Npeople X Npeople) matrix giving average IBS (kinship) values
 	between a pair below the diagonal and number of SNP genotype  
-	measured for both members of the pair above the diagonal 
+	measured for both members of the pair above the diagonal. 
+
+	On the diagonal, homozygosity (0.5+inbreeding) is provided.
 }
 %\references{}
 \author{Yurii Aulchenko}
@@ -48,7 +59,7 @@ data(ge03d2c)
 a <- ibs(data=ge03d2c,ids=c(1:10),snps=c(1:1000))
 a
 # compute IBS based on a random sample of 1000 autosomal marker
-a <- ibs(ge03d2c,snps=sample(ge03d2c@gtdata@snpnames[ge03d2c@gtdata@chromosome!="X"],1000,replace=FALSE))
+a <- ibs(ge03d2c,snps=sample(ge03d2c@gtdata@snpnames[ge03d2c@gtdata@chromosome!="X"],1000,replace=FALSE),weight="freq")
 mds <- cmdscale(as.dist(1-a))
 plot(mds)
 # identify smaller cluster of outliers

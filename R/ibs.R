@@ -15,7 +15,11 @@ function (data,snpsubset,idsubset,weight="no") {
 	out <- .C("ibs", as.raw(data@gtps), as.integer(data@nids), as.integer(data@nsnps), as.integer(option), sout = double(data@nids*data@nids), PACKAGE="GenABEL")$sout
 	dim(out) <- c(data@nids,data@nids)
 	out <- t(out)
-	diag(out) <- NA
+	if (weight=="no") {
+		diag(out) <- hom(data,weight="no")[,2]
+	} else {
+		diag(out) <- 0.5+hom(data,weight="freq")[,4]
+	}
 	colnames(out) <- data@idnames
 	rownames(out) <- data@idnames
 	out

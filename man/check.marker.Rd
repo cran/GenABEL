@@ -11,7 +11,7 @@ of the genotypes (including missing values).
 \usage{
 check.marker(data, snpsubset, idsubset, callrate = 0.95, 
 		perid.call=0.95, het.fdr = 0.01, ibs.threshold = 0.95, ibs.mrk = 2000, maf, p.level = -1, fdrate = 0.2, 
-		odds = 100, hweidsubset, redundant = "no", 
+		odds = 1000, hweidsubset, redundant = "no", 
 		minconcordance = 2.0, qoption = "bh95") 
 }
 \arguments{

@@ -1,5 +1,5 @@
 "ccfast" <-
-function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE) {
+function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0) {
 	if (class(data) != "gwaa.data") stop("wrong type of data argument, must be gwaa.data")
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
@@ -40,7 +40,7 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE) {
 				lambda$se <- NA
 				chi2.c1df <- chi2.1df;
 			} else {
-				lambda <- estlambda(chi2.1df,plot=FALSE,prop=0.9)
+				lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
 				def <- 1/lambda$estimate
 				if (def > 1 && clambda) {
 					chi2.c1df <- chi2.1df;

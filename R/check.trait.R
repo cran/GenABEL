@@ -39,7 +39,7 @@ function (trait,data,fdrate=0.05,graph=TRUE,binshow=FALSE,qoption="bh95") {
       qobj<-qvaluebh95(Pv,fdr = fdrate)
       if (sum(qobj$signif)>=1) {
         cat("Outliers discovered for trait",trait[i],":\n");
-        cat(id[qobj$signif])
+        cat(data$id[qobj$signif])
         cat("\n")
         cat(tra[qobj$signif])
         cat("\n")

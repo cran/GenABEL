@@ -21,8 +21,8 @@ Imbedding GenABEL into R environment allows for easy data characterisation, expl
 \tabular{ll}{
 Package: \tab GenABEL\cr
 Type: \tab Package\cr
-Version: \tab 1.1-8\cr
-Date: \tab 2007-03-09\cr
+Version: \tab 1.2-4\cr
+Date: \tab 2007-06-14\cr
 License: \tab GNU GPL v. 2.0 or later\cr
 }
 
@@ -40,6 +40,7 @@ The most important functions and classes are:
 For loading the data, see
 \code{\link{convert.snp.text}},
 \code{\link{convert.snp.ped}},
+\code{\link{convert.snp.tped}},
 \code{\link{load.gwaa.data}}.
 
 Also check companion programs, affy2mega.pl and affy2gwaa.pl
@@ -64,11 +65,21 @@ For fast analysis function, see
 \code{\link{ccfast}},
 \code{\link{qtscore}},
 \code{\link{emp.ccfast}},
-\code{\link{emp.qtscore}}
+\code{\link{emp.qtscore}},
+\code{\link{ibs}},
+\code{\link{r2fast}},
+\code{\link{dprfast}},
+\code{\link{rhofast}}
 
-For specific tools facilitating analysis of the data with stratification, see
-\code{\link{ibs}}. Principle components analysis (\code{\link{cmdscale}} 
-is a very useful function in this context.
+For specific tools facilitating analysis of the data with stratification
+(population stratification or (possibly unknown) pedigree structure), see
+\code{\link{ibs}},
+\code{\link{polygenic}},
+\code{\link{mmscore}},
+\code{\link{grammar}}.
+
+Also, principle components analysis (\code{\link{cmdscale}} 
+may be useful function in this context.
 
 For functions facilitating construction of tables for your manuscript, see
 \code{\link{descriptives.marker}},
@@ -100,15 +111,19 @@ Maintainer: Yurii Aulchenko <i.aoultchenko@erasmusmc.nl>
 \references{
 If you use the package in your analysis, please cite the following work:
 
-Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. (in press) GenABEL: an R package for genome-wide association analysis. Bioinformatics.
+Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. (2007) GenABEL: an R package for genome-wide association analysis. Bioinformatics.
 
 For exact HWE, please cite:
 
 Wigginton G.E., Cutler D.J., Abecasis G.R. (2005) A note on exact tests of Hardy-Weinberg equilibrium. Am J Hum Genet, 76: 887-893.
 
-For haplo.stats (scan.haplo, scan.haplo.2D), please cite:
+For haplo.stats (\code{scan.haplo}, \code{scan.haplo.2D}), please cite:
 
 Schaid DJ, Rowland CM, Tines DE, Jacobson RM, Poland GA. (2002) Score tests for association between traits and haplotypes when linkage phase is ambiguous. Am J Hum Genet, 70: 425-434.
+
+For fast LD computations (function \code{dprfast}, \code{r2fast}), please cite:
+
+Hao K, Di X, Cawley S. (2006) LdCompare: rapid computation of single- and multiple-marker r2 and genetic coverage. Bioinformatics, 23: 252-254.
 }
 \keyword{package}
 \seealso{
@@ -117,10 +132,12 @@ Packages \code{genetics},
 \code{qvalue},
 }
 \examples{
-# to see complete functionality, run
+# to see more or less complete functionality, run
+#	demo(ge03d2)
+# also try
 #	demo(srdta)
 # it will take a while!
-# if demo(srdta) does not work (for Windows)m try
+# if demo(srdta) does not work (for Windows) try
 #	demo(srdtawin)
 #
 }

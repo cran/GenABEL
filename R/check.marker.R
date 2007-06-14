@@ -2,7 +2,7 @@
 function(data, snpsubset, idsubset,
 			callrate=0.95,perid.call=0.95,
 			het.fdr=0.01, ibs.threshold = 0.95, ibs.mrk = 2000, maf, p.level=-1, 
-			fdrate = 0.2, odds = 100, hweidsubset, redundant="no", minconcordance = 2.0, 
+			fdrate = 0.2, odds = 1000, hweidsubset, redundant="no", minconcordance = 2.0, 
 			qoption="bh95") {
 
 	if (class(data) == "gwaa.data") data <- data@gtdata
@@ -41,7 +41,7 @@ function(data, snpsubset, idsubset,
 				PssX[vec1] <- 2.*(1.-P2)*P2*Pssw
 				PssX[vec2] <- P2*(1.-Pssw)
 				PseswX <- sum(log(PssX),na.rm=TRUE)
-				if ((PnonX-PseswX)>log(1000)) {
+				if ((PnonX-PseswX)>log(odds)) {
 					cat("Marker",jj,"is likely to be not an X marker (Odds>",odds,")\n")
 					flush.console()
 					if (is.null(Xmrkfail)) {
@@ -70,7 +70,7 @@ function(data, snpsubset, idsubset,
 				PerrX[vec1] <- Pgterr
 				PerrX[vec2] <- P2[vec2]*(1.-Pgterr)
 				PerrorX <- sum(log(PerrX),na.rm=TRUE)
-				if ((PseswX-PerrorX)>log(1000)) {
+				if ((PseswX-PerrorX)>log(odds)) {
 					cat("Person",jj,"is likely to be female (Odds>",odds,")\n")
 					flush.console()
 					if (is.null(Xidfail)) {

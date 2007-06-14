@@ -27,7 +27,7 @@
 }
 \examples{
 	data(srdta)
-	x <- qtscore(qt2~CRSNP,srdta)
+	x <- qtscore(qt2,srdta)
 	descriptives.scan(x)
 }
 \keyword{distribution}

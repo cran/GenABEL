@@ -110,14 +110,14 @@ function(x, ...) {
 "as.raw.snp.data" <- 
 function (x) {
 	if (class(x) != "snp.data") stop("data argument should be of snp.data-class")
-	to <- as.raw(from@gtps)
+	to <- as.raw(x@gtps)
 	to
 }
 
 "as.raw.snp.mx" <-
 function(x) {
 	if (class(x) != "snp.mx") stop("data argument should be of snp.mx-class")
-#	to <- unclass(x)
+	to <- unclass(x)
 	to <- as.raw(to)
 	to
 }

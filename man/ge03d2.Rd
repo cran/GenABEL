@@ -26,7 +26,7 @@
 
 # load and work with ge03d2
 data(ge03d2)
-a <- qtscore("dm2~CRSNP",ge03d2)
+a <- qtscore(dm2,ge03d2)
 plot(a)
 }
 \keyword{datasets}
