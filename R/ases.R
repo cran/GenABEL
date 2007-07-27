@@ -31,13 +31,36 @@ function(x, ...) {
 	to
 }
 
-"as.character.snp.data" <- 
-function(x, ...) {
+## old function
+#"as.character.snp.data" <- 
+#function(x, ...) {
+#	if (class(x) != "snp.data") stop("data argument should be snp.data-class")
+#	a <- as.double(x)
+#	dm <- dim(a)
+#	to <- ifelse(is.na(a),NA,c("1/1","1/2","2/2")[a+1])
+#	dim(to) <- dm
+#	colnames(to) <- x@snpnames
+#	rownames(to) <- x@idnames
+#	to
+#}
+as.character.snp.data <- function(x,...) {
 	if (class(x) != "snp.data") stop("data argument should be snp.data-class")
-	a <- as.double(x)
-	dm <- dim(a)
-	to <- ifelse(is.na(a),"",c("A/A","A/B","B/B")[a+1])
-	dim(to) <- dm
+	rw2ch <- alleleID.raw2char.matrix()
+#
+#	Very bulky fix -- now as.char.snp.coding returns true coding, used to be raw...
+#
+#	rect <- rw2ch[as.character(x@coding),]
+#
+	rect <- rw2ch[as.character(as.raw(x@coding)),]
+	from <- as.double(x)
+	to <- from
+	if (dim(to)[2] == 1) {
+		to[,1] <- ifelse(is.na(from[,1]),NA,rect[from+1])
+	} else {
+		for (i in 1:dim(to)[2]) {
+			to[,i] <- ifelse(is.na(from[,i]),NA,rect[i,][from[,i]+1])
+		}
+	}
 	colnames(to) <- x@snpnames
 	rownames(to) <- x@idnames
 	to
@@ -126,4 +149,23 @@ function(x) {
 function(x, ...) {
 	a <- x@phdata
 	a
+}
+
+"as.character.snp.coding" <- 
+function(x, ...) {
+	snam <- names(x)
+	rect <- alleleID.raw2char()
+	x <- as.raw(x)
+	out <- rect[as.character(x)]
+	names(out) <- snam
+	out
+}
+
+"as.character.snp.strand" <- 
+function(x, ...) {
+	snam <- names(x)
+	x <- as.raw(x)
+	tmpo <- c("u","+","-")[as.numeric(x)+1]
+	names(tmpo) <- snam
+	tmpo
 }

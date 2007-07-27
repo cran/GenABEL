@@ -101,6 +101,11 @@ function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt
 			h2an$estimate[npar] <- h2an$estimate[npar]*sdy*sdy
 			h2an$estimate[1] <- h2an$estimate[1]+meany
 		}
+	} else {
+		if (!missing(fixh2)) {
+		} else {
+			h2an$estimate[(npar-1)] <- h2an$estimate[(npar-1)]*scaleh2
+		}
 	}
 	out$h2an <- h2an
 	if (trait.type=="gaussian") {scay <- y*sdy+meany} else {scay<-y}

@@ -86,6 +86,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 	}
 
 	lenn <- data@gtdata@nsnps;
+	out <- list()
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) resid <- sample(resid,replace=FALSE)
 		chi2 <- .C("qtscore",as.raw(data@gtdata@gtps),as.double(resid),as.integer(bin),as.integer(data@gtdata@nids),as.integer(data@gtdata@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(6*data@gtdata@nsnps), PACKAGE="GenABEL")$chi2
@@ -100,7 +101,9 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		}
 		if (j == 1) {
 			chi2.1df <- chi2[1:lenn];
+			out$chi2.1df <- chi2.1df
 			chi2.2df <- chi2[(lenn+1):(2*lenn)];
+			out$chi2.2df <- chi2.2df
 			actdf <- chi2[(2*lenn+1):(3*lenn)];
 			if (lenn<=10) {
 				lambda <- list()
@@ -137,7 +140,6 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 	}
 	if (times > bcast) cat("\n")
 
-	out <- list()
 	if (times>1) {
 		out$P1df <- pr.1df/times
 		out$P1df <- replace(out$P1df,(out$P1df==0),1/(1+times))

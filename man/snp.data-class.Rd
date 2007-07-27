@@ -1,7 +1,7 @@
 \name{snp.data-class}
 \docType{class}
 \alias{snp.data-class}
-\alias{[,snp.data-method}
+\alias{[,snp.data,ANY,ANY,ANY-method}
 \alias{coerce,snp.data,numeric-method}
 \alias{coerce,snp.data,character-method}
 \alias{coerce,snp.data,genotype-method}
@@ -21,6 +21,8 @@
     \item{\code{nsnps}:}{number of SNPs}
     \item{\code{nsnpnames}:}{list of SNP names}
     \item{\code{chromosome}:}{list chromosomes corresponding to SNPs}
+    \item{\code{coding}:}{list of nucleotide coding for the SNPs}
+    \item{\code{strand}:}{strands of the SNPs}
     \item{\code{map}:}{list SNPs' positions}
     \item{\code{gtps}:}{\code{\link{snp.mx-class}} object used to store genotypes}
 	}
@@ -28,12 +30,12 @@
 %\section{Extends}{}
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "snp.data")}: subset
-      operations. [x,y] will select people listed in x and SNPs listed in y.}
+    \item{[}{\code{signature(x = "snp.data", i = "ANY", j = "ANY", drop = "ANY")}: subset
+      operations. x[i,j] will select people listed in i and SNPs listed in j.}
     \item{coerce}{\code{signature(from = "snp.data", to = "numeric")}:
       map to codes 0, 1, 2, or NA}
     \item{coerce}{\code{signature(from = "snp.data", to =
-	"character")}: map to codes "A/A", "A/B", "B/B", ""}
+	"character")}: map to actual nucleotide codes, e.g. "A/A", "A/G", "G/G", ""}
     \item{coerce}{\code{signature(from = "snp.data", to =
 	"genotype")}: map to data frame with \code{\link[genetics]{genotype}}-class
 	data, for later use with package \code{genetics}}

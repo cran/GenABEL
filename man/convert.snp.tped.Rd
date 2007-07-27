@@ -76,9 +76,11 @@ convert.snp.tped(tpedfile, tfamfile, outfile, bcast = 10000)
 	it is always over-written
 }
 \seealso{
-	\code{\link{convert.snp.ped}}
-	\code{\link{convert.snp.text}}
-	\code{\link{load.gwaa.data}},
+	\code{\link{convert.snp.ped}}, 
+	\code{\link{convert.snp.illumina}},
+	\code{\link{convert.snp.text}},
+	\code{\link{convert.snp.mach}},
+	\code{\link{load.gwaa.data}}
 }
 \examples{
 #

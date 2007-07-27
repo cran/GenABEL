@@ -7,7 +7,9 @@ importClasses(genetics)
 export(
 	add.plot,
 	as.character.gwaa.data,
+	as.character.snp.coding,
 	as.character.snp.data,
+	as.character.snp.strand,
 	as.data.frame.gwaa.data,
 	as.double.gwaa.data,
 	as.double.snp.data,
@@ -21,6 +23,8 @@ export(
 	ccfast,
 	check.marker,
 	check.trait,
+	convert.snp.illumina,
+	convert.snp.mach,
 	convert.snp.ped,
 	convert.snp.tped,
 	convert.snp.text,
@@ -31,6 +35,7 @@ export(
 	emp.ccfast,
 	emp.qtscore,
 	estlambda,
+	export.merlin,
 	grammar,
 	HWE.show,
 	hom,
@@ -67,8 +72,10 @@ exportClasses(
 	"gwaa.data",
 	"scan.gwaa",
 	"scan.gwaa.2D",
+	"snp.coding",
 	"snp.data",
 	"snp.mx",
+	"snp.strand",
 	"snps.cell"
 	)
 

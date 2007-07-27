@@ -72,7 +72,13 @@ is used.
 	The function does not check if "outfile" already exists, thus
 	it is always over-written
 }
-\seealso{\code{\link{load.gwaa.data}}}
+\seealso{
+	\code{\link{load.gwaa.data}},
+	\code{\link{convert.snp.illumina}},
+	\code{\link{convert.snp.ped}}, 
+	\code{\link{convert.snp.mach}},
+	\code{\link{convert.snp.tped}}
+}
 \examples{
 #
 # convert.snp.text("genos.dat","genos.raw")

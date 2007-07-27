@@ -1,3 +1,13 @@
+/**
+ *
+ * Code contributed by Toby Johnson
+ *
+ * modified by Yurii Aulchenko:
+ * list -> vector
+ * output hex format -- ensure that two chars are output for every number (width=2)
+ * conversion to GenABEL raw format version 0.1 
+ *
+ **/
 #include <cstdlib>  
 #include <string>
 #include <iostream>
@@ -7,7 +17,7 @@
 using namespace std; 
 
 //STL
-#include <list>
+#include <vector>
 #include <vector>
 #include <map>
 #include <iterator>
@@ -18,20 +28,28 @@ using namespace std;
 
 
 extern "C" {
-  void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilename, int* bcast) {
+  void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilename, int* bcast, int* Strandid, char **allele_codes, int* Ncodes) {
+
+  short unsigned int ncodes = *Ncodes;
+  short unsigned int strandid = *Strandid;
 
     int verbose = *bcast ? 1 : 0;
 
-    long int linecount;
+    long int linecount = 0;
     string data;
     string token;
     
-    list<string> iid; string tmp_iid;
-    list<int> chrom; int tmp_chrom;
-    list<string> snpnm; string tmp_snpnm;
-    list<double> genmap; double tmp_genmap;
-    list<unsigned long> phymap; unsigned long tmp_phymap;
-    list<unsigned char*> gtype; unsigned char* tmp_gtype;
+    vector<string> iid; string tmp_iid;
+    vector<string> chrom; string tmp_chrom;
+    vector<string> snpnm; string tmp_snpnm;
+    vector<double> genmap; double tmp_genmap;
+    vector<unsigned long> phymap; unsigned long tmp_phymap;
+    vector<unsigned char*> gtype; unsigned char* tmp_gtype;
+  vector<string> coding; string tmp_coding,tmp_coding1;
+  vector<unsigned short int> intcoding;
+  vector<unsigned short int> strand; string tmp_strand;
+  vector<string> codeset(ncodes); 
+  char tmp_chcoding [10];
 
     ///////////////////////
     // read the tfamfile //
@@ -95,17 +113,22 @@ extern "C" {
 	snpnm.push_back(tmp_snpnm);
 	genmap.push_back(tmp_genmap);
 	phymap.push_back(tmp_phymap);
+        strand.push_back(strandid);
 
 	char allele1 = 0;
 	char allele2 = 0;
+  unsigned long int ca1 = 0;
+  unsigned long int ca2 = 0;
 
 	for (idx = 0; idx < 2*nids; ++idx) {
 	  if (datas >> gdata) {
 
 	    if (gdata == allele1) {
 	      gnum[idx] = 1;
+		ca1++;
 	    } else if (gdata == allele2) {
 	      gnum[idx] = 3;
+		ca2++;
 	    } else if (gdata == '0') {
 	      gnum[idx] = 0;
 	    } else {
@@ -126,6 +149,22 @@ extern "C" {
 		     tmp_snpnm.c_str(),tpedfilename[0],linecount);
 	  }
 	}
+
+
+	if (ca1 > ca2) sprintf(tmp_chcoding,"%c%c",allele1,allele2);
+	else sprintf(tmp_chcoding,"%c%c",allele2,allele1);
+	tmp_coding.assign(tmp_chcoding);
+	if (!allele1 || !allele2) tmp_coding="12";
+	int ccd = -1;
+	for (int i = 0; i < ncodes; i++) {
+		if (codeset[i].compare(tmp_coding)==0) {
+			ccd = i + 1;
+			intcoding.push_back(ccd);
+		}
+	}
+	if (ccd<0) error ("coding '%s' for SNP not recognised !\n",tmp_coding.c_str());
+
+
 
 	try {
 	  tmp_gtype = new unsigned char [nbytes];
@@ -200,7 +239,7 @@ extern "C" {
     copy(snpnm.begin(), snpnm.end(), ostream_iterator<string>(outfile, " "));
     outfile << endl;
 
-    copy(chrom.begin(), chrom.end(), ostream_iterator<int>(outfile, " "));
+    copy(chrom.begin(), chrom.end(), ostream_iterator<string>(outfile, " "));
     outfile << endl;
 
     copy(phymap.begin(), phymap.end(), ostream_iterator<unsigned long>(outfile, " "));
@@ -208,10 +247,27 @@ extern "C" {
 
     outfile.flags(hex);
 
-    do {
-      tmp_gtype = gtype.front();
+    for (unsigned long int i=0;i<chrom.size();i++) {
+	    outfile.width(2);
+            outfile.fill('0');
+	    outfile << (unsigned int)intcoding[i] << " ";
+    }
+    outfile << endl;
+
+    for (unsigned long int i=0;i<chrom.size();i++) {
+	    outfile.width(2);
+            outfile.fill('0');
+	    outfile << (unsigned int)strand[i] << " ";
+    }
+    outfile << endl;
+
+    for (unsigned long int i = 0;i<gtype.size();i++)  
+    {
+      tmp_gtype = gtype[i];
       
       for (byte = 0; byte < nbytes; ++byte) {
+	outfile.width(2);
+        outfile.fill('0');
 	outfile << (unsigned int)tmp_gtype[byte];
 	outfile << " ";
       }
@@ -219,8 +275,8 @@ extern "C" {
 
       delete [] tmp_gtype;
 
-      gtype.pop_front();
-    } while (!gtype.empty());
+//      gtype.pop_front();
+    } //while (!gtype.empty());
    
     if (verbose) {
       Rprintf("... done.\n");

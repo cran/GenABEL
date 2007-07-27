@@ -21,8 +21,8 @@ Imbedding GenABEL into R environment allows for easy data characterisation, expl
 \tabular{ll}{
 Package: \tab GenABEL\cr
 Type: \tab Package\cr
-Version: \tab 1.2-4\cr
-Date: \tab 2007-06-14\cr
+Version: \tab 1.2-6\cr
+Date: \tab 2007-08-03\cr
 License: \tab GNU GPL v. 2.0 or later\cr
 }
 
@@ -37,13 +37,16 @@ demo(srdtawin).
 
 The most important functions and classes are:
 
-For loading the data, see
-\code{\link{convert.snp.text}},
-\code{\link{convert.snp.ped}},
-\code{\link{convert.snp.tped}},
-\code{\link{load.gwaa.data}}.
+For converting data from other formats, see
+\code{\link{convert.snp.text}} (conversion from human-readable GenABEL format),
+\code{\link{convert.snp.ped}} (Linkage, Merlin, Mach, and similar files),
+\code{\link{convert.snp.mach}} (Mach-format),
+\code{\link{convert.snp.tped}} (from PLINK TPED format),
+\code{\link{convert.snp.illumina}} (Illumina/Affymetrix-like format). 
 
-Also check companion programs, affy2mega.pl and affy2gwaa.pl
+To load the data, see \code{\link{load.gwaa.data}}.
+
+Also check companion programs, affy2mega.pl, affy2gwaa.pl, and WTCCC2GWAA.
 
 For data managment, and manipulations see
 \code{\link{gwaa.data-class}},
@@ -78,9 +81,6 @@ For specific tools facilitating analysis of the data with stratification
 \code{\link{mmscore}},
 \code{\link{grammar}}.
 
-Also, principle components analysis (\code{\link{cmdscale}} 
-may be useful function in this context.
-
 For functions facilitating construction of tables for your manuscript, see
 \code{\link{descriptives.marker}},
 \code{\link{descriptives.trait}},
@@ -111,7 +111,15 @@ Maintainer: Yurii Aulchenko <i.aoultchenko@erasmusmc.nl>
 \references{
 If you use the package in your analysis, please cite the following work:
 
-Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. (2007) GenABEL: an R package for genome-wide association analysis. Bioinformatics.
+Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. (2007) GenABEL: an R package 
+for genome-wide association analysis. Bioinformatics. 23(10):1294-6.
+
+If you used polygenic residulas from "polygenic" for qtscore, used GRAMMAR and/or 
+GRAMMOS analysis, please cyte
+
+Aulchenko Y.S., de Koning D.J., Haley C. (2007) Grammar: a fast and simple method 
+for genome-wide pedigree-based quantitative trait loci association analysis. 
+Genetics. (in press)
 
 For exact HWE, please cite:
 

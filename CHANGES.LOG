@@ -1,3 +1,40 @@
+***** v 1.2-6 (2007.08.03) 
+
+A major improvement in GenABEL ability to import and export data
+compatible in format to other packages and databases. One of the 
+main goals behind this effort was to make GW imputations with  
+MACH software (G. Abecasis) easy.
+
+(a) New format of GenABEL data (0.1) developed. Now the 
+    features stored by GenABEL include SNP coding (actual nucleotides) 
+    and strand.  
+
+(b) New and updated convert.snp.* functions, which convert genotypic 
+    data from external to GenABEL format
+
+  -- convert.snp.ped: large improvement in speed (now in C++), 
+		      flexible control. Pre-makeped, MERLIN 
+		      and MACH formats supported
+
+  -- convert.snp.tped: some bug fixes, switch to 0.1 data format
+
+  -- convert.snp.mach (NEW!): converts MACH files to GenABEL
+			format, allowing for filtering on 
+			quality
+
+  -- convert.snp.illumina (NEW!): converter for Affymetrix / Illumina 
+		       style of files
+
+(c) export.merlin() function to export data in MERLIN format. MACH 
+    can be directly applied on these files. Coupled with 
+    convert.snp.ped(format="mach") this allows easy data export, 
+    imputations, and re-import. 
+
+***** v 1.2-5 (2007.07.11)
+
+Some improvement of convert.snp.ped -- now is able to read
+alleles coded as characters
+
 ***** v 1.2-4 (2007.07.10)
 
 Few small fixes done for compatibility with R 2.6.0-devel

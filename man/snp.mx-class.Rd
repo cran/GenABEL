@@ -1,7 +1,7 @@
 \name{snp.mx-class}
 \docType{class}
 \alias{snp.mx-class}
-\alias{[,snp.mx-method}
+\alias{[,snp.mx,ANY,ANY,ANY-method}
 \alias{coerce,snp.mx,numeric-method}
 \alias{coerce,snp.mx,character-method}
 \alias{show,snp.mx-method}
@@ -18,8 +18,8 @@ arrays of single nucleotide polymorphism (SNP) genotypes}
 %\section{Extends}{}
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "snp.mx")}: subset
-      operations. [x,y] will select people listed in x and SNPs listed in y.}
+    \item{[}{\code{signature(x = "snp.mx", i = "ANY", j = "ANY", drop = "ANY")}: subset
+      operations. x[i,j] will select people listed in i and SNPs listed in j.}
     \item{coerce}{\code{signature(from = "raw", to =
 	"snp.mx")}: makes an snp.mx object out of raw data}
     \item{show}{\code{signature(object = "snp.mx")}: shows the object.

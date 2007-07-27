@@ -2,7 +2,7 @@
 \docType{class}
 \alias{gwaa.data-class}
 \alias{show,gwaa.data-method}
-\alias{[,gwaa.data-method}
+\alias{[,gwaa.data,ANY,ANY,ANY-method}
 \alias{summary,gwaa.data-method}
 
 \title{Class "gwaa.data"}
@@ -19,8 +19,8 @@ phenotypes, genotypes and other relevant information
 }
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "gwaa.data")}: subset
-      operations. [x,y] will select people listed in x and SNPs listed in y.}
+    \item{[}{\code{signature(x = "gwaa.data", i = "ANY", j = "ANY", drop = "ANY")}: subset
+      operations. x[i,j] will select people listed in i and SNPs listed in j.}
     \item{show}{\code{signature(object = "gwaa.data")}: shows both parts of the object.
       Take care that the objects are usually very large!}
     \item{summary}{\code{signature(object = "gwaa.data")}: Calls 

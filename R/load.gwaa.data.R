@@ -1,5 +1,5 @@
 "load.gwaa.data" <-
-function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=FALSE) {
+function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=FALSE, sort=TRUE) {
 # check that ID and SEX are correct
 	dta <- read.table(phenofile,header=TRUE,as.is=TRUE)
 	coln <- names(dta)
@@ -23,20 +23,36 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=F
 		stop("there are missing sexes in the phenotypic data file")
 # read in genotypic data
 	ifile <- file(genofile,"r")
-	ids <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE)
+	header <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE)
+	vver <- grep(x=header,pat="version")
+	if (length(vver)>0) {ver <- as.numeric(header[vver+1]);} else {ver <- 0;}
+	if (is.na(ver)) warning("Incorrect data format version number")
+	if (ver > 0) {ids <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE);}
+		else {ids <- header;}
 	nids <- length(ids)
-	print("ids loaded...")
+	cat("ids loaded...\n")
 	mnams <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE)
-	print("marker names loaded...")
+	cat("marker names loaded...\n")
 	chrom <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE)
 	chrom <- as.factor(chrom);gc(verbose=FALSE)
-	print("chromosome data loaded...")
+	cat("chromosome data loaded...\n")
 	pos <- scan(file=ifile,what=double(),nlines=1,quiet=TRUE)
-	print("map data loaded...")
+	cat("map data loaded...\n")
+	if (ver==0) {
+		coding <- new("snp.coding",as.raw(rep(1,length(pos))))
+		strand <- new("snp.strand",as.raw(rep(0,length(pos))))
+	} else {
+		coding <- scan(file=ifile,what=raw(),nlines=1,quiet=TRUE)
+		class(coding) <- "snp.coding"
+		cat("allele coding data loaded...\n")
+		strand <- scan(file=ifile,what=raw(),nlines=1,quiet=TRUE)
+		class(strand) <- "snp.strand"
+		cat("strand data loaded...\n")
+	}
 	nsnps <- length(mnams)
 	nbytes <- ceiling(nids/4)
 	rdta <- scan(file=ifile,what=raw(),quiet=TRUE)
-	print("genotype data loaded...")
+	cat("genotype data loaded...\n")
 	close(ifile)
 	dim(rdta) <- c(nbytes,nsnps)
 	rdta <- new("snp.mx",rdta);gc(verbose=FALSE)
@@ -61,9 +77,9 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=F
 	newdta <- data.frame(dta[mlst,])
 	rm(dta);gc(verbose=FALSE)
 
-	a <- snp.data(nids=nids,rawdata=rdta,idnames=ids,snpnames=mnams,chromosome=chrom,map=pos,male=newdta$sex)
-	print("snp.data object created...")
-	rm(rdta,ids,mnams,chrom,pos);gc(verbose=FALSE)
+	a <- snp.data(nids=nids,rawdata=rdta,idnames=ids,snpnames=mnams,chromosome=chrom,map=pos,coding=coding,strand=strand,male=newdta$sex)
+	cat("snp.data object created...\n")
+	rm(rdta,ids,mnams,chrom,pos,coding,strand);gc(verbose=FALSE)
 
 #check X chromosome markers
  	if (any(a@chromosome == "X") && any(a@male == 1) && !force) {
@@ -102,6 +118,14 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=F
 
 	out <- new("gwaa.data",phdata=newdta,gtdata=a)
 	rm(a,newdta);gc(verbose=FALSE)
+	if (sort) {
+		chr <- as.character(out@gtdata@chromosome)
+		mxC <- max(as.numeric(chr),na.rm=T)
+		chr <- replace(chr,(chr=="X"),(mxC+1))
+		chr <- as.numeric(chr)
+		ord <- order(chr,out@gtdata@map)
+		out <- out[,ord]
+	}
 	out
 }
 

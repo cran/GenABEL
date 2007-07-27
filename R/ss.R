@@ -32,28 +32,80 @@ setMethod("show","snp.mx",
 		}
 	})
 
+
+setClass("snp.coding",contains="raw",package="GenABEL")
+setMethod("[",signature(x="snp.coding",i="ANY",j="missing",drop="missing"),
+	function (x,i,j,...,drop) {
+		nams <- names(x)
+		x <- as.raw(x)
+		names(x) <- nams
+		out <- new("snp.coding",x[i])
+#		names(out) <- nams
+		out
+	})
+setMethod("show","snp.coding",
+	function (object) {
+		snam <- names(object)
+#		x <- alleleID.raw2char()
+#		out <- x[as.character(object)]
+		out <- as.raw(object)
+		names(out) <- snam
+		print(out)
+#		cat(out,"\n");
+	})
+
+
+setClass("snp.strand",contains="raw",package="GenABEL")
+setMethod("[",signature(x="snp.strand",i="ANY",j="missing",drop="missing"),
+	function (x,i,j,...,drop) {
+		nams <- names(x)
+		x <- as.raw(x)
+		names(x) <- nams
+		out <- new("snp.strand",x[i])
+#		names(out) <- nams
+		out
+	})
+setMethod("show","snp.strand",
+	function (object) {
+		snam <- names(object)
+#		tmpo <- c("u","+","-")[as.numeric(object)+1]
+		tmpo <- as.raw(object)
+		names(tmpo) <- snam
+		print(tmpo)
+#		cat(tmpo,"\n");
+	})
+
+
 setClass("snp.data",representation(nbytes="numeric",nids="numeric",nsnps="numeric",
 		idnames="character",snpnames="character",chromosome="factor",map="numeric",
+		coding="snp.coding",strand="snp.strand",
 		male="numeric",gtps="snp.mx"),package="GenABEL")
 snp.data <- function (nids,rawdata,
 		idnames=as.character(c(1:nids)),
 		snpnames=as.character(c(1:(length(rawdata)/ceiling(nids/4)))),
-		chromosome=as.factor(c(1:(length(rawdata)/ceiling(nids/4)))),
-		map=as.double(c(1:(length(rawdata)/ceiling(nids/4)))),
+		chromosome=as.factor(rep(1,(length(rawdata)/ceiling(nids/4)))),
+		map=as.double(seq(1,(length(rawdata)/ceiling(nids/4)))),
+		coding=as.raw(rep(1,length(rawdata)/ceiling(nids/4))),
+		strand=as.raw(rep(0,length(rawdata)/ceiling(nids/4))),
 		male=rep(0,nids)
 		) {
 	nbytes <- ceiling(nids/4)
 	nsnps <- length(rawdata)/nbytes
-	if (nsnps != round(nsnps)) stop("wrong numner of ids")
+	if (nsnps != round(nsnps)) stop("wrong number of ids")
 	names(map) <- snpnames
 	names(chromosome) <- snpnames
+	names(coding) <- snpnames
+	names(strand) <- snpnames
 	names(male) <- idnames
 	t <- as.raw(rawdata)
 	dim(t) <- c(nbytes,nsnps)
 	t <- new("snp.mx",t)
 	a <- new("snp.data",nbytes=nbytes,nids=nids,nsnps=nsnps,gtps=t,
 			idnames=idnames,snpnames=snpnames,
-			chromosome=chromosome,map=map,male=male)
+			chromosome=chromosome,map=map,
+			coding=coding,
+			strand=strand,
+			male=male)
 	a
 }
 
@@ -85,6 +137,8 @@ setMethod("[","snp.data",
 		a@snpnames <- x@snpnames[j]
 		a@map <- x@map[j]
 		a@chromosome <- as.factor(as.character(x@chromosome[j]))
+		a@coding <- new("snp.coding",x@coding[j])
+		a@strand <- new("snp.strand",x@strand[j])
 		a@idnames <- x@idnames[i]
 		a@male <- x@male[i]
 		a@gtps <- x@gtps[i,j]
@@ -102,6 +156,8 @@ setMethod("show","snp.data",
 		cat("@idnames =",object@idnames,"\n")
 		cat("@snpnames =",object@snpnames,"\n")
 		cat("@chromosome =",object@chromosome,"\n")
+		cat("@coding = ",as.raw(object@coding),"\n")
+		cat("@strand = ",as.raw(object@strand),"\n")
 		cat("@map =",object@map,"\n")
 		cat("@male =",object@male,"\n")
 		cat("@gtps = \n");
