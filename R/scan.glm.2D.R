@@ -140,6 +140,7 @@ function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=50) {
   colnames(P1df) <- snpsubset
   rownames(P1df) <- snpsubset #[length(snpsubset):1]
   out <- list(P1df = P1df, Pint1df=Pint1df, P2df=P2df, Pint2df=Pint2df, medChi1df = med1df, medChi2df = med2df, snpnames = snpsubset, idnames = idsubset, formula = match.call(), family = family, map = map, chromosome = chromosome)
+  out$Pc1df <- rep(NA,length(P1df))
   class(out) <- "scan.gwaa.2D"
   out
 }

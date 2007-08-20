@@ -37,11 +37,13 @@
 	snps <- colnames(x)
 	ids <- rownames(x)
 	nids <- length(ids)
+	sx <- data@phdata$sex
+	sx <- replace(sx,(sx==0),2)
 	if (traits > 0) {
 		tr <- matrix(rep(0,nids*traits),ncol=traits)
-		x <- data.frame(seq(1,nids),ids,rep(0,nids),rep(0,nids),data@phdata$sex,tr,x)
+		x <- data.frame(seq(1,nids),ids,rep(0,nids),rep(0,nids),sx,tr,x)
 	} else {
-		x <- data.frame(seq(1,nids),ids,rep(0,nids),rep(0,nids),data@phdata$sex,x)
+		x <- data.frame(seq(1,nids),ids,rep(0,nids),rep(0,nids),sx,x)
 	}
 	write.table(x,file=pedfile,col.n=FALSE,row.n=FALSE,quote=FALSE)
 	inf <- data.frame(a=rep("M",length(snps)),b=snps)

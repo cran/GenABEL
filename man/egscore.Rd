@@ -1,11 +1,12 @@
-\name{qtscore}
-\alias{qtscore}
-\title{Fast score test for association}
+\name{egscore}
+\alias{egscore}
+\title{Fast score test for association, corrected with PC}
 \description{
-Fast score test for association between a trait and genetic polymorphism
+Fast score test for association between a trait and genetic polymorphism, 
+adjusted for possible stratification by principal components.
 }
 \usage{
-qtscore(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0)
+egscore(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0) 
 }
 \arguments{
   \item{formula}{Formula describing fixed effects to be used in analysis, e.g. 
@@ -18,12 +19,14 @@ qtscore(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qui
 		If missing, all SNPs from \code{data} are used for analysis.}
   \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
 		If missing, all people from \code{data/cc} are used for analysis.}
+  \item{kinship.matrix}{kinship matrix, as returned by \code{\link{ibs}}, (use weight="freq"!)}
+  \item{naxes}{Number of axes of variation to be used in adjustment (should be much smaller 
+		than number of subjects)}
   \item{strata}{Stratification variable. If provieded, scores are computed within strata and 
 		then added up.}
-  \item{trait.type}{"gaussian" or "binomial"}
   \item{times}{If more then one, the number of replicas to be used in derivation of 
-		empirical genome-wide significance. See \code{\link{emp.qtscore}}, which
-		calls qtscore with times>1 for details}
+		empirical genome-wide significance. 
+		}
   \item{quiet}{do not print warning messages}
   \item{bcast}{If the argument times > 1, progress is reported once in bcast replicas}
   \item{clambda}{If inflation facot Lambda is estimated as lower then one, this parameter 
@@ -35,47 +38,40 @@ qtscore(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qui
 		passed directly to the \code{\link{estlambda}}}
 }
 \details{
-When formula contains covariates, the traits is analysed using GLM and later 
-residuals used when score test is computed for each of the SNPs in analysis. 
-For binary traits, residuals from GLM are transformed using exp(x)/(1+exp(x)).
+The idea of this test is to use genomic kinship matrix to first, 
+derive axes of genetic variation (principal components), and, second, 
+adjust both trait and genotypes onto these axes. 
 
-With no adjustment for binary traits, 1 d.f., the test is equivalent to the 
-Armitage test.
+The traits is first analysed using LM and with covariates as specified with 
+formula and also with axes of variation as predictors. Corrected genotypes are 
+defined as residuals from regression of genotypes onto axes (which are 
+orthogonal). Correlaton between corrected genotypes and phenotype is computed, 
+and test statistics is defined as square of this correlation times 
+(N - K - 1), where N is number of genotyped subjects and K is the number of 
+axes. 
 
-This is a valid function to analyse GWA data, including X chromosome. For X chromosome,
-stratified analysis is performed (strata=sex).
+This test is defined only for 1 d.f.
 }
 \value{
   Object of class \code{\link{scan.gwaa-class}}
 }
-%\references{}
+\references{
+	Price A. L. et al, Principal components analysis corrects for 
+	stratification in genome-wide association studies. Nat Genet 
+	38: 904-909.
+}
 \author{Yurii Aulchenko}
 %\note{}
 \seealso{
+\code{\link{qtscore}},
 \code{\link{mmscore}},
-\code{\link{egscore}},
-\code{\link{emp.qtscore}},
 \code{\link{plot.scan.gwaa}},
 \code{\link{scan.gwaa-class}}
 }
 \examples{
-data(srdta)
-#qtscore with stratification
-a <- qtscore(qt3~sex,data=srdta)
+data(ge03d2ex)
+#egscore with stratification
+a <- egscore(dm2~sex+age,data=ge03d2ex,kin=ibs(ge03d2ex,w="freq"))
 plot(a)
-b <- qtscore(qt3,strata=srdta@phdata$sex,data=srdta)
-add.plot(b,col="green",cex=2)
-# qtscore with extra adjustment
-a <- qtscore(qt3~sex+age,data=srdta)
-a
-plot(a)
-# compare results of score and chi-square test for binary trait
-a1 <- ccfast("bt",data=srdta,snps=c(1:100))
-a2 <- qtscore(bt,data=srdta,snps=c(1:100),trait.type="binomial")
-plot(a1,ylim=c(0,2))
-add.plot(a2,col="red",cex=1.5)
-# the good thing about score test is that we can do adjustment...
-a2 <- qtscore(bt~age+sex,data=srdta,snps=c(1:100),trait.type="binomial")
-points(a2$map,-log10(a2$P1df),col="green")
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

@@ -27,7 +27,7 @@ summary.check.marker(object, ...)
 }
 \examples{
 data(srdta)
-mc <- check.marker(srdta)
+mc <- check.marker(srdta,ids=c(1:500))
 summary(mc)
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

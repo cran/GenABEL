@@ -113,6 +113,7 @@ function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=50) {
   med1df <- median(qchisq(1.-P1df,df=1))
   med2df <- median(qchisq(1.-P2df,df=2))
   out <- list(P1df = P1df, P2df=P2df, medChi1df = med1df, medChi2df = med2df, name = snpsubset, ids = idsubset, formula = match.call(), family = family, map = map, chromosome = chromosome, effB=effB, effAB=effAB,effBB=effBB)
+  out$Pc1df <- rep(NA,length(P1df))
   class(out) <- "scan.gwaa"
   out
 }

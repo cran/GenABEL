@@ -27,25 +27,32 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,pro
 	rm(cc)
 
 	lenn <- data@gtdata@nsnps
+	out <- list()
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) cc1 <- sample(cc1,replace=FALSE)
 		chi2 <- fcc(data@gtdata,cc1)
 		if (j == 1) {
 			chi2.1df <- chi2[1:lenn];
 			chi2.2df <- chi2[(lenn+1):(2*lenn)];
+			out$chi2.1df <- chi2.1df
+			out$chi2.2df <- chi2.2df
 			actdf <- chi2[(2*lenn+1):(3*lenn)];
-			if (lenn<=10) {
+			if (lenn<=10 && !is.numeric(clambda)) {
 				lambda <- list()
 				lambda$estimate <- NA
 				lambda$se <- NA
 				chi2.c1df <- chi2.1df;
 			} else {
-				lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
-				def <- 1/lambda$estimate
-				if (def > 1 && clambda) {
-					chi2.c1df <- chi2.1df;
+				if (is.numeric(clambda)) {
+					chi2.c1df <- chi2.1df/clambda;
 				} else {
-					chi2.c1df <- def*chi2.1df;
+					lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
+					def <- 1/lambda$estimate
+					if (def > 1 && clambda) {
+						chi2.c1df <- chi2.1df;
+					} else {
+						chi2.c1df <- def*chi2.1df;
+					}
 				}
 			}
 			effB <- chi2[(3*lenn+1):(lenn*4)]
@@ -67,7 +74,6 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,pro
 			}
 		}
 	}
-	out <- list()
 	if (times>1) {
 		out$P1df <- pr.1df/times
 		out$P1df <- replace(out$P1df,(out$P1df==0),1/(1+times))

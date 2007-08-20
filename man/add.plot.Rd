@@ -14,7 +14,7 @@ add.plot(x, ..., df = 1)
 	   or of type scan.gwaa.2D-class, as returned by \code{\link{scan.haplo.2D}} or \code{\link{scan.glm.2D}}.
 	}
   \item{\dots}{additional arguments to be passed to plot}
-  \item{df}{P-value at which df to add (1 or 2)}
+  \item{df}{P-value at which df to add (1, 2 or "Pc1df")}
 }
 %\details{}
 \value{

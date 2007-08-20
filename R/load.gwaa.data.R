@@ -21,6 +21,7 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=F
 		stop("there are missing IDs in the phenotypic data file")
 	if (any(is.na(dta$sex)))
 		stop("there are missing sexes in the phenotypic data file")
+	rownames(dta) <- dta$id
 # read in genotypic data
 	ifile <- file(genofile,"r")
 	header <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE)

@@ -21,8 +21,8 @@ Imbedding GenABEL into R environment allows for easy data characterisation, expl
 \tabular{ll}{
 Package: \tab GenABEL\cr
 Type: \tab Package\cr
-Version: \tab 1.2-6\cr
-Date: \tab 2007-08-03\cr
+Version: \tab 1.2-8\cr
+Date: \tab 2007-08-20\cr
 License: \tab GNU GPL v. 2.0 or later\cr
 }
 
@@ -67,8 +67,8 @@ For fast analysis function, see
 \code{\link{scan.gwaa-class}},
 \code{\link{ccfast}},
 \code{\link{qtscore}},
-\code{\link{emp.ccfast}},
-\code{\link{emp.qtscore}},
+\code{\link{mmscore}},
+\code{\link{egscore}},
 \code{\link{ibs}},
 \code{\link{r2fast}},
 \code{\link{dprfast}},
@@ -76,10 +76,12 @@ For fast analysis function, see
 
 For specific tools facilitating analysis of the data with stratification
 (population stratification or (possibly unknown) pedigree structure), see
-\code{\link{ibs}},
-\code{\link{polygenic}},
-\code{\link{mmscore}},
-\code{\link{grammar}}.
+\code{\link{qtscore}} (implements basic Genomic Control),
+\code{\link{ibs}} (computations of IBS / genomic IBD),
+\code{\link{egscore}} (stratification adjustment following Price et al.),
+\code{\link{polygenic}} (heritability analysis),
+\code{\link{mmscore}} (score test of Chen and Abecasis),
+\code{\link{grammar}} (grammar test of Aulchenko et al.).
 
 For functions facilitating construction of tables for your manuscript, see
 \code{\link{descriptives.marker}},
@@ -115,11 +117,16 @@ Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. (2007) GenABEL: an R package
 for genome-wide association analysis. Bioinformatics. 23(10):1294-6.
 
 If you used polygenic residulas from "polygenic" for qtscore, used GRAMMAR and/or 
-GRAMMOS analysis, please cyte
+GRAMMAS analysis, please cyte
 
 Aulchenko Y.S., de Koning D.J., Haley C. (2007) Grammar: a fast and simple method 
 for genome-wide pedigree-based quantitative trait loci association analysis. 
 Genetics. (in press)
+
+If you used mmscore, please cyte
+
+Chen WM, Abecasis GR (2007) Family-based assoication tests for 
+genome-wide association scans. Am. J. Hum. Genet. (in press)
 
 For exact HWE, please cite:
 

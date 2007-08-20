@@ -1,33 +1,42 @@
 "Xcheck" <-
-function(data) {
-	if (class(data) != "snp.data") stop("data argument should be of snpdata-class")
+function(data,Pgte=0.01,Pssw=0.01,Pmsw=0.01,odds=1000,tabonly=F) {
+	if (class(data) != "snp.data") stop("data argument should be of snp.data-class")
 	if (any(data@chromosome != "X")) stop("All markers should be X-linked")
-	xerr <- 0
-	for (snpX in (1:data@nsnps)) {
-	 xmdta <- as.double(data[,snpX])
-	 xm <- (xmdta == 1)
-	 xm <- replace(xm,is.na(xm),FALSE)
-	 if (any(xm,na.rm=TRUE)) {
-		if (!xerr) {
-			xerr=1
-			tmpoe <- matrix(rep(NA,2*sum(xm)),ncol=2)
-			tmpoe[,1] <- data@idnames[xm]
-			tmpoe[,2] <- rep(data@snpnames[snpX],sum(xm))
-			outerr <- tmpoe
+	male <- (data@male==1)
+	out <- list()
+	out$xerr <- 0
+	q <- summary(data)[,"Q.2"]
+	if (sum(male)) {
+		xdat <- as.numeric(data[male,])
+		if (any(xdat==1,na.rm=T)) {
+			out$xerr <- 1
+			out$Xerrtab <- crnames(dimnames(xdat),which(xdat==1))
+			colnames(out$Xerrtab) <- c("ID","SNP")
 		}
-		tmpoe <- matrix(rep(NA,2*sum(xm)),ncol=2)
-		tmpoe[,1] <- data@idnames[xm]
-		tmpoe[,2] <- rep(data@snpnames[snpX],sum(xm))
-		outerr <- rbind(outerr,tmpoe)
-	  }
 	}
-	out <- list();
-	out$xerr <- xerr
-	if (xerr) {
-		colnames(outerr) <- c("ID","SNP")
-		out$tab <- outerr
-	} else {
-		out$tab <- NULL
-	}
+	if (tabonly) return(out)
+	xdat <- as.numeric(data)
+	xdat <- t(xdat)
+	ll.female <- log(q*q*(1-Pgte)*(xdat==2)+(2*q*(1-q)*(1-Pgte)+Pgte)*(xdat==1)+(1-q)*(1-q)*(1-Pgte)*(xdat==0))
+	ll.male <- log(q*(1-Pgte)*(xdat==2)+Pgte*(xdat==1)+(1-q)*(1-Pgte)*(xdat==0))
+	ll.sex <- ll.female
+	ll.sex[,male] <- ll.male[,male]
+# find SNPs with are likely to be (pseudo)autosomal
+	snpprob.0 <- apply(ll.sex,MARGIN=1,FUN=sum,na.rm=T)+log(1-Pmsw)
+	snpprob.1 <- apply(ll.female,MARGIN=1,FUN=sum,na.rm=T)+log(Pmsw)
+	snpODDs <- snpprob.1-snpprob.0
+	out$Xmrkfail <- names(snpprob.1[snpODDs>log(odds)])
+# find male which are likely to be female
+	idprob.0 <- apply(ll.sex,MARGIN=2,FUN=sum,na.rm=T)+log(1-Pssw)
+	idprob.1 <- apply(ll.female,MARGIN=2,FUN=sum,na.rm=T)+log(Pssw)
+	idODDs <- idprob.1-idprob.0
+	out$isfemale <- names(idprob.1[idODDs>log(odds)])
+# find female which are likely to be male
+	idprob.1 <- apply(ll.male,MARGIN=2,FUN=sum,na.rm=T)+log(Pssw)
+	idODDs <- idprob.1-idprob.0
+	out$ismale <- names(idprob.1[idODDs>log(odds)])
+# return object
+	out$Xidfail <- unique(c(out$ismale,out$isfemale))
 	out
 }
+

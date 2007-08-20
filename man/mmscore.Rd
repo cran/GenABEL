@@ -30,7 +30,8 @@ mmscore(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
   \item{clambda}{If inflation facot Lambda is estimated as lower then one, this parameter 
 		controls if the original P1df (clambda=TRUE) to be reported in Pc1df, 
 		or the original 1df statistics is to be multiplied onto this "deflation" 
-		factor (clambda=FALSE)}
+		factor (clambda=FALSE).
+		If a numeric value is provided, it is used as a correction factor.}
   \item{propPs}{proportion of non-corrected P-values used to estimate the inflation factor Lambda,
 		passed directly to the \code{\link{estlambda}}}
 }
@@ -54,13 +55,14 @@ mmscore(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
 }
 \references{
 	Chen WM, Abecasis GR (2007) Family-based assoication tests for 
-	genome-wide association scans. 
+	genome-wide association scans. Am. J. Hum. Genet. (in press)
 }
 \author{Yurii Aulchenko}
 %\note{}
 \seealso{
 \code{\link{grammar}},
 \code{\link{qtscore}},
+\code{\link{egscore}},
 \code{\link{plot.scan.gwaa}},
 \code{\link{scan.gwaa-class}}
 }

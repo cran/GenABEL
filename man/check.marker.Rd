@@ -10,7 +10,8 @@ of the genotypes (including missing values).
 }
 \usage{
 check.marker(data, snpsubset, idsubset, callrate = 0.95, 
-		perid.call=0.95, het.fdr = 0.01, ibs.threshold = 0.95, ibs.mrk = 2000, maf, p.level = -1, fdrate = 0.2, 
+		perid.call=0.95, extr.call = 0.1, extr.perid.call = 0.1, het.fdr = 0.01, 
+		ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower", maf, p.level = -1, fdrate = 0.2, 
 		odds = 1000, hweidsubset, redundant = "no", 
 		minconcordance = 2.0, qoption = "bh95") 
 }
@@ -20,10 +21,15 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
   \item{idsubset}{a subset of people to check (names, indexes, logical), default is all from \code{data}}
   \item{callrate}{cut-off SNP call rate}
   \item{perid.call}{cut-off individual call rate (maximum percent of missing genotypes in a person)}
+  \item{extr.call}{SNPs with this low call rate are dropped prior to main analysis}
+  \item{extr.perid.call}{people with this low call rate are dropped prior to main analysis}
   \item{het.fdr}{FDR rate for unacceptably high individual heterozygosity}
   \item{ibs.threshold}{threshold value for acceptable IBS}
   \item{ibs.mrk}{How many random markers should be used to estimate IBS. When ibs.mrk < 1, IBS checks are turned off.
 		When "all" all markers are used.
+		}
+  \item{ibs.exclude}{"both" or "lower" -- whether both samples with IBS>ibs.threshold should be excluded, 
+		or the one with lower call rate.
 		}
   \item{maf}{cut-off Minor Allele Frequency. If not specified, the default value is 5 chromosomes (5/data@nsnpa)}
   \item{p.level}{cut-off p-value in check for Hardy-Weinberg Equilibrium. If negative, FDR is applied}

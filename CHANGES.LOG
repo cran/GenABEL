@@ -1,9 +1,42 @@
-***** v 1.2-6 (2007.08.03) 
+***** v 1.2-8 (2007.08.27)
+
+GenABEL tutorial updated and, internals joined with 
+tutorial, new introductory sections added.
+
+New association analysis procedure introduced. 
+egscore() computes association statistics adjusted 
+for eigenvector(s), following Price et al, Nat. Genet.,
+2006. 
+
+Improved and new functionality of check.marker(): 
+much faster X-errors check, identification of female 
+which are likely to be male. When "twin" DNAs are 
+identified, the one with lower call may be dropped, 
+or both (previously random).
+
+***** v 1.2-7 (2007.08.13)
+
+New list names added to output produced by qtscore(), 
+grammar(), ccfast() and mmscore(): chi2.1df and 
+chi2.2df. These correspond to Chi-square values produced. 
+The minimal P-values, as before, are resti=ricted to 1e-16
+
+Improvements in plot.scan.gwaa() and add.plot() -- 
+now 0-probabilities converted to 1.e-16 (previously 
+a warning message would be produced and the point would be 
+dropped); also option df="Pc1df" introduced. 
+
+***** v 1.2-6 (2007.08.08) 
 
 A major improvement in GenABEL ability to import and export data
-compatible in format to other packages and databases. One of the 
-main goals behind this effort was to make GW imputations with  
-MACH software (G. Abecasis) easy.
+compatible in format to other packages and databases. 
+
+NOTE: to convert your R data from old to new format within R, use 
+refresh.gwaa.data() function. Old phenotype- and genotype- files will load 
+with load.gwaa.data with no problem.
+
+One of the main goals behind this effort was to make GW imputations 
+with MACH software (G. Abecasis) easy.
 
 (a) New format of GenABEL data (0.1) developed. Now the 
     features stored by GenABEL include SNP coding (actual nucleotides) 

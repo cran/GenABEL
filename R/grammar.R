@@ -32,6 +32,7 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cl
 	lenn <- data@nsnps;
 	tvar <- h2object$h2an$estimate[length(h2object$h2an$estimate)]
 	h2object$InvSigma <- h2object$InvSigma*(1.-h2object$esth2)*tvar #sqrt(tvar)
+	out <- list()
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) resid <- sample(resid,replace=FALSE)
 		chi2 <- .C("grammar",as.raw(data@gtps),as.double(resid),as.double(h2object$InvSigma),as.integer(data@nids),as.integer(data@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(6*data@nsnps), PACKAGE="GenABEL")$chi2
@@ -47,19 +48,25 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cl
 		if (j == 1) {
 			chi2.1df <- chi2[1:lenn];
 			chi2.2df <- chi2[(lenn+1):(2*lenn)];
+			out$chi2.1df <- chi2.1df
+			out$chi2.2df <- chi2.2df
 			actdf <- chi2[(2*lenn+1):(3*lenn)];
-			if (lenn<=10) {
+			if (lenn<=10 && !is.numeric(clambda)) {
 				lambda <- list()
 				lambda$estimate <- NA
 				lambda$se <- NA
 				chi2.c1df <- chi2.1df;
 			} else {
-				lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
-				def <- 1/lambda$estimate
-				if (def > 1 && clambda) {
-					chi2.c1df <- chi2.1df;
+				if (is.numeric(clambda)) {
+					chi2.c1df <- chi2.1df/clambda;
 				} else {
-					chi2.c1df <- def*chi2.1df;
+					lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
+					def <- 1/lambda$estimate
+					if (def > 1 && clambda) {
+						chi2.c1df <- chi2.1df;
+					} else {
+						chi2.c1df <- def*chi2.1df;
+					}
 				}
 			}
 			effB <- chi2[(3*lenn+1):(lenn*4)]
@@ -83,7 +90,6 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cl
 	}
 	if (times > bcast) cat("\n")
 
-	out <- list()
 	if (times>1) {
 		out$P1df <- pr.1df/times
 		out$P1df <- replace(out$P1df,(out$P1df==0),1/(1+times))

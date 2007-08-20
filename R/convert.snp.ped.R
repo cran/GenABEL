@@ -1,19 +1,15 @@
-"convert.snp.ped" <- function(pedfile,mapfile,outfile,format="premakeped",traits=1,extendedmap=FALSE,strand="u",bcast=10000000) {
+"convert.snp.ped" <- function(pedfile,mapfile,outfile,format="premakeped",traits=1,strand="u",bcast=10000000) {
 
 	alcodes <- alleleID.codes()
 
-	poss <- c("u","+","-")
+	poss <- c("u","+","-","file")
 	intstrand <- which(poss == strand)-1
 	if (length(intstrand)!=1) {cat("strand argument must be one of",poss,"\n");stop();}
 
 # strand == 0 -> unknown ('u')
 # strand == 1 -> plus ('+')
 # strand == 2 -> minus ('-')
-
-	if (!is.logical(extendedmap)) stop("extendedmap argument must be TRUE or FALSE");
-	if (extendedmap) intstrand <- 3;
-
-# extendedmap == TRUE -> five columns (chr,name,pos,strand,coding) expected in map-file
+# extendedmap -> five columns (chr,name,pos,strand,coding) expected in map-file
 # passed through intstrand <- 3 !
 
 	posf <- c("premakeped","mach")

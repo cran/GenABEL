@@ -129,9 +129,15 @@ function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt
 #	es <- 1./diag(t(ervec) %*% (sigma) %*% ervec)
 #	ginvsig <- ervec %*% diag(es,ncol=length(y)) %*% t(ervec)
 	out$InvSigma <- ginv(sigma) #ginvsig
-	out$pgresidualY <- as.vector((1.-h2) * tvar * (out$InvSigma %*% out$residualY))
-	out$call <- match.call()
+	pgres <- as.vector((1.-h2) * tvar * (out$InvSigma %*% out$residualY))
 	out$measuredIDs <- mids
+	out$pgresidualY <- rep(NA,length(mids))
+	out$pgresidualY[mids] <- pgres
+	resY <- out$residualY
+	out$residualY <- rep(NA,length(mids))
+	out$residualY[mids] <- resY
+	out$call <- match.call()
+	class(out) <- "polygenic"
 	out
 }
 

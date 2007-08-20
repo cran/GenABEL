@@ -7,28 +7,28 @@
 ###################
 
 ?"LOAD THE DATA"
-data(ge03d2)
+data(ge03d2ex)
 
 ?"ATTACH PHENOTYPIC DATA"
-attach(ge03d2@phdata)
+attach(ge03d2ex@phdata)
 
 ?"DESCRIBE TRAIT DATA"
-descriptives.trait(ge03d2)
+descriptives.trait(ge03d2ex)
 
 ?"DESCRIBE TRAIT DATA, COMPARE CASES AND CONTROLS"
-descriptives.trait(ge03d2,by=dm2)
+descriptives.trait(ge03d2ex,by=dm2)
 
 #"DESCRIBE MARKER DATA"
 ?"...IN ALL SUBJECTS"
-descriptives.marker(ge03d2)
+descriptives.marker(ge03d2ex)
 ?"...IN CONTROLS"
-descriptives.marker(ge03d2,ids=(dm2==0))
+descriptives.marker(ge03d2ex,ids=(dm2==0))
 ?"...IN CASES"
-descriptives.marker(ge03d2,ids=(dm2==1))
+descriptives.marker(ge03d2ex,ids=(dm2==1))
 
 #"GENERATE QQ PLOT FOR HWE P-VALUES IN CONTROLS"
 ?"...GET SUMMARY FOR SNPS IN CONTROLS"
-s <- summary(ge03d2@gtdata[(dm2==0),])
+s <- summary(ge03d2ex@gtdata[(dm2==0),])
 ?"...LOOK UP FIRST 10 SNPs"
 s[1:10,]
 ?"...LOOK UP FIRST 10 SNPs, SORTED BY HWE-P-VALUE"
@@ -38,7 +38,7 @@ estlambda(s[,"Pexact"])
 
 #"GENERATE QQ PLOT FOR HWE P-VALUES IN CASES"
 ?"...GET SUMMARY FOR SNPS IN CASES"
-s <- summary(ge03d2@gtdata[(dm2==1),])
+s <- summary(ge03d2ex@gtdata[(dm2==1),])
 ?"...LOOK UP FIRST 10 SNPs, SORTED BY HWE-P-VALUE"
 s[order(s$Pexact),][1:10,]
 ?"...GENERATE QQ PLOT"
@@ -46,15 +46,15 @@ estlambda(s[,"Pexact"])
 
 #"QUALITY CONTROL, FIRST PASS"
 ?"...RUN CHECK.MARKER WITHOUT HWE CHECKS, KEEPING ALL POLYMORPHIC MARKERS"
-qc1 <- check.marker(ge03d2,p.level=0,maf=0.0001)
+qc1 <- check.marker(ge03d2ex,p.level=0,maf=0.0001)
 ?"...DETAILED SUMMARY OF ERRORS"
 summary(qc1)
 ?"...GENERATE DATA SET 1, WHICH IS RELATIVELY CLEAN"
-data1 <- ge03d2[qc1$idok,qc1$snpok]
+data1 <- ge03d2ex[qc1$idok,qc1$snpok]
 ?"...FIX SPORADIC X-ERRORS"
 data1 <- Xfix(data1)
 ?"...BEFORE WORKING WITH NEW DATA, DETACH PREVIOUS PHENOTYPIC DATA"
-detach(ge03d2@phdata)
+detach(ge03d2ex@phdata)
 
 #"CHECK DATA1 FOR STRONG GENETIC OUTLIERS"
 #"...FIRST COMPUTE GENOMIC KINSHIP USING ALL AUTOSOMAL MARKERS"
@@ -101,7 +101,7 @@ descriptives.marker(data2)
 ################
 #"TRY ANALYSIS OF RAW DATA"
 ?"...RUN GWA WITH QTSCORE"
-an0 <- qtscore(dm2,ge03d2)
+an0 <- qtscore(dm2,ge03d2ex)
 ?"...PLOT THE ANALYSIS RESULTS"
 plot(an0)
 ?"...CHECK IF POPULATION IS HOMOGENIOUS (Lambda=1)"
@@ -129,7 +129,7 @@ plot(an3.a,df="Pc1df")
 
 #"COMPARE RESULTS"
 ?"...QC'ED DATA, NO ADJUSTMENT = BLUE"
-plot(an3,df="Pc1df",col="blue")
+plot(an3,df="Pc1df",col="blue",ylim=c(0,7))
 ?"...QC'ED DATA, ADJUSTMENT = RED"
 add.plot(an3.a,df="Pc1df",col="red")
 ?"...DATA BEFORE QC = GREEN"
@@ -153,7 +153,7 @@ plot(an3.nob,df="Pc1df")
 
 #"COMPARE RESULTS"
 ?"...OBESE CASES = RED"
-plot(an3.ob,df="Pc1df",col="red")
+plot(an3.ob,df="Pc1df",col="red",ylim=c(0,7))
 ?"...NON-OBESE CASES = BLUE"
 add.plot(an3.nob,df="Pc1df",col="blue")
 ?"...ALL CASES = GREEN"
@@ -175,7 +175,7 @@ descriptives.scan(an3.nob.e,sort="Pc1df")
 
 #"COMPARE RESULTS"
 ?"...OBESE CASES = RED"
-plot(an3.ob.e,df="Pc1df",col="red")
+plot(an3.ob.e,df="Pc1df",col="red",ylim=c(0,7))
 ?"...NON-OBESE CASES = BLUE"
 add.plot(an3.nob.e,df="Pc1df",col="blue")
 ?"...ALL CASES = GREEN"
@@ -196,7 +196,7 @@ an4.sa <- qtscore(dm2~sex+age,data1,strata=strata)
 ?"...CHECK LAMBDA"
 an4.sa$lambda
 ?"...COMPARE RESULTS; SA = RED"
-plot(an4.sa,ylim=c(0,7),col="red",df="Pc1df")
+plot(an4.sa,col="red",df="Pc1df",ylim=c(0,7))
 ?"...ANALYSIS EXCLUSING OUTLIERS = BLUE"
 add.plot(an3.a,col="blue",df="Pc1df")
 ?"...ANALYSIS WITH OUTLIERS = GREEN"
@@ -207,7 +207,7 @@ an4.eg <- egscore(dm2~sex+age,data1,kin=data1.gkin)
 ?"...CHECK LAMBDA"
 an4.eg$lambda
 ?"...COMPARE RESULTS; SA = RED, W/O OUTLIERS = BLUE, WITH OUTLIERS = GREEN"
-plot(an4.sa,ylim=c(0,7),col="red",df="Pc1df")
+plot(an4.sa,col="red",df="Pc1df",ylim=c(0,7))
 add.plot(an3.a,col="blue",df="Pc1df")
 add.plot(an0,col="green",df="Pc1df")
 ?"...EIGENVECTOR CORRECTION ANALYSIS = BLACK"
@@ -243,42 +243,4 @@ csnps <- rownames(descriptives.scan(confirm))[c(1,3,4)]
 csnps
 ?"CHECK WHAT ARE THE CONFIRMED SNPs ON NCBI"
 show.ncbi(csnps)
-
-#####################
-# Regional analysis #
-#####################
-
-?"DO REGIONAL ANALYSIS"
-?"SELECT SNPS IN 300 KB REGION AROUND SNP3"
-snp <- csnps[1]
-snppos <- data1@gtdata@map[which(data1@gtdata@snpnames==snp)]
-reg <- snp.names(data1,begin=snppos-150000,end=snppos+150000)
-reg
-?"ONE SNP ANALYSES"
-reg.qt <- qtscore(dm2~sex+age,data1[,reg],clam=an4.sa$lam$est)
-print(min(reg.qt$P1df))
-reg.glm <- scan.glm("dm2~sex+age+CRSNP",data=data2[,reg]) #,clam=an4.sa$lam$est)
-print(min(reg.glm$P1df))
-?"HAPLOTYPE ANALYSIS IN SLIDING WINDOW"
-reg.h2 <- scan.haplo(dm2~sex+age+CRSNP,data2[,reg],trait.type="binomial")
-print(min(reg.h2$P1df))
-reg.h3 <- scan.haplo(dm2~sex+age+CRSNP,data2[,reg],n.slide=3,trait.type="binomial")
-print(min(reg.h3$P1df))
-?"PLOT RESULTS"
-minp <- min(reg.qt$P1df,reg.glm$P1df,reg.h2$P1df,reg.h3$P1df)
-print(minp)
-plot(reg.qt,ylim=c(0,ceiling(-log10(minp))))
-add.plot(reg.glm,cex=2)
-add.plot(reg.h2,col="green",typ="l")
-add.plot(reg.h3,col="blue",typ="l")
-?"DO 2D HAPLOTYPE ANALYSIS IN 50 KB REGION OF THE PEAK"
-bpos <- reg.h2$map[which.min(reg.h2$P1df)]
-sreg <- snp.names(data2,begin=bpos-25000,end=bpos+25000)
-sreg
-sreg.h2D <- scan.haplo.2D(dm2~age+sex+CRSNP,data2[,sreg],trait.type="binomial")
-print(min(sreg.h2D$P1df,na.rm=T))
-plot(sreg.h2D)
-?"DO LD ANALYSIS AND UPDATE THE PLOT"
-sreg.LD <- LD(as.genotype(data2@gtdata[,sreg]))
-image(sreg.h2D$map,sreg.h2D$map,t(sreg.LD$"D'"),add=T)
 

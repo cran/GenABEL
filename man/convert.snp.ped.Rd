@@ -6,7 +6,7 @@ Converts genotypic data in a variety of pedigree fromats (+map) to internal geno
 }
 \usage{
 convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1, 
-	extendedmap = FALSE, strand = "u", bcast = 10000000)
+	strand = "u", bcast = 10000000)
 }
 \arguments{
   \item{pedfile}{
@@ -27,13 +27,10 @@ convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1,
 	-- or 2 -- affection and liability).
 	Has no effect when format = "mach".
 	}
-  \item{extendedmap}{Whether map file contains an extended map (the one 
-	including strand and coding)
-	}
   \item{strand}{
-	Specification of strand, one of "u" (unknown), "+", "-" or "map".
-	In the latter case, map chould contain 4th column specifying 
-	the strand (again, one of "u", "+", or "-")
+	Specification of strand, one of "u" (unknown), "+", "-" or "file".
+	In the latter case, map-file should contain an extended map (the one 
+	including strand and coding)
 	}
   \item{bcast}{
 	Reports progress after reading bcast portion of SNPs

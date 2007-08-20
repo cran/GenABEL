@@ -13,7 +13,8 @@ plot.scan.gwaa(x, y, ..., df=1)
 		\code{\link{ccfast}}, \code{\link{emp.ccfast}}, \code{\link{emp.qtscore}}, or \code{\link{scan.haplo}}}
   \item{y}{this argument is not used}
   \item{\dots}{additional arguments to be passed to plot}
-  \item{df}{Plot results of 1 or 2-df test. Could be also "all" (to plot both)}
+  \item{df}{Plot results of 1 or 2-df test (1, 2). Could be also "Pc1df" (for GC corrected P-values) or "all" 
+		(to plot all three)}
 }
 %\details{}
 \value{

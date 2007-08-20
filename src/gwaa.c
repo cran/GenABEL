@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <R.h>
 
 int msk[4] = {192,48,12,3};
 int ofs[4] = {6,4,2,0};
@@ -542,6 +543,138 @@ void qtscore(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, int *
 			  chi2[igt+3*nsnps]=0.;
 			} else {
 			  chi2[igt]=u*u/v;
+			  chi2[igt+3*nsnps]=u/(Tsg1+2.*Tsg2);
+			}
+			det = v11*v22 - v12*v12;
+			if (det<(1.e-16)) {
+				chi2[igt+nsnps]=chi2[igt];
+				chi2[igt+2*nsnps] = 1.;
+			  	chi2[igt+4*nsnps]=chi2[igt+3*nsnps];
+			  	chi2[igt+5*nsnps]=2.*chi2[igt+3*nsnps];
+			} else {
+				chi2[igt+nsnps]=(u1*u1*v22+u2*u2*v11-2.0*u1*u2*v12)/det;
+			  	chi2[igt+4*nsnps]=u1/Tsg1;
+			  	chi2[igt+5*nsnps]=u2/Tsg2;
+				if (Tsg1>0 && Tsg2>0 && Ttotg>0) 
+					chi2[igt+2*nsnps] = 2.;
+				else
+					chi2[igt+2*nsnps] = 1.;
+			}
+		}
+	}
+}
+
+void egscore(char *gdata, double *pheno, int *Naxes, double *axes, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2) 
+{
+	int nsnps = (*Nsnps);
+	int nstra = (*Nstra);
+	int nids = (*Nids);
+	int naxes = (*Naxes);
+	int gtint[nids];
+	double gt[nids];
+	int i, j, cstr, igt, i1=1;
+	int nbytes;
+	double Ttotg, mx, bb, dgt, totg[nstra], x2[nstra], sumx[nstra];
+	double Tsg1, Tsg2, sg1[nstra], sg2[nstra], xg1[nstra], xg2[nstra], gamma[nstra][naxes], saxg[nstra][naxes], sa2[nstra][naxes];
+	double det, u, v, u1, u2, v11, v12, v22;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+//	char chgt[nbytes];
+
+	for (igt=0;igt<nsnps;igt++) {
+		get_snps_many(gdata+nbytes*igt,Nids,&i1,gtint);
+		for (i=0;i<nids;i++) {
+			gt[i] = 1.*gtint[i] - 1.0;
+		}
+		for (j=0;j<nstra;j++) {
+			totg[j] = 0.;
+			x2[j] = 0.;
+			sumx[j] = 0.;
+			sg1[j] = 0.;
+			sg2[j] = 0.;
+			xg1[j] = 0.;
+			xg2[j] = 0.;
+		}
+		for (i=0;i<naxes;i++) {
+		for (j=0;j<nstra;j++) {
+			gamma[j][i] = 0.;
+			saxg[j][i] = 0.;
+			sa2[j][i] = 0.;
+		}
+		}
+		for (j=0;j<naxes;j++) {
+		for (i=0;i<nids;i++) {
+		    if (gtint[i] != 0) {
+			cstr = stra[i];
+			dgt = gt[i] - 1.0;
+			saxg[cstr][j] += dgt*axes[i+j*nids];
+			sa2[cstr][j] += axes[i+j*nids]*axes[i+j*nids];
+//			Rprintf("%d %d %d %e %e %e %e\n",i,j,cstr,dgt,dgt*axes[i+j*nids],saxg[cstr][j],sa2[cstr][j]);
+		    }
+		}
+		}
+		for (j=0;j<naxes;j++) {
+		for (i=0;i<nstra;i++) {
+			gamma[i][j] = saxg[i][j]/sa2[i][j];
+//			Rprintf("%d %d %e %e %e\n",i,j,gamma[i][j],saxg[i][j],sa2[i][j]);
+		}
+		}
+		for (i=0;i<nids;i++) {
+		for (j=0;j<naxes;j++) {
+			cstr = stra[i];
+			gt[i] = gt[i] - gamma[cstr][j]*axes[i+j*nids];
+		}
+//		Rprintf("%d %e\n",i,gt[i]);
+		}
+		for (j=0;j<nstra;j++) {
+		for (i=0;i<nids;i++) {
+		    if (gtint[i] != 0) {
+			cstr = stra[i];
+			totg[cstr]+=1.0;
+			sg1[cstr]+=gt[i];
+			sg2[cstr]+=gt[i]*gt[i];
+			sumx[cstr] += pheno[i];
+			x2[cstr] += pheno[i]*pheno[i];
+			xg1[cstr]+=gt[i]*pheno[i];
+		    }
+		}
+		}
+		Ttotg=Tsg1=Tsg2=0.; 
+		for (j=0;j<nstra;j++) {
+			Ttotg += totg[j]; 
+			Tsg1 += sg1[j];
+			Tsg2 += sg2[j];
+		}
+		if (Ttotg == 0) {
+			chi2[igt] = 0.;
+			chi2[igt+nsnps] = 0.;
+			chi2[igt+2*nsnps] = 0.0001;
+			chi2[igt+3*nsnps] = 0.;
+			chi2[igt+4*nsnps] = 0.;
+			chi2[igt+5*nsnps] = 0.;
+		} else {
+			u = v = u1 = u2 = v11 = v12 = v22 = 0.;
+			for (j=0;j<nstra;j++) if (totg[j]>0) {
+				mx = sumx[j]/totg[j];
+				bb = (x2[j]/totg[j])-mx*mx;
+				u1 += (xg1[j]-sg1[j]*mx);
+				u2 += (xg2[j]-sg2[j]*mx);
+				v11 += bb*(sg1[j]-sg1[j]*sg1[j]/totg[j]);
+				v12 += bb*(0.0-sg1[j]*sg2[j]/totg[j]);
+				v22 += bb*(sg2[j]-sg2[j]*sg2[j]/totg[j]);
+			}
+			for (j=0;j<nstra;j++) if (totg[j]>0) {
+				mx = sumx[j]/totg[j];
+				bb = (x2[j]/totg[j])-mx*mx;
+				u += (xg1[j]-sg1[j]*mx);
+				v += bb*(sg2[j]-sg1[j]*sg1[j]/totg[j]);
+			}
+//			u = u1+2.*u2;
+//			v = v11+4.*v12+4.*v22;
+			if (v<1.e-16) {
+			  chi2[igt]=0.;
+			  chi2[igt+3*nsnps]=0.;
+			} else {
+			  chi2[igt]=(u*u/v)*(1.*nids/(1.*nids-1.*naxes-1.));
 			  chi2[igt+3*nsnps]=u/(Tsg1+2.*Tsg2);
 			}
 			det = v11*v22 - v12*v12;

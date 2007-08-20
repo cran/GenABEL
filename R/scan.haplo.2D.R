@@ -55,6 +55,7 @@ function(formula,data,snpsubset,idsubset,bcast=10,simulate=FALSE,trait.type,...)
   	Pint1df <- rep(NA,length(Pv))
   	Pint2df <- Pint1df
 	out <- list(P1df=Pv,Pint1df=Pint1df,Pint2df=Pint2df,P2df=Pv,snpnames=data@gtdata@snpnames,formula=match.call(),family=family,map=data@gtdata@map,idnames=data@gtdata@idnames)
+  	out$Pc1df <- rep(NA,length(Pv))
 	class(out) <- "scan.gwaa.2D"
 	out
 }

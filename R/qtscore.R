@@ -31,22 +31,10 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 			bin <- 0
 		}
 		resid <- lmf$resid
-	} else {
+	} else if (class(formula) == "numeric" || class(formula) == "integer" || class(formula) == "double") {
 		y <- formula
 		mids <- (!is.na(y))
 		y <- y[mids]
-#		sdy <- sd(y)
-#		meany <- mean(y)
-#		if (trait.type=="gaussian") y <- (y-mean(y))/sd(y)
-#		desmat <- matrix(1,nrow=length(y))
-#		if (trait.type=="binomial") {
-#			tvar <- var(y)
-#			tmp <- mean(y)
-#			iniest <- c(log(tmp/(1.-tmp)))
-#		} else {
-#			tvar <- var(y)
-#			iniest <- c(mean(y))
-#		}
 		resid <- y
 		if (length(unique(resid))==1) stop("trait is monomorphic")
 		if (length(unique(resid))==2) bin <- 1 else bin <- 0
@@ -63,6 +51,8 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		}
 		if (bin == 1) trait.type="binomial" else if (bin == 0) trait.type="gaussian"
 
+	} else {
+		stop("formula argument must be a formula or one of (numeric, integer, double)")
 	}
 	if (!missing(data)) detach(data@phdata)
 	if (length(strata)!=data@gtdata@nids) stop("Strata variable and the data do not match in length")
@@ -105,18 +95,25 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 			chi2.2df <- chi2[(lenn+1):(2*lenn)];
 			out$chi2.2df <- chi2.2df
 			actdf <- chi2[(2*lenn+1):(3*lenn)];
-			if (lenn<=10) {
+			if (lenn<=10 && !is.numeric(clambda)) {
 				lambda <- list()
 				lambda$estimate <- NA
 				lambda$se <- NA
 				chi2.c1df <- chi2.1df;
 			} else {
-				lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
-				def <- 1/lambda$estimate
-				if (def > 1 && clambda) {
-					chi2.c1df <- chi2.1df;
+				if (is.numeric(clambda)) {
+					lambda <- list()
+					lambda$estimate <- clambda
+					lambda$se <- NA
+					chi2.c1df <- chi2.1df/lambda$estimate;
 				} else {
-					chi2.c1df <- def*chi2.1df;
+					lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
+					def <- 1/lambda$estimate
+					if (def > 1 && clambda) {
+						chi2.c1df <- chi2.1df;
+					} else {
+						chi2.c1df <- def*chi2.1df;
+					}
 				}
 			}
 			effB <- chi2[(3*lenn+1):(lenn*4)]

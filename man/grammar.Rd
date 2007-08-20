@@ -32,10 +32,11 @@ grammar(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
 		}
   \item{quiet}{do not print warning messages}
   \item{bcast}{If the argument times > 1, progress is reported once in bcast replicas}
-  \item{clambda}{If inflation facot Lambda is estimated as lower then one, this parameter 
+  \item{clambda}{If inflation facor Lambda is estimated as lower then one, this parameter 
 		controls if the original P1df (clambda=TRUE) to be reported in Pc1df, 
 		or the original 1df statistics is to be multiplied onto this "deflation" 
-		factor (clambda=FALSE)}
+		factor (clambda=FALSE). With GRAMMAR, Lambda is expected ot be less than 1.
+		If a numeric value is provided, it is used as a correction factor.}
   \item{propPs}{proportion of non-corrected P-values used to estimate the inflation factor Lambda,
 		passed directly to the \code{\link{estlambda}}}
 }

@@ -27,10 +27,13 @@ snp.subset(data, snpsubset)
 \examples{
 data(srdta)
 # processing check.marker object
-mc <- check.marker(data=srdta@gtdata[,1:100],redundant="all",maf=0.01,minconcordance=0.9,fdr=.1,ibs.mrk=0)
-plot(mc)
+#mc <- check.marker(data=srdta@gtdata[,1:100],redundant="all",maf=0.01,minconcordance=0.9,fdr=.1,ibs.mrk=0)
+mc <- check.marker(data=srdta@gtdata[,1:100],maf=0.01,fdr=.1,ibs.mrk=0)
+summary(mc)
+#plot(mc)
 mc1 <- snp.subset(mc,snps=srdta@gtdata@snpnames[20:50])
-plot(mc1)
+summary(mc1)
+#plot(mc1)
 # processing scan.gwaa object
 a <- scan.glm("qt3~sex+age+CRSNP",data=srdta,snps=(1:30))
 plot(a)

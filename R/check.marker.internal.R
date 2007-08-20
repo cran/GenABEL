@@ -1,7 +1,8 @@
 "check.marker.internal" <-
 function(data, snpsubset, idsubset,
 			callrate=0.95,perid.call=0.95,
-			het.fdr=0.01, ibs.threshold = 0.95, ibs.mrk = 2000, maf, p.level=-1, 
+			het.fdr=0.01, ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower",
+			maf, p.level=-1, 
 			fdrate = 0.2, hweidsubset, redundant="no", minconcordance = 2.0, 
 			qoption="bh95") {
 
@@ -29,12 +30,13 @@ function(data, snpsubset, idsubset,
 		out$details.redundancy <- redundant(data,pairs=redundant, minconcordance = minconcordance)
 		out$redundant <- out$details.redundancy[["all"]]
 		redok[match(out$details.redundancy$all,data@snpnames)] <- 0
+		ntmp <- length(out$redundant); ptmp <- 100*ntmp/nts
+		cat(ntmp," (",ptmp,"%) markers excluded as redundant (option = \"",redundant,"\")\n",sep="")
+		flush.console()
 	} else {
 		out$details.redundancy[["all"]] <- NULL;
+		out$redundant <- NULL;
 	}
-	ntmp <- length(out$redundant); ptmp <- 100*ntmp/nts
-	cat(ntmp," (",ptmp,"%) markers excluded as redundant (option = \"",redundant,"\")\n",sep="")
-	flush.console()
 # run summary
 	s <- summary(data)
 # check frequency
@@ -104,7 +106,6 @@ function(data, snpsubset, idsubset,
 	} else {
 		hetok <- !(qvaluebh95(Zhet,het.fdr)$significant)
 	}
-#	hetok <- ((length(Zhet)*Zhet)>het.fdr)
 	out$hetfail <- data@idnames[which(hetok == FALSE)]
 	ntmp <- length(out$hetfail); ptmp <- 100*ntmp/data@nids
 	cat(ntmp," (",ptmp,"%) people excluded because too high autosomal heterozygosity (FDR <",het.fdr*100,"%)\n",sep="")
@@ -133,36 +134,31 @@ function(data, snpsubset, idsubset,
 		saibs <- ibs(data[,fromset],weight="no")
 		ibs.mrk <- length(fromset)
 	}
-	wids <- colnames(saibs)
-	saibs <- saibs[lower.tri(saibs)]
-	mibs <- mean(saibs)
-	sdibs <- sd(saibs)
-#	Zibs <- (saibs-mibs)/sdibs; 
-#	Zibs <- replace(Zibs,(Zibs<0),0);
-#	Zibs <- Zibs*Zibs
-#	Zibs <- (1. - pchisq(Zibs,1))
-#	if (qoption == "storey") {
-#		qobj <- qvalue(Zibs,fdr.level=ibs.fdr)
-#		ibsok <- !(qobj$significant)
-#	} else {
-#		ibsok <- !(qvaluebh95(Zibs,ibs.fdr)$significant)
-#	}
-#	ibsok <- ((length(Zibs)*Zibs)>ibs.fdr)
-	saibs1 <- matrix(ncol=data@nids,nrow=data@nids)
-	saibs1[lower.tri(saibs1)] <- (saibs<ibs.threshold)
-	ibsfail <- which(!saibs1) %% data@nids
-	rm(saibs1);gc(verbose=FALSE)
-	ibsfail <- replace(ibsfail,(ibsfail==0),data@nids)
-	ibsfail <- unique(ibsfail)
-	ibsok <- rep(TRUE,data@nids)
-	ibsok[ibsfail] <- FALSE
-	ibsfail <- data@idnames[ibsfail]
-	out$ibsfail <- ibsfail
+	saibs[upper.tri(saibs,diag=T)] <- NA
+	mibs <- mean(as.vector(saibs),na.rm=T)
+	sdibs <- sd(as.vector(saibs),na.rm=T)
+	if (any(saibs>=ibs.threshold,na.rm=T)) {
+		ibsfailpairs <- crnames(dimnames(saibs),(saibs>=ibs.threshold))
+		if (ibs.exclude == "both") {
+			ibsfail <- unique(c(ibsfailpairs[,1],ibsfailpairs[,2]))
+		} else {
+			cll <- perid.summary(data[ibsfailpairs[,1],])[,"CallPP"]
+			clr <- perid.summary(data[ibsfailpairs[,2],])[,"CallPP"]
+			lgr <- (cll < clr)
+			ibsfail <- unique(c(ibsfailpairs[lgr,2],ibsfailpairs[!lgr,1]))
+		}
+		out$ibsfail <- ibsfail
+		ibsok <- !(data@idnames %in% ibsfail)
+		rm(ibsfailpairs,ibsfail);gc(verbose=FALSE)
+	} else {
+		out$ibsfail <- NULL;
+		ibsok <- rep(TRUE,data@nids)
+	}
+	rm(saibs);gc(verbose=FALSE)
 	ntmp <- length(out$ibsfail); ptmp <- 100*ntmp/data@nids
 	cat(ntmp," (",ptmp,"%) people excluded because of too high IBS (>=",ibs.threshold,")\n",sep="")
 	flush.console()
 	cat("Mean IBS was ",mibs," (s.e. ",sdibs,"), as based on ",ibs.mrk," autosomal markers\n",sep="")
-	rm(saibs);gc(verbose=FALSE)
 	flush.console();
 	}
 
