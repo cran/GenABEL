@@ -138,7 +138,9 @@ setMethod("[","snp.data",
 		a@map <- x@map[j]
 		a@chromosome <- as.factor(as.character(x@chromosome[j]))
 		a@coding <- new("snp.coding",x@coding[j])
+		names(a@coding) <- a@snpnames
 		a@strand <- new("snp.strand",x@strand[j])
+		names(a@strand) <- a@snpnames
 		a@idnames <- x@idnames[i]
 		a@male <- x@male[i]
 		a@gtps <- x@gtps[i,j]

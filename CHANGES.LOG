@@ -1,3 +1,33 @@
+***** v 1.3-1 (2007.11.05)
+
+The strand information as based on build 35, is available from Yurii 
+for Illumina 318K. 
+
+Bug fix in convert.snp.illumina (alleles would change to the other one 
+in large proportion of SNPs, e.g. A/G polymorphism, AA -> GG, GG -> AA).
+Though this does not affect results directly (e.g. P-values and the absolute 
+effect values are OK), this may couse confusion when you compare your 
+results to other people's results (the sign of the effect may be swapped), 
+also imputations would have gone wrong. 
+
+Small bug fixes with strand operations (SNP names were lost in sub-setting).
+
+New procedure rntransform(). This procedure performs 
+rank transformation to normality. The transformed varible 
+is perfectly normal, unless there are ties in the original 
+distribution.
+
+***** v 1.2-9 (2007.10.22)
+
+A bug fix in check.markers(ibs.exclude="lower") -- before the fix, the 
+samples with HIGHER call were excluded. Thanks to Tuuli Lappalainen!
+
+Bug fix in refresh.gwaa.data
+
+option "details" added to qtscore().
+When details=FALSE, SNP and ID names 
+are not reported, which saves some memory
+
 ***** v 1.2-8 (2007.08.27)
 
 GenABEL tutorial updated and, internals joined with 

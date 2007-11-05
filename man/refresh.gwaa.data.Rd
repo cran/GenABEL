@@ -6,11 +6,14 @@
 	from old to new format
 }
 \usage{
-refresh.gwaa.data(data)
+refresh.gwaa.data(data,force=FALSE)
 }
 \arguments{
   \item{data}{An object of \code{\link{gwaa.data-class}} in pre-1.2-6 (data version 0) 
 		format. 
+	}
+  \item{force}{When TRUE, the refreshing is forced, with any data in @strand and @coding 
+		replaced by default data (0/1 coding, u-strand)
 	}
 }
 \details{

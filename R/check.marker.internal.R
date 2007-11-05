@@ -144,7 +144,7 @@ function(data, snpsubset, idsubset,
 		} else {
 			cll <- perid.summary(data[ibsfailpairs[,1],])[,"CallPP"]
 			clr <- perid.summary(data[ibsfailpairs[,2],])[,"CallPP"]
-			lgr <- (cll < clr)
+			lgr <- (cll >= clr)
 			ibsfail <- unique(c(ibsfailpairs[lgr,2],ibsfailpairs[!lgr,1]))
 		}
 		out$ibsfail <- ibsfail

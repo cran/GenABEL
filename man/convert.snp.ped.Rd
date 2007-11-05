@@ -83,6 +83,9 @@ convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1,
 	18    rs9965482  2860891   +     GT
 
 	Accepted strand coding: +, -, u (unknown)
+
+	Please note that the header line (e.g. "chrom	name	position") SHOULD 
+	be present in your file!
 	
 }
 \value{

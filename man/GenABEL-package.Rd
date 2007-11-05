@@ -21,9 +21,9 @@ Imbedding GenABEL into R environment allows for easy data characterisation, expl
 \tabular{ll}{
 Package: \tab GenABEL\cr
 Type: \tab Package\cr
-Version: \tab 1.2-8\cr
-Date: \tab 2007-08-20\cr
-License: \tab GNU GPL v. 2.0 or later\cr
+Version: \tab 1.3-1\cr
+Date: \tab 2007-11-05\cr
+License: \tab GPL (>= 2)\cr
 }
 
 To see (more or less complete) functionality of GenABEL, try running

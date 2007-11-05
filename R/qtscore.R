@@ -1,5 +1,5 @@
 "qtscore" <-
-function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0) {
+function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
   	if (class(data)!="gwaa.data") {
 		stop("wrong data class: should be gwaa.data")
   	}
@@ -153,10 +153,12 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 	out$effB <- effB
 	out$effAB <- effAB
 	out$effBB <- effBB
-	out$snpnames <- data@gtdata@snpnames
+	if (details) {
+		out$snpnames <- data@gtdata@snpnames
+		out$idnames <- data@gtdata@idnames
+	}
 	out$map <- data@gtdata@map
 	out$chromosome <- data@gtdata@chromosome
-	out$idnames <- data@gtdata@idnames
 	out$formula <- match.call()
 	out$family <- paste("score test for association with trait type",trait.type)
 	class(out) <- "scan.gwaa"

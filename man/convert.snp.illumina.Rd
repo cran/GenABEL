@@ -54,6 +54,10 @@ convert.snp.illumina(infile, outfile, strand = "+", bcast = 10000000)
 	rs123	3	5327	+	TC	TT	CC
 
 	Accepted strand coding: +, -, u (unknown)	
+
+	The procedure always codes genotypes that "0", "1" and "2" correspond to 
+	AA, AB, and BB, where B is the less frequent allele. Thus GWA analysis 
+	procedures will return effect of the minor allele.
 }
 \value{
 	Does not return any value, but writes file with GenABEL raw data

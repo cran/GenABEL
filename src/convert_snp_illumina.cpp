@@ -200,13 +200,19 @@ extern "C" {
 
 	    switch (gnum[idx]+gnum[idx+1]) {
 	    case 2:
-	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
+              if (ca1 > ca2) 
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
+	      else
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
 	      break;
 	    case 4:
 	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)2 << offset[ind]);
 	      break;
 	    case 6:
-	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
+              if (ca1 > ca2) 
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
+	      else
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
 	      break;
 	    case 0:
 	      tmp_gtype[byte] = tmp_gtype[byte] | (0 << offset[ind]); // this does nothing

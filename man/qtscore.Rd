@@ -5,7 +5,7 @@
 Fast score test for association between a trait and genetic polymorphism
 }
 \usage{
-qtscore(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0)
+qtscore(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE)
 }
 \arguments{
   \item{formula}{Formula describing fixed effects to be used in analysis, e.g. 
@@ -33,6 +33,10 @@ qtscore(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qui
 		If a numeric value is provided, it is used as a correction factor.}
   \item{propPs}{proportion of non-corrected P-values used to estimate the inflation factor Lambda,
 		passed directly to the \code{\link{estlambda}}}
+  \item{details}{when FALSE, only SNP and ID names are not reported in the returned object
+		(saves some memory). This is experimental and will be not mantained anymore 
+		as soon as we achieve better memory efficiency for storage of SNP and ID names
+		(currently default R character data type used)}
 }
 \details{
 When formula contains covariates, the traits is analysed using GLM and later 
