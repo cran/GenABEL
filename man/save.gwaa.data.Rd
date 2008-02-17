@@ -2,6 +2,7 @@
 \alias{save.gwaa.data}
 \title{function to save gwaa.data object}
 \description{
+	Saves GenABEL data in internal format
 }
 \usage{
 save.gwaa.data(data, phenofile = "pheno.dat", genofile = "geno.raw", 

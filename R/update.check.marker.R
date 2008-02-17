@@ -17,10 +17,12 @@ function(preo,curo) {
 	out$hetfail <- unique(c(preo$hetfail,curo$hetfail))
 	out$idnocall <- unique(c(preo$idnocall,curo$idnocall))
 	out$ibsfail <- unique(c(preo$ibsfail,curo$ibsfail))
-	out$Xidfail <- unique(c(preo$Xidfail,curo$Xidfail))
+#	out$Xidfail <- unique(c(preo$Xidfail,curo$Xidfail))
 	out$isfemale <- unique(c(preo$isfemale,curo$isfemale))
 	out$ismale <- unique(c(preo$ismale,curo$ismale))
-	idfail <- unique(c(out$hetfail,out$idnocall,out$ibsfail,out$Xidfail))
+	out$isXXY <- unique(c(preo$isXXY,curo$isXXY))
+#	idfail <- unique(c(out$hetfail,out$idnocall,out$ibsfail,out$Xidfail,out$isXXY,out$isfemale,out$ismale))
+	idfail <- unique(c(out$hetfail,out$idnocall,out$ibsfail,out$isXXY,out$isfemale,out$ismale))
 # generate snpok and idok
 	if (length(snpfail)>0) 
 		out$snpok <- preo$snpok[!(preo$snpok %in% snpfail)]

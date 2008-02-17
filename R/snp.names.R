@@ -6,17 +6,17 @@ function(data,begin,end,chromosome) {
 	} else if (class(data) == "scan.gwaa") {
 		if (missing(chromosome)) {
 			if (missing(begin)) begin <- min(data$map)
-			if (missing(end))   begin <- min(data$map)
-			if (is.character(begin)) begin <- data$map[data$name == begin]
-			if (is.character(end)) end <- data$map[data$name == end]
-			out <- data$name[data$map>=begin & data$map<=end]
+			if (missing(end))   end <- max(data$map)
+			if (is.character(begin)) begin <- data$map[data$snpname == begin]
+			if (is.character(end)) end <- data$map[data$snpname == end]
+			out <- data$snpname[data$map>=begin & data$map<=end]
 			return(out)
 		} else {
 			if (missing(begin)) begin <- min(data$map[data$chromosome == chromosome])
-			if (missing(end))   begin <- min(data$map[data$chromosome == chromosome])
-			if (is.character(begin)) begin <- data$map[data$name == begin]
-			if (is.character(end)) end <- data$map[data$name == end]
-			out <- data$name[data$map>=begin & data$map<=end & data$chromosome == chromosome]
+			if (missing(end))   end <- max(data$map[data$chromosome == chromosome])
+			if (is.character(begin)) begin <- data$map[data$snpname == begin]
+			if (is.character(end)) end <- data$map[data$snpname == end]
+			out <- data$snpname[data$map>=begin & data$map<=end & data$chromosome == chromosome]
 			return(out)
 		}
 	} else if (class(data) == "check.marker") {

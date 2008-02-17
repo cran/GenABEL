@@ -17,7 +17,7 @@ summary.snp.data(object, ...)
 }
 %\details{}
 \value{
-	Summary for snp.data object
+	Data frame summary for snp.data object
 }
 \references{
 Wigginton, JE, Cutler, DJ, and Abecasis, GR (2005) A Note on Exact Tests of 
@@ -27,6 +27,8 @@ Hardy-Weinberg Equilibrium. American Journal of Human Genetics. 76: 887-93.
 \note{
 	The P-values reported for X-chromosome are based on analysis of female 
 	data, but other statistics (freqencies, calls, ...) are based on all data.
+	Statistics for Y-chromosome are based on male-only. P-HWE is not defined 
+	for mt- and Y- markers (set to 1.0).
 }
 \seealso{
 \code{\link{summary.gwaa.data}},

@@ -31,21 +31,18 @@
 		  names(data@gtdata@strand) <- savnam
 		}
 	}
-	x <- as.character(data@gtdata)
-	x <- replace(x,(x==""),"0/0")
-	x <- replace(x,is.na(x),"0/0")
-	snps <- colnames(x)
-	ids <- rownames(x)
-	nids <- length(ids)
-	sx <- data@phdata$sex
-	sx <- replace(sx,(sx==0),2)
-	if (traits > 0) {
-		tr <- matrix(rep(0,nids*traits),ncol=traits)
-		x <- data.frame(seq(1,nids),ids,rep(0,nids),rep(0,nids),sx,tr,x)
+	bstp <- 100
+	if (data@gtdata@nids>(bstp*1.5)) {
+		steps <- seq(from=0,to=data@gtdata@nids,by=bstp)
+		if (data@gtdata@nids != steps[length(steps)]) steps[length(steps)+1] <- data@gtdata@nids
+		dump.piece(data=data,from=1,to=steps[2],traits=traits,pedfile=pedfile,append=F)
+		for (jjj in c(2:(length(steps)-1))) {
+			dump.piece(data=data,from=(steps[jjj]+1),to=(steps[jjj+1]),traits=traits,pedfile=pedfile,append=T)
+		}
 	} else {
-		x <- data.frame(seq(1,nids),ids,rep(0,nids),rep(0,nids),sx,x)
+		dump.piece(data=data,from=1,to=data@gtdata@nids,traits=traits,pedfile=pedfile,append=F)
 	}
-	write.table(x,file=pedfile,col.n=FALSE,row.n=FALSE,quote=FALSE)
+	snps <- data@gtdata@snpnames
 	inf <- data.frame(a=rep("M",length(snps)),b=snps)
 	if (traits>0) {
 		tran <- paste("faket",seq(1:traits),sep="")
@@ -59,4 +56,22 @@
 		map <- data.frame(chromosome=as.character(data@gtdata@chromosome),markername=data@gtdata@snpnames,position=data@gtdata@map,strand=as.character(data@gtdata@strand),coding=as.character(data@gtdata@coding))
 		write.table(map,file=paste(mapfile,".ext",sep=""),col.n=TRUE,row.n=FALSE,quote=FALSE)
 	}
+}
+
+dump.piece <- function(data,fromid,toid,traits,pedfile,append) {
+	if (toid < fromid) stop("toid<fromid")
+	x <- as.character(data@gtdata[c(fromid:toid),])
+	x <- replace(x,(x==""),"0/0")
+	x <- replace(x,is.na(x),"0/0")
+	ids <- rownames(x)
+	nids <- length(ids)
+	sx <- data@phdata$sex[c(fromid:toid)]
+	sx <- replace(sx,(sx==0),2)
+	if (traits > 0) {
+		tr <- matrix(rep(0,nids*traits),ncol=traits)
+		x <- data.frame(seq(fromid,toid),ids,rep(0,nids),rep(0,nids),sx,tr,x)
+	} else {
+		x <- data.frame(seq(fromid,toid),ids,rep(0,nids),rep(0,nids),sx,x)
+	}
+	write.table(x,file=pedfile,col.n=FALSE,row.n=FALSE,quote=FALSE,append=append)
 }

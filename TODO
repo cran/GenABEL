@@ -33,5 +33,8 @@
 		may be it is good idea if it will also return "corrected" 
 		Ps (chi2s)
 
-2007.03.18	Checks for high homozygosity in female X
-		(high)
+2007.11.04	QC: checks for autosomal SNPs which predict sex
+
+2007.12.21	Add Pc2df to scan.gwaa output
+
+2007.12.21	Cahnge "quality" in convert.snp.mach to r2

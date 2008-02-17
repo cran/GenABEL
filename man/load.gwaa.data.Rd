@@ -6,7 +6,7 @@ Load data (genotypes and phenotypes) from files to gwaa.data object
 }
 \usage{
 load.gwaa.data(phenofile = "pheno.dat", genofile = "geno.raw", 
-		force = FALSE, makemap = FALSE, sort = TRUE)
+		force = TRUE, makemap = FALSE, sort = TRUE)
 }
 \arguments{
   \item{phenofile}{data table with pehnotypes}

@@ -1,3 +1,69 @@
+***** v 1.3-5b (2008.02.21)
+
+Bug fix in ztransform(): would not work without data argument, 
+if formula supplied will not use it. This bug also affected rntransform().
+
+***** v 1.3-5 (2008.02.15)
+
+qtscore "binomial" workout
+
+minor bug fix in check.marker() -- the procedure would fail to run 
+in presence of more than couples of "twin" (e.g. multiple plant clones).
+
+bug fix in formetascore() function: standard errors were reported with 
+sign of beta
+
+***** v 1.3-3d (2008.02.11)
+
+A fix in npsubtreated() function (in some situations all medicated 
+people's values were set to NA)
+
+***** v 1.3-3c (2008.02.03)
+
+npsubtreated() function, to be used in analysis of 
+traits affetcted by treatment (medication) added.
+
+formetascore() procedure extended with parameter "verbosity".
+
+***** v 1.3-3 (2008.01.12)
+
+autosomal() function added
+
+Y and mtDNA markers-specific analyses added in QC function check.marker()
+This also involves checks for people with XXY genotypes.
+
+Robust Genomic Control added to correct 2df test in qtscore 
+function -- yet experimental.
+
+formetascore() function introduced -- analysis oriented to 
+future meta-analysis.
+
+ztransform function created, rntransform function modified to take 
+similar syntax as ztransform.
+
+Bug in convert.snp.merlin (similar to the one in convert.snp.illumina) 
+fixed.
+
+***** v 1.3-2 (2007.12.18)
+
+Extensive cleanup, including fixes to mmscore and grammar; 
+examples introduced for polygenic, mmscore, grammar, and others.
+
+Bug in convert.snp.tped (similar to the one in convert.snp.illumina) 
+fixed.
+
+The number of people/genotypes (N) used in analysis of a particular SNP 
+added to the output of qtscore, mmscore, ccfast, egscore, and grammar.
+
+plot.scan.gwaa changed -- now it is possible to use ylim. 
+
+Bug fix in qtscore with binary traits without covariates -- there was 
+no test whether coding is 0/1 (if not, test would be wrong).
+
+Changes in C code of concerns functions convert.snp.mach and 
+convert.snp.ped. Speed of conversion from MACH format greatly 
+improved.
+
 ***** v 1.3-1 (2007.11.05)
 
 The strand information as based on build 35, is available from Yurii 
@@ -13,7 +79,7 @@ also imputations would have gone wrong.
 Small bug fixes with strand operations (SNP names were lost in sub-setting).
 
 New procedure rntransform(). This procedure performs 
-rank transformation to normality. The transformed varible 
+rank transformation to normality. The transformed variable 
 is perfectly normal, unless there are ties in the original 
 distribution.
 

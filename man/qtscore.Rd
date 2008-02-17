@@ -20,7 +20,7 @@ qtscore(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qui
 		If missing, all people from \code{data/cc} are used for analysis.}
   \item{strata}{Stratification variable. If provieded, scores are computed within strata and 
 		then added up.}
-  \item{trait.type}{"gaussian" or "binomial"}
+  \item{trait.type}{"gaussian" or "binomial" or "guess" (later option guesses trait type)}
   \item{times}{If more then one, the number of replicas to be used in derivation of 
 		empirical genome-wide significance. See \code{\link{emp.qtscore}}, which
 		calls qtscore with times>1 for details}
@@ -41,7 +41,12 @@ qtscore(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qui
 \details{
 When formula contains covariates, the traits is analysed using GLM and later 
 residuals used when score test is computed for each of the SNPs in analysis. 
-For binary traits, residuals from GLM are transformed using exp(x)/(1+exp(x)).
+Coefficients of regression are reported for the quantitative trait.
+
+For binary traits, odds ratios (ORs) are reportted. When adjustemnt is 
+performed, first, "response" residuals are estimated after adjustment for 
+covariates and scaled to [0,1]. Reported effects are approximately equal 
+to ORs expected in logistic regression model. 
 
 With no adjustment for binary traits, 1 d.f., the test is equivalent to the 
 Armitage test.
@@ -52,7 +57,14 @@ stratified analysis is performed (strata=sex).
 \value{
   Object of class \code{\link{scan.gwaa-class}}
 }
-%\references{}
+\references{
+Aulchenko YS, de Koning DJ, Haley C. Genomewide rapid association using mixed model 
+and regression: a fast and simple method for genome-wide pedigree-based quantitative 
+trait loci association analysis. Genetics. 2007 177(1):577-85.
+
+Amin N, van Duijn CM, Aulchenko YS. A genomic background based method for 
+association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274. 
+}
 \author{Yurii Aulchenko}
 %\note{}
 \seealso{

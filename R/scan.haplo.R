@@ -52,7 +52,7 @@ function(formula,data,snpsubset,idsubset,n.slide=2,bcast=10,simulate=FALSE,trait
 	  }
 	}
 	if (bcast<=(nsnps-n.slide+1)) cat("\n")
-	out <- list(P1df=Pv,name=name,formula=match.call(),family=family,map=map,ids=data@gtdata@idnames,chromosome=data@gtdata@chromosome[1:(nsnps-n.slide+1)])
+	out <- list(P1df=Pv,snpnames=name,formula=match.call(),family=family,map=map,idnames=data@gtdata@idnames,chromosome=data@gtdata@chromosome[1:(nsnps-n.slide+1)])
 	class(out) <- "scan.gwaa"
 	out
 }

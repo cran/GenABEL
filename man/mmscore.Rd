@@ -54,8 +54,8 @@ mmscore(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
   implemented currently.
 }
 \references{
-	Chen WM, Abecasis GR (2007) Family-based assoication tests for 
-	genome-wide association scans. Am. J. Hum. Genet. (in press)
+Chen WM, Abecasis GR. Family-based association tests for genome-wide association 
+scans. Am J Hum Genet. 2007 Nov;81(5):913-26. 
 }
 \author{Yurii Aulchenko}
 %\note{}
@@ -67,5 +67,23 @@ mmscore(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
 \code{\link{scan.gwaa-class}}
 }
 \examples{
+# ge03d2 is rather bad data set to demonstrate grammar, 
+# because this is a population-based study
+data(ge03d2.clean)
+#take half for speed
+ge03d2.clean <- ge03d2.clean[1:450,]
+gkin <- ibs(ge03d2.clean,w="freq")
+h2ht <- polygenic(height ~ sex + age,kin=gkin,ge03d2.clean)
+h2ht$est
+mm <- mmscore(h2ht,data=ge03d2.clean)
+# compute grammar
+gr <- qtscore(h2ht$pgres,data=ge03d2.clean,clam=FALSE)
+#compute GC
+gc <- qtscore(height ~ sex + age,data=ge03d2.clean)
+#compare
+plot(mm,df="Pc1df",cex=0.5)
+add.plot(gc,df="Pc1df",col="red")
+add.plot(gr,df="Pc1df",col="green",cex=1.1)
+# can see that mmscore and grammar are quite the same... in contrast to GC
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

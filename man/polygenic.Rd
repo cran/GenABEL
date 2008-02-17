@@ -56,9 +56,9 @@ polygenic(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",op
 
 	Also, it can be used for a variant of GRAMMAR analysis, which 
 	allows for permutations for GW significance by use of 
-	polygenic residuals as an analysis trait with \code{\link{qtscore}}.
+	environmental residuals as an analysis trait with \code{\link{qtscore}}.
 
-	"Polygenic residuals" (not to be mistaken with just "residuals") are 
+	"Environmental residuals" (not to be mistaken with just "residuals") are 
 	the residual where both the effect of covariates AND the estimated 
 	polygenic effect (breeding values) are factored out. This thus 
 	provides an estimate of the trait value contributed by environment
@@ -98,9 +98,9 @@ polygenic(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",op
 	maximal likelihood estimates (MLEs) (order: mean, betas for covariates, 
 	heritability, (polygenic + residual variance))}
   \item{residualY}{Residuals from analysis, based on covariate effects only; 
-	NOTE: these are NOT grammar polygenic residuals!}
+	NOTE: these are NOT grammar "environmental residuals"!}
   \item{esth2}{Estimate (or fixed value) of heritability}
-  \item{pgresidualY}{Polygenic residuals from analysis, based on covariate effects 
+  \item{pgresidualY}{Environmental residuals from analysis, based on covariate effects 
 	and predicted breeding value.
 	}
   \item{InvSigma}{Inverse of the variance-covariance matrix, computed at the 
@@ -111,16 +111,44 @@ polygenic(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",op
 	(traits and all covariates measured) == TRUE}
 }
 \references{
-	Thompson EA, Shaw RG (1990) Pedigree analysis for quantitative 
-	traits: variance components without matrix inversion. Biometrics 
-	46, 399-413.
+Thompson EA, Shaw RG (1990) Pedigree analysis for quantitative 
+traits: variance components without matrix inversion. Biometrics 
+46, 399-413.
+
+Aulchenko YS, de Koning DJ, Haley C. Genomewide rapid association using mixed model 
+and regression: a fast and simple method for genome-wide pedigree-based quantitative 
+trait loci association analysis. Genetics. 2007 177(1):577-85.
+
+Amin N, van Duijn CM, Aulchenko YS. A genomic background based method for 
+association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274. 
 }
 \author{Yurii Aulchenko}
-%\note{}
+\note{
+	Presence of twins may screw up your analysis. Check kinship matrix for 
+	singularities, or rather use \code{\link{check.marker}} for identification 
+	and exclusion of twin samples.
+}
 \seealso{
 \code{\link{mmscore}},
 \code{\link{grammar}}
 }
 \examples{
+# note that procedure runs on CLEAN data
+data(ge03d2ex.clean)
+gkin <- ibs(ge03d2ex.clean,w="freq")
+h2ht <- polygenic(height ~ sex + age,kin=gkin,ge03d2ex.clean)
+# estimate of heritability
+h2ht$esth2
+# other parameters
+h2ht$h2an
+# minimum negative log-likelihood
+h2ht$h2an$minimum
+# maximum log-likelihood
+-h2ht$h2an$minimum
+
+#for binary trait (experimental)
+h2dm <- polygenic(dm2 ~ sex + age,kin=gkin,ge03d2ex.clean,trait="binomial")
+# estimated parameters
+h2dm$h2an
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

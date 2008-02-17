@@ -1,7 +1,9 @@
 \name{ge03d2}
 \alias{ge03d2}
+\alias{ge03d2.clean}
 \alias{ge03d2c}
 \alias{ge03d2ex}
+\alias{ge03d2ex.clean}
 \alias{pop2.ids}
 \alias{qc.nostr}
 \alias{qc.str}
@@ -29,16 +31,18 @@
 	This data set was developed for the "Advances in population-
 	based studies" (Ge03) course of the Nihes.
 	See vignette "GenABEL-tutorial.pdf" for details.
+
+	The data sets with extension ".clean" are sets after QC.
 }
 \usage{data(ge03d2)}
-\format{
-}
-\details{
-}
-\source{
-}
-\references{
-}
+%\format{
+%}
+%\details{
+%}
+%\source{
+%}
+%\references{
+%}
 \examples{
 #main example: use this to see full functionality
 # demo(ge03d2)

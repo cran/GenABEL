@@ -1,10 +1,11 @@
 "load.gwaa.data" <-
-function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=FALSE, sort=TRUE) {
+function(phenofile = "pheno.dat", genofile = "geno.raw",force = TRUE, makemap=FALSE, sort=TRUE) {
 # check that ID and SEX are correct
 	dta <- read.table(phenofile,header=TRUE,as.is=TRUE)
 	coln <- names(dta)
 	if (!any(names(dta)=="id",na.rm=TRUE)) 
 		stop("the filed named \"id\", containing the identifier presented in both pheno- and geno- files was not found in the phenofile")
+	class(dta$id) <- "character"
 	if (!any(names(dta)=="sex",na.rm=TRUE)) 
 		stop("the column named \"sex\", containing the male identifier was not found in the phenofile")
 	a <- table(dta$sex,exclude=NULL)
@@ -20,7 +21,7 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=F
 	if (any(is.na(dta$id)))
 		stop("there are missing IDs in the phenotypic data file")
 	if (any(is.na(dta$sex)))
-		stop("there are missing sexes in the phenotypic data file")
+		stop("there are missing sex values in the phenotypic data file")
 	rownames(dta) <- dta$id
 # read in genotypic data
 	ifile <- file(genofile,"r")
@@ -121,8 +122,12 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = FALSE, makemap=F
 	rm(a,newdta);gc(verbose=FALSE)
 	if (sort) {
 		chr <- as.character(out@gtdata@chromosome)
-		mxC <- max(as.numeric(chr),na.rm=T)
-		chr <- replace(chr,(chr=="X"),(mxC+1))
+		names(chr) <- names(out@gtdata@chromosome)
+		mxC <- max(as.numeric(chr[autosomal(out@gtdata)]),na.rm=T)
+		if (any(chr=="XY")) chr <- replace(chr,(chr=="XY"),(mxC+1))
+		if (any(chr=="X")) chr <- replace(chr,(chr=="X"),(mxC+2))
+		if (any(chr=="mt")) chr <- replace(chr,(chr=="mt"),(mxC+3))
+		if (any(chr=="Y")) chr <- replace(chr,(chr=="Y"),(mxC+4))
 		chr <- as.numeric(chr)
 		ord <- order(chr,out@gtdata@map)
 		out <- out[,ord]

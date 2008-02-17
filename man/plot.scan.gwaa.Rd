@@ -5,7 +5,7 @@
 Plots results of GWA analysis
 }
 \usage{
-plot.scan.gwaa(x, y, ..., df=1)
+plot.scan.gwaa(x, y, ..., df=1,ylim)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -13,8 +13,9 @@ plot.scan.gwaa(x, y, ..., df=1)
 		\code{\link{ccfast}}, \code{\link{emp.ccfast}}, \code{\link{emp.qtscore}}, or \code{\link{scan.haplo}}}
   \item{y}{this argument is not used}
   \item{\dots}{additional arguments to be passed to plot}
-  \item{df}{Plot results of 1 or 2-df test (1, 2). Could be also "Pc1df" (for GC corrected P-values) or "all" 
-		(to plot all three)}
+  \item{df}{Plot results of 1 or 2-df test (1, 2). Could be also "Pc1df" (for GC corrected P-values), "Pc2df" 
+		(for robust genomic control of the 2 df test) or "all" (all results)}
+  \item{ylim}{ylim, same as in the standard plot function}
 }
 %\details{}
 \value{
@@ -36,10 +37,8 @@ plot.scan.gwaa(x, y, ..., df=1)
 }
 \examples{
 data(srdta)
-a <- ccfast("bt",srdta,snps=c(1:250))
+a <- qtscore(bt,srdta,snps=c(1:250))
 plot(a)
-plot(a,df="all")
-a1 <- snp.subset(a,snps=c(20:100))
-plot(a1,df="all")
+add.plot(a,df="Pc1df",col="green")
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS

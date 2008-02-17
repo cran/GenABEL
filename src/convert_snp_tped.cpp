@@ -7,6 +7,8 @@
  * output hex format -- ensure that two chars are output for every number (width=2)
  * conversion to GenABEL raw format version 0.1 
  *
+ * last modified 2007.12.18
+ *
  **/
 #include <cstdlib>  
 #include <string>
@@ -28,7 +30,7 @@ using namespace std;
 
 
 extern "C" {
-  void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilename, int* bcast, int* Strandid, char **allele_codes, int* Ncodes) {
+  void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilename, int* Strandid, int* bcast, char **allele_codes, int* Ncodes) {
 
   short unsigned int ncodes = *Ncodes;
   short unsigned int strandid = *Strandid;
@@ -50,6 +52,8 @@ extern "C" {
   vector<unsigned short int> strand; string tmp_strand;
   vector<string> codeset(ncodes); 
   char tmp_chcoding [10];
+
+  for (int i=0;i<ncodes;i++) codeset[i].assign(allele_codes[i]);
 
     ///////////////////////
     // read the tfamfile //
@@ -163,9 +167,6 @@ extern "C" {
 		}
 	}
 	if (ccd<0) error ("coding '%s' for SNP not recognised !\n",tmp_coding.c_str());
-
-
-
 	try {
 	  tmp_gtype = new unsigned char [nbytes];
 	}
@@ -184,20 +185,26 @@ extern "C" {
 
 	    switch (gnum[idx]+gnum[idx+1]) {
 	    case 2:
-	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
+              if (ca1 > ca2) 
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
+	      else
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
 	      break;
 	    case 4:
 	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)2 << offset[ind]);
 	      break;
 	    case 6:
-	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
+              if (ca1 > ca2) 
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
+	      else
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
 	      break;
 	    case 0:
-	      // tmp_gtype[byte] = tmp_gtype[byte] | (0 << offset[ind]); // this does nothing
+	      tmp_gtype[byte] = tmp_gtype[byte] | (0 << offset[ind]); // this does nothing
 	      break;
 	    default:
-	      error ("illegal genotype (half missing) snp '%s' file '%s' line %li !",
-		     tmp_snpnm.c_str(),tpedfilename[0],linecount);
+	      error ("illegal genotype (half missing) SNP '%s' file '%s' line %li !",
+		     snpnm[linecount-1].c_str(),tpedfilename[0],(linecount-1));
 	    }
 	    idx += 2;
 	    if (idx >= 2*nids) break;
@@ -233,6 +240,9 @@ extern "C" {
       Rprintf("Writing to file '%s' ...\n",outfilename[0]);
     }    
     
+    outfile << "#GenABEL raw data version 0.1";
+    outfile << endl;
+
     copy(iid.begin(), iid.end(), ostream_iterator<string>(outfile, " "));
     outfile << endl;
 

@@ -6,6 +6,7 @@ importClasses(genetics)
 
 export(
 	add.plot,
+	add.phdata,
 	as.character.gwaa.data,
 	as.character.snp.coding,
 	as.character.snp.data,
@@ -19,6 +20,7 @@ export(
 	as.hsgeno,
 	as.hsgeno.gwaa.data,
 	as.hsgeno.snp.data,
+	autosomal,
 	catable,
 	ccfast,
 	check.marker,
@@ -38,6 +40,7 @@ export(
 	emp.qtscore,
 	estlambda,
 	export.merlin,
+	formetascore,
 	grammar,
 	HWE.show,
 	hom,
@@ -45,6 +48,7 @@ export(
 	load.gwaa.data,
 #	merge.snp.data,
 	mmscore,
+	npsubtreated,
 	perid.summary,
 	plot.check.marker,
 	plot.scan.gwaa,
@@ -70,7 +74,8 @@ export(
 	summary.check.marker,
 	summary.gwaa.data,
 	summary.snp.data,
-	Xfix
+	Xfix,
+	ztransform
        )
 
 exportClasses(

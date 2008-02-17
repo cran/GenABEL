@@ -1,9 +1,9 @@
 \name{Xfix}
 \alias{Xfix}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{function to set heterozygous male X-linked genotypes to NA}
+\title{function to set impossible genotypes as missing}
 \description{
-Sets heterozygous male X-linked genotypes to NA
+Sets impossible genotypes (e.g. heterozygous male X-linked genotypes) to missing
 }
 \usage{
 	Xfix(data)
@@ -13,6 +13,11 @@ Sets heterozygous male X-linked genotypes to NA
   \item{data}{Object of \link{gwaa.data-class}}
 }
 \details{
+	Sets to missing genotypes in the following situations:
+	(1) heterozygous male X-genotypes (2) heterozygous 
+	Y- and mtDNA genotypes (3) any Y-genotypes in females.
+	Should only be used after \code{\link{check.marker}}, 
+	which identifies systematic sex errors.
 }
 \value{
 	The same object of \link{gwaa.data-class}, with fixed 
@@ -20,8 +25,8 @@ Sets heterozygous male X-linked genotypes to NA
 }
 \references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{check.marker}}
 }

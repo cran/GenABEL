@@ -34,4 +34,4 @@ refresh.gwaa.data(data,force=FALSE)
 }
 %\examples{
 %}
-\keyword{IO}% at least one, from doc/KEYWORDS
+\keyword{manip}% at least one, from doc/KEYWORDS

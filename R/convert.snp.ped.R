@@ -1,4 +1,4 @@
-"convert.snp.ped" <- function(pedfile,mapfile,outfile,format="premakeped",traits=1,strand="u",bcast=10000000) {
+"convert.snp.ped" <- function(pedfile,mapfile,outfile,format="premakeped",traits=1,strand="u",bcast=10000000,wslash=F) {
 
 	alcodes <- alleleID.codes()
 
@@ -19,7 +19,11 @@
 # intfmt = 0 -> premakeped, merlin
 # else -> mach
 
-	.C("convert_snp_merlin",as.character(pedfile),as.character(mapfile),as.character(outfile),as.integer(intstrand),as.integer(bcast),as.character(alcodes),as.integer(length(alcodes)),as.integer(intfmt),as.integer(traits),PACKAGE="GenABEL")
+	if (wslash) {
+		.C("convert_snp_merlin_wslash",as.character(pedfile),as.character(mapfile),as.character(outfile),as.integer(intstrand),as.integer(bcast),as.character(alcodes),as.integer(length(alcodes)),as.integer(intfmt),as.integer(traits),PACKAGE="GenABEL")
+	} else {
+		.C("convert_snp_merlin",as.character(pedfile),as.character(mapfile),as.character(outfile),as.integer(intstrand),as.integer(bcast),as.character(alcodes),as.integer(length(alcodes)),as.integer(intfmt),as.integer(traits),PACKAGE="GenABEL")
+	}
     	return(invisible(0))
 }
 

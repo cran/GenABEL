@@ -65,13 +65,14 @@ This test is defined only for 1 d.f.
 \seealso{
 \code{\link{qtscore}},
 \code{\link{mmscore}},
-\code{\link{plot.scan.gwaa}},
+\code{\link{ibs}},
 \code{\link{scan.gwaa-class}}
 }
 \examples{
 data(ge03d2ex)
 #egscore with stratification
-a <- egscore(dm2~sex+age,data=ge03d2ex,kin=ibs(ge03d2ex,w="freq"))
-plot(a)
+gkin <- ibs(ge03d2ex,w="freq")
+a <- egscore(dm2~sex+age,data=ge03d2ex,kin=gkin)
+plot(a,df="Pc1df")
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

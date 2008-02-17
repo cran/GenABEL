@@ -3,7 +3,8 @@
  * 2007.07.20 by Yurii Aulchenko, EMCR
  * based on code conributed by Toby Johnson (convert_snp_tped.cpp)
  *
- * last modified 2007.07.23 by YA
+ * modified 2007.07.23 by YA
+ * last modified 2008.01.10 by YA
  *
  **/
 
@@ -27,30 +28,15 @@ using namespace std;
 
 #define MAXIDS 100000
 
-string replace_mrl(string in) {
-	int pos = 0;
-	while ( (pos=in.find("/")) != -1 ) {
-		in.erase(pos,1);
-		in.insert(pos," ");
-	}
-	return in;
-}
-
-string replace_mach(string in) {
-	int pos = 0;
-	if ( (pos=in.find("->")) != -1 ) {
-		in.erase(pos,2);
-		in.insert(pos," ");
-	}
-	return in;
-}
+string replace_mrl(string in);
+string replace_mach(string in);
 
 /**
  *
  * strand == 0 -> unknown ('u')
  * strand == 1 -> plus ('+')
  * strand == 2 -> minus ('-')
- * strand == 3 -> five columns (chr,name,pos,strand,coding) expected in map-file
+ * strand == 3 -> four columns (name,chr,pos,strand) expected at the beginning
  *
 **/
 
@@ -102,7 +88,8 @@ extern "C" {
     while (getline(mapfile,data)) {
       istringstream datas (data);
       mapline++;
-      if ( datas >> tmp_chrom >> tmp_snpnm >> tmp_phymap >> tmp_strand >> tmp_coding) {
+//      if ( datas >> tmp_chrom >> tmp_snpnm >> tmp_phymap >> tmp_strand >> tmp_coding) {
+      if ( datas >> tmp_chrom >> tmp_snpnm >> tmp_phymap >> tmp_strand) {
 	chrom.push_back(tmp_chrom);
 	snpnm.push_back(tmp_snpnm);
 	phymap.push_back(tmp_phymap);
@@ -110,7 +97,7 @@ extern "C" {
 	else if (tmp_strand=="-") strand.push_back(2);
 	else if (tmp_strand=="u") strand.push_back(0);
 	else error ("Strand code not recognised at line %i !\n", mapline);
-	coding.push_back(tmp_coding);
+//	coding.push_back(tmp_coding);
       } else {
 	      error ("incomplete map record in line %i !\n",mapline);
       }
@@ -255,12 +242,14 @@ extern "C" {
 
 	char allele1 = 0;
 	char allele2 = 0;
+/**
         if (strandid==3) {
 	  char at[10];
 	  sprintf(at,"%s",coding[snp].c_str());
 	  allele1 = at[0];
 	  allele2 = at[1];
         }
+**/
 
 
   unsigned long int ca1 = 0;
@@ -277,10 +266,12 @@ extern "C" {
 	    } else if (gdata == '0') {
 	      gnum[idx] = 0;
 	    } else {
+/**
 	      if (strandid==3) {
 		error ("Annotation ('%s') and pedigree ('%c%c') coding contradicts in snp '%s' file '%s' line %li !",
 		       coding[snp].c_str(),allele1,allele2,snpnm[snp].c_str(),pedfilename[0],linecount);
 	      } else {
+**/
 	      if (allele1 == 0) {
 		allele1 = gdata;
 		gnum[idx] = 1;
@@ -293,33 +284,20 @@ extern "C" {
 		error ("illegal genotype (three alleles) snp '%s' file '%s' line %li !",
 		       snpnm[snp].c_str(),pedfilename[0],linecount);
 	      }
-	      }
+//	      }
 	    }
 
 	}
 
-/**
-    if (strandid==3) {
-	sprintf(tmp_chcoding,"%c%c",allele1,allele2);
-	sprintf(tmp_chcoding1,"%c%c",allele1,allele2);
-	tmp_coding.assign(tmp_chcoding);
-	tmp_coding1.assign(tmp_chcoding1);
-	if (!allele1 || !allele2) {
-		coding.push_back(codingarr[snp]);
-	} else if (tmp_coding != codingarr[snp] && tmp_coding1 != codingarr[snp]) 
-		error("Pedigree coding ('%s') is different from the annotation coding ('') !\n",tmp_coding,codingarr[snp]);
-	coding.push_back(codingarr[snp]);
-    } else {
-**/
-    if (strandid!=3) {
+//    if (strandid!=3) {
 	if (ca1 > ca2) sprintf(tmp_chcoding,"%c%c",allele1,allele2);
 	else sprintf(tmp_chcoding,"%c%c",allele2,allele1);
 	tmp_coding.assign(tmp_chcoding);
 	if (!allele1 || !allele2) tmp_coding="12";
 	coding.push_back(tmp_coding);
-    }
+//    }
 
-    	if (strandid==3) tmp_coding = coding[snp];
+//    	if (strandid==3) tmp_coding = coding[snp];
 	int ccd = -1;
 	for (int i = 0; i < ncodes; i++) {
 		if (codeset[i].compare(tmp_coding)==0) {
@@ -347,13 +325,19 @@ extern "C" {
 
 	    switch (gnum[idx]+gnum[idx+1]) {
 	    case 2:
-	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
+              if (ca1 > ca2) 
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
+	      else
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
 	      break;
 	    case 4:
 	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)2 << offset[ind]);
 	      break;
 	    case 6:
-	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
+              if (ca1 > ca2) 
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
+	      else
+		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
 	      break;
 	    case 0:
 	      tmp_gtype[byte] = tmp_gtype[byte] | (0 << offset[ind]); // this does nothing

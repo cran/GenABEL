@@ -37,6 +37,7 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,pro
 			out$chi2.1df <- chi2.1df
 			out$chi2.2df <- chi2.2df
 			actdf <- chi2[(2*lenn+1):(3*lenn)];
+			out$N <- chi2[(6*lenn+1):(7*lenn)];
 			if (lenn<=10 && !is.numeric(clambda)) {
 				lambda <- list()
 				lambda$estimate <- NA

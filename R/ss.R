@@ -40,7 +40,7 @@ setMethod("[",signature(x="snp.coding",i="ANY",j="missing",drop="missing"),
 		x <- as.raw(x)
 		names(x) <- nams
 		out <- new("snp.coding",x[i])
-#		names(out) <- nams
+		names(out) <- nams[i]
 		out
 	})
 setMethod("show","snp.coding",
@@ -62,7 +62,7 @@ setMethod("[",signature(x="snp.strand",i="ANY",j="missing",drop="missing"),
 		x <- as.raw(x)
 		names(x) <- nams
 		out <- new("snp.strand",x[i])
-#		names(out) <- nams
+		names(out) <- nams[i]
 		out
 	})
 setMethod("show","snp.strand",
@@ -137,12 +137,14 @@ setMethod("[","snp.data",
 		a@snpnames <- x@snpnames[j]
 		a@map <- x@map[j]
 		a@chromosome <- as.factor(as.character(x@chromosome[j]))
+		names(a@chromosome) <- a@snpnames
 		a@coding <- new("snp.coding",x@coding[j])
 		names(a@coding) <- a@snpnames
 		a@strand <- new("snp.strand",x@strand[j])
 		names(a@strand) <- a@snpnames
 		a@idnames <- x@idnames[i]
 		a@male <- x@male[i]
+		names(a@male) <- a@idnames
 		a@gtps <- x@gtps[i,j]
 		a
 	})

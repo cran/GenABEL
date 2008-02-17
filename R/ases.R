@@ -85,6 +85,7 @@ function(x, ...) {
 		gdta <- cbind(gdta,genotype(as.character(x[,i])))
 	}
 	colnames(gdta) <- x@snpnames
+	rownames(gdta) <- x@idnames
 #	class(gdta) <- "genotype"
 	gdta
 }

@@ -6,7 +6,7 @@ Converts genotypic data in a variety of pedigree fromats (+map) to internal geno
 }
 \usage{
 convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1, 
-	strand = "u", bcast = 10000000)
+	strand = "u", bcast = 10000000, wslash=F)
 }
 \arguments{
   \item{pedfile}{
@@ -34,6 +34,12 @@ convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1,
 	}
   \item{bcast}{
 	Reports progress after reading bcast portion of SNPs
+	}
+  \item{wslash}{
+	Whether alleles are separated with slash (is true for Mach/Merlin format), 
+	otherwise it is assumed that alleles are separated with space. When 
+	wslash=T it is assumed that genotypes are coded with single characters, 
+	separated with slash (no spaces), e.g. "A/G", and not "A/ G" or "A / G".
 	}
 }
 \details{
@@ -73,14 +79,13 @@ convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1,
 	Says that locus 1 is named rs679153 and located at chromosome 18 position 2859916.
 	Locus 2 (rs9965482) is located at chromosome 18, position 2860891.
 
-	In extended map format, there should be 4th column specifying the strand and 5th 
-	column specifying coding.
+	In extended map format, there should be 4th column specifying the strand
 
-	chrom name       position strand coding
+	chrom name       position strand
 
-	18    rs679153   2859916   -     AG
+	18    rs679153   2859916   -
 
-	18    rs9965482  2860891   +     GT
+	18    rs9965482  2860891   +
 
 	Accepted strand coding: +, -, u (unknown)
 

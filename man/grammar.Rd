@@ -4,10 +4,10 @@
 \description{
 Fast approximate score test for association between a trait and genetic polymorphism, 
 in samples of related individuals. When used with argument "times=1", it is equivalent to 
-running \code{\link{qtscore}} on polygenic residuals from \code{\link{polygenic}}.
+running \code{\link{qtscore}} on "environmental residuals" from \code{\link{polygenic}}.
 However, it does not produce correct results with permutations, because the raw 
-trait values, which are not exchangable, are permuted. Use \code{\link{qtscore}} 
-on polygenic residuals when you wnat to have empirical GW significance with GRAMMAR 
+trait values, which are not exchangeable, are permuted. Use \code{\link{qtscore}} 
+on "environmental residuals" when you want to have empirical GW significance with GRAMMAR 
 method.
 }
 \usage{
@@ -64,8 +64,12 @@ grammar(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
   implemented currently.
 }
 \references{
-	Chen WM, Abecasis GR (2007) Family-based assoication tests for 
-	genome-wide association scans. 
+Aulchenko YS, de Koning DJ, Haley C. Genomewide rapid association using mixed model 
+and regression: a fast and simple method for genome-wide pedigree-based quantitative 
+trait loci association analysis. Genetics. 2007 177(1):577-85.
+
+Amin N, van Duijn CM, Aulchenko YS. A genomic background based method for 
+association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274. 
 }
 \author{Yurii Aulchenko}
 %\note{}
@@ -76,5 +80,23 @@ grammar(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
 \code{\link{scan.gwaa-class}}
 }
 \examples{
+# ge03d2.clean is rather bad data set to demonstrate grammar, 
+# because this is a population-based study
+data(ge03d2.clean)
+#take half for speed
+ge03d2.clean <- ge03d2.clean[1:450,]
+gkin <- ibs(ge03d2.clean,w="freq")
+h2ht <- polygenic(height ~ sex + age,kin=gkin,ge03d2.clean)
+h2ht$est
+# can use "grammar", but ...
+a <- grammar(h2ht,data=ge03d2.clean)
+# ... use rather qtscore (note clam=FALSE), which is a better alternative for the same thing
+a <- qtscore(h2ht$pgres,data=ge03d2.clean,clam=FALSE)
+# compare to GC:
+b <- qtscore(height ~ sex + age,data=ge03d2.clean)
+plot(b,df="Pc1df",col="red")
+add.plot(a,df="Pc1df")
+# relatively large difference is due to high heritability
+# note that locus at chromosome 2 should indeed be there...
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

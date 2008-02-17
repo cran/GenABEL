@@ -13,7 +13,7 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 		perid.call=0.95, extr.call = 0.1, extr.perid.call = 0.1, het.fdr = 0.01, 
 		ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower", maf, p.level = -1, fdrate = 0.2, 
 		odds = 1000, hweidsubset, redundant = "no", 
-		minconcordance = 2.0, qoption = "bh95") 
+		minconcordance = 2.0, qoption = "bh95", imphetasmissing = TRUE, XXY.call=0.5) 
 }
 \arguments{
   \item{data}{gwaa.data or snp.data object}
@@ -44,6 +44,11 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 			see \code{\link{redundant}} for details. Note that if "minconcordance" < 1
 			the program will take much longer time to run}
   \item{qoption}{if "bh95", BH95 FDR used; if "storey", qvalue package is used}
+  \item{imphetasmissing}{If "impossible heterozygotes" (e.g. heterozygous 
+			mtDNA, and male Y- and X-chromsome markers) should 
+			be treated as missing genotypes in the QC procedure}
+  \item{XXY.call}{What proportion of Y-chromosome markers should be called to consider that 
+			Y-chromosome is present (in presence of XX)}
 }
 \details{
 	In this procedure, sex errors are identified initally and then 

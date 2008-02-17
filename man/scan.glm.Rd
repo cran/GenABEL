@@ -46,11 +46,13 @@ maposnp
 reg <- snp.names(srdta,begin=maposnp-100000,end=maposnp+100000,chrom="1")
 a <- scan.glm("qt3~sex+age+CRSNP",data=srdta,snps=reg)
 plot(a)
-plot(a,df="all")
+plot(a,df=1)
+add.plot(a,df=2)
 
 # interaction with sex
 a <- scan.glm("qt3~age+sex*CRSNP",data=srdta,snps=reg)
-plot(a,df="all")
+plot(a,df=1)
+add.plot(a,df=2)
 # you can do interaction with a selected polymorphisms in the same way
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

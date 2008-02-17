@@ -30,7 +30,10 @@ function(data,categories = c(quantile(data,c(0.01,0.1,0.5,0.9,0.99),na.rm=TRUE))
 		else 
 			cnams[i+1] <- paste(categories[i],"<X<=",categories[i+1],sep="")
 	}
-	cnams[length(categories)+1] <- paste("X>",categories[length(categories)],sep="")
+	if (cumulative) 
+		cnams[length(categories)+1] <- paste("all X",sep="")
+	else 
+		cnams[length(categories)+1] <- paste("X>",categories[length(categories)],sep="")
 
 	colnames(outmat) <- cnams
 	rownames(outmat) <- c("No","Prop")

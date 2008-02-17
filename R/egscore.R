@@ -70,11 +70,11 @@ function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,q
 	out <- list()
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) resid <- sample(resid,replace=FALSE)
-		chi2 <- .C("egscore",as.raw(data@gtdata@gtps),as.double(resid),as.integer(naxes),as.double(ev),as.integer(data@gtdata@nids),as.integer(data@gtdata@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(6*data@gtdata@nsnps), PACKAGE="GenABEL")$chi2
+		chi2 <- .C("egscore",as.raw(data@gtdata@gtps),as.double(resid),as.integer(naxes),as.double(ev),as.integer(data@gtdata@nids),as.integer(data@gtdata@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(7*data@gtdata@nsnps), PACKAGE="GenABEL")$chi2
 #		if (any(data@gtdata@chromosome=="X")) {
 #		  ogX <- data@gtdata[,data@gtdata@chromosome=="X"]
 #		  sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
-#		  chi2X <- .C("egscore",as.raw(ogX@gtps),as.double(resid),as.integer(naxes),as.double(ev),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(6*ogX@nsnps), PACKAGE="GenABEL")$chi2
+#		  chi2X <- .C("egscore",as.raw(ogX@gtps),as.double(resid),as.integer(naxes),as.double(ev),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(7*ogX@nsnps), PACKAGE="GenABEL")$chi2
 #		  revec <- (data@gtdata@chromosome=="X")
 #		  revec <- rep(revec,6)
 #		  chi2 <- replace(chi2,revec,chi2X)
@@ -150,6 +150,7 @@ function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,q
 	out$idnames <- data@gtdata@idnames
 	out$formula <- match.call()
 	out$family <- paste("score test for association, eigen-adjustment")
+	out$N <- chi2[(6*lenn+1):(lenn*7)]
 	class(out) <- "scan.gwaa"
 	out
 }

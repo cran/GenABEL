@@ -1,8 +1,7 @@
-"?" <- function(...) invisible(0)
 #
-?"loading the data"
+# loading the data
 #
-?"first, you can convert data from ped-files to internal format"
+# first, you can convert data from ped-files to internal format"
 adpr <- paste(.Library,"/GenABEL/exdata/",sep="")
 genofile <- paste(adpr,"pedin.18",sep="")
 cat("location of ped-file:",genofile,"\n")
@@ -12,10 +11,10 @@ phfile <- paste(adpr,"phenos.18",sep="")
 cat("location of pheno-file:",phfile,"\n")
 convert.snp.ped(pedfile=genofile,mapfile=mapfile,outfile="chr18.raw",bcast=50)
 a<-readline("PRESS <Enter> TO CONTINUE...")
-?"These file can be read in using load.gwaa.data:"
+# These file can be read in using load.gwaa.data:"
 srdta <- load.gwaa.data(geno="chr18.raw",pheno=phfile)
 a<-readline("PRESS <Enter> TO CONTINUE...")
-?"Now, let us convert and read data from other human-readable format:"
+# Now, let us convert and read data from other human-readable format:"
 genofile <- paste(adpr,"srgenos.dat",sep="")
 cat("location of file with human-readable genotypes:",genofile,"\n")
 a<-readline("PRESS <Enter> TO CONTINUE...")
@@ -130,28 +129,47 @@ a<-readline("PRESS <Enter> TO CONTINUE...")
 #
 # genetic data QC
 #
-summary(srdta@gtdata)
+# Not run: very long output
+# summary(srdta@gtdata)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 summary(srdta@gtdata[,1:10])
 a<-readline("PRESS <Enter> TO CONTINUE...")
 summary(srdta@gtdata[srdta@phdata$bt==0,1:10])
 a<-readline("PRESS <Enter> TO CONTINUE...")
-mc <- check.marker(srdta)
+mc <- check.marker(srdta,ibs.mrk=200)
+#
+# generate summary per SNP and per ID
+#
+a<-readline("PRESS <Enter> TO CONTINUE...")
 summary(mc)
+#
+# show HWE details for markers which failed HWE test
+#
+a<-readline("PRESS <Enter> TO CONTINUE...")
 HWE.show(snps=mc$nohwe,data=srdta)
-plot(mc)
+#
+# plot mc
+#
 a<-readline("PRESS <Enter> TO CONTINUE...")
-mc <- check.marker(data=srdta,call=0.94,maf=0.01,p.level=0.01,bcast=200)
+plot(mc)
+#
+# other round of QC with user threshold values
+#
+a<-readline("PRESS <Enter> TO CONTINUE...")
+mc <- check.marker(data=srdta,call=0.94,maf=0.01,p.level=0.01,ibs.exclude="both")
 summary(mc)
 plot(mc)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 HWE.show(snps=mc$nohwe,data=srdta)
+#
+# use only "bt" controls for HWE checks
+#
 a<-readline("PRESS <Enter> TO CONTINUE...")
-mc <- check.marker(data=srdta,call=0.94,maf=0.01,p.level=0.01,bcast=200,hweids=(srdta@phdata$bt==0))
+mc <- check.marker(data=srdta,call=0.94,maf=0.01,p.level=0.01,hweids=(srdta@phdata$bt==0),ibs.exclude="both")
 summary(mc)
 plot(mc)
 a<-readline("PRESS <Enter> TO CONTINUE...")
-mc <- check.marker(data=srdta,call=0.94,maf=0.01,p.level=0.01,bcast=200,mincon=.90)
+mc <- check.marker(data=srdta,call=0.94,maf=0.01,p.level=0.01,mincon=.90,ibs.exclude="both")
 summary(mc)
 plot(mc)
 a<-readline("PRESS <Enter> TO CONTINUE...")
@@ -162,28 +180,51 @@ a<-readline("PRESS <Enter> TO CONTINUE...")
 #
 # running analysis
 #
-mc <- check.marker(data=srdta,call=0.94,maf=(5/srdta@gtdata@nids),fdr=0.05,hweids=(srdta@phdata$bt==0))
+mc <- check.marker(data=srdta,call=0.94,maf=(5/srdta@gtdata@nids),fdr=0.05,hweids=(srdta@phdata$bt==0),ibs.exclude="both")
 summary(mc)
-mymrk <- mc$ok
+mymrk <- mc$snpok
+#
+# case-control analysis (not recommended, rather use qtscore)
+#
 a<-readline("PRESS <Enter> TO CONTINUE...")
 res.fcc <- ccfast("bt",data=srdta,snps=mymrk)
+#
+# what is the minimal P-value obsreved?
+#
 min(res.fcc$P1df)
 -log10(min(res.fcc$P1df))
-which(res.fcc$P1df<=0.01)
+#
+# at which SNP the P-value <= 0.01 observed?
+#
+b<-which(res.fcc$P1df<=0.01)
+b
+res.fcc$snpnames[b]
+res.fcc$P1df[b]
+#
+# plot the results
+#
 plot(res.fcc)
+#
+# estimate experimet-wise significance
+#
 a<-readline("PRESS <Enter> TO CONTINUE...")
 res.boocc <- emp.ccfast("bt",data=srdta,snps=mymrk)
 min(res.boocc$P1df)
 plot(res.boocc)
+#
+# run simular analyses qith qtscore
+#
 a<-readline("PRESS <Enter> TO CONTINUE...")
-res.score <- qtscore(srdta@phdata$bt,data=srdta,snps=mymrk)
+res.score <- qtscore(bt,data=srdta,snps=mymrk,trait="binomial")
 min(res.score$P1df)
 -log10(min(res.score$P1df))
 which(res.score$P1df<=0.01)
 plot(res.score)
+#
+# overlay ccfast results over qtscore
+#
 a<-readline("PRESS <Enter> TO CONTINUE...")
-plot(res.fcc)
-points(res.score$map,-log10(res.score$P1df),col="red")
+add.plot(res.fcc,col="red")
 a<-readline("PRESS <Enter> TO CONTINUE...")
 plot(res.fcc$P1df,res.score$P1df,pch=20)
 a<-readline("PRESS <Enter> TO CONTINUE...")
@@ -202,7 +243,7 @@ a<-readline("PRESS <Enter> TO CONTINUE...")
 
 index <- which.min(res.score$P1df)
 index
-osnp <- res.score$name[index]
+osnp <- res.score$snpname[index]
 osnp
 pososnp <- srdta@gtdata@map[osnp]
 pososnp
@@ -244,9 +285,9 @@ x.adj <- matrix(c(srdta@phdata$sex,srdta@phdata$age),ncol=2)
 srdta@phdata[1:5,]
 x.adj[1:5,]
 a<-readline("PRESS <Enter> TO CONTINUE...")
-r1.2.hap <- scan.haplo("bt",data=srdta,snps=reg,trait="binomial",x.adj=x.adj,n.slide=2)
+r1.2.hap <- scan.haplo("bt~sex+age+CRSNP",data=srdta,snps=reg,trait="binomial",n.slide=2)
 min(r1.2.hap$P1df)
-r1.3.hap <- scan.haplo("bt",data=srdta,snps=reg,trait="binomial",x.adj=x.adj,n.slide=3)
+r1.3.hap <- scan.haplo("bt~sex+age+CRSNP",data=srdta,snps=reg,trait="binomial",n.slide=3)
 min(r1.3.hap$P1df)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 plot(r1.1.glm)
@@ -264,7 +305,7 @@ points(r1.2.hap$map,-log10(r1.2.hap$P1df),col="red",type="l")
 points(r1.3.hap$map,-log10(r1.3.hap$P1df),col="green",type="l")
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
-h2d <- scan.haplo.2D("bt",data=srdta,snps=reg[10:30],trait="binomial",x.adj=x.adj)
+h2d <- scan.haplo.2D("bt~sex+age+CRSNP",data=srdta,snps=reg[10:30],trait="binomial")
 plot(h2d)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
@@ -296,7 +337,7 @@ plot(r.booqts)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
 #investigation of the region
-osnp <- r.booqts$name[which.min(r.booqts$P1df)]
+osnp <- r.booqts$snpname[which.min(r.booqts$P1df)]
 osnp
 pososnp <- srdta@gtdata@map[osnp]
 pososnp
@@ -346,59 +387,58 @@ a<-readline("PRESS <Enter> TO CONTINUE...")
 # generating combined 2D - LD heatmaps
 #
 
-?"figure out best SNP P-value"
+# figure out best SNP P-value"
 qts <- qtscore(qt2~sex+age,data=srdta)
 min(qts$P1df)
 
-?"get index of the best SNP"
-a<-which.min(qts$P1df)
-a
+# get index of the best SNP"
+b<-which.min(qts$P1df)
+b
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
-?"get names of SNPs in +/- 25 kbp region"
-reg1 <- snp.names(srdta,beg=srdta@gtdata@map[a]-25000,end=srdta@gtdata@map[a]+25000)
+# get names of SNPs in +/- 25 kbp region"
+reg1 <- snp.names(srdta,beg=srdta@gtdata@map[b]-25000,end=srdta@gtdata@map[b]+25000)
 reg1
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
-?"2D haplo analysis"
-?"2D haplo analysis will be adjusted for sex and age"
-cov <- data.frame(sex=srdta@phdata$sex,age=srdta@phdata$age)
-?"2D haplo analysis"
-reg1.h2D <- scan.haplo.2D("qt2",data=srdta,x.adj=cov,snps=reg1)
+# 2D haplo analysis"
+# 2D haplo analysis will be adjusted for sex and age
+# CRSNP signifies current SNP
+reg1.h2D <- scan.haplo.2D("qt2~sex+age+CRSNP",data=srdta,snps=reg1)
 min(reg1.h2D$P1df,na.rm=T)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
 
-?"LD analysis of the region"
-?"get regional data in genetics format"
+# LD analysis of the region"
+# get regional data in genetics format"
 reg1.gen <- as.genotype(srdta@gtdata[,reg1])
-?"get LD"
+# get LD"
 reg1.LD <- LD(reg1.gen)
 a<-readline("PRESS <Enter> TO CONTINUE...")
 
-?"now let us plot this stuff"
-?"first, only 2D association"
-?"get map"
+# now let us plot this stuff"
+# first, only 2D association"
+# get map"
 reg1.map <- srdta@gtdata@map[reg1]
 reg1.map
-?"get -log10-P for association"
+# get -log10-P for association"
 lgP <- -log10(reg1.h2D$P1df)
-?"get color scheme"
+# get color scheme"
 maxP <- ceiling(max(lgP,na.rm=T))
 maxP
 brk <- c(0:(maxP+1))
 brk
 a<-readline("PRESS <Enter> TO CONTINUE...")
-?"draw image"
+# draw image"
 image(x=reg1.map,y=reg1.map,z=lgP,breaks=brk,col=heat.colors(length(brk)-1))
 a<-readline("PRESS <Enter> TO CONTINUE...")
-?"now let us draw LD"
-?"get D' and transpose"
+# now let us draw LD"
+# get D' and transpose"
 Dp <- t(reg1.LD$"D'")
-?"draw it"
+# draw it"
 image(x=reg1.map,y=reg1.map,z=Dp,breaks=c(-.1,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.1),col=heat.colors(10))
 a<-readline("PRESS <Enter> TO CONTINUE...")
-?"now let us put these together"
+# now let us put these together"
 image(x=reg1.map,y=reg1.map,z=lgP,breaks=brk,col=heat.colors(length(brk)-1))
 image(x=reg1.map,y=reg1.map,z=Dp,breaks=c(-.1,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.1),col=heat.colors(10),add=T)
-a<-readline("PRESS <Enter> TO CONTINUE...")
+

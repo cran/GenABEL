@@ -84,3 +84,26 @@ alleleID.revstrand <- function() {
 	oo
 }
 
+alleleID.reference <- function() {
+	codes <- alleleID.codes()
+	out <- codes
+	x <- strsplit(codes,"")
+	for (i in c(1:length(codes))) {
+		out[i] <- x[[i]][1]
+	}
+	names(out) <- codes
+	out
+}
+
+alleleID.effective <- function() {
+	codes <- alleleID.codes()
+	out <- codes
+	x <- strsplit(codes,"")
+	for (i in c(1:length(codes))) {
+		out[i] <- x[[i]][2]
+	}
+	names(out) <- codes
+	out
+}
+
+

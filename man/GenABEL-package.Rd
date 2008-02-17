@@ -21,8 +21,8 @@ Imbedding GenABEL into R environment allows for easy data characterisation, expl
 \tabular{ll}{
 Package: \tab GenABEL\cr
 Type: \tab Package\cr
-Version: \tab 1.3-1\cr
-Date: \tab 2007-11-05\cr
+Version: \tab 1.3-5\cr
+Date: \tab 2008-02-17\cr
 License: \tab GPL (>= 2)\cr
 }
 
@@ -32,8 +32,7 @@ demo(ge03d2).
 
 Other demo of interest could be run with demo(srdta). 
 Depending on your user priveleges in Windows, it may well not run. In this
-case, try
-demo(srdtawin).
+case, try demo(srdtawin).
 
 The most important functions and classes are:
 
@@ -46,13 +45,22 @@ For converting data from other formats, see
 
 To load the data, see \code{\link{load.gwaa.data}}.
 
-Also check companion programs, affy2mega.pl, affy2gwaa.pl, and WTCCC2GWAA.
-
-For data managment, and manipulations see
+For data managment and manipulations see
 \code{\link{gwaa.data-class}},
 \code{\link{snp.data-class}},
 \code{\link{snp.names}},
 \code{\link{snp.subset}}.
+
+%For merging objects of \code{\link{gwaa.data-class}}, see \code{\link{merge.gwaa.data}}.
+
+For merging extra data to the phenotypic part of \code{\link{gwaa.data-class}} object, 
+see \code{\link{add.phdata}}.
+
+For traits manipulations see 
+\code{\link{ztransform}} (transformation to standard Normal),
+\code{\link{rntransform}} (rank-transformation to normality),
+\code{\link{npsubtreated}} (non-parametric routine to "impute" trait's values in these medicated).
+
 
 For quality control, see
 \code{\link{check.trait}},
@@ -88,6 +96,9 @@ For functions facilitating construction of tables for your manuscript, see
 \code{\link{descriptives.trait}},
 \code{\link{descriptives.scan}}.
 
+For meta-analysis and related, see help on
+\code{\link{formetascore}}.
+
 For link to WEB databases, see
 \code{\link{show.ncbi}}.
 
@@ -111,34 +122,54 @@ Yurii Aulchenko
 Maintainer: Yurii Aulchenko <i.aoultchenko@erasmusmc.nl>
 }
 \references{
-If you use the package in your analysis, please cite the following work:
+If you use GenABEL package in your analysis, please cite the following work:
 
-Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. (2007) GenABEL: an R package 
-for genome-wide association analysis. Bioinformatics. 23(10):1294-6.
+Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. GenABEL: an R package 
+for genome-wide association analysis. Bioinformatics. 2007 23(10):1294-6.
 
-If you used polygenic residulas from "polygenic" for qtscore, used GRAMMAR and/or 
-GRAMMAS analysis, please cyte
+If you used \code{\link{polygenic}}, please cite
 
-Aulchenko Y.S., de Koning D.J., Haley C. (2007) Grammar: a fast and simple method 
-for genome-wide pedigree-based quantitative trait loci association analysis. 
-Genetics. (in press)
+Thompson EA, Shaw RG (1990) Pedigree analysis for quantitative 
+traits: variance components without matrix inversion. Biometrics 
+46, 399-413.
 
-If you used mmscore, please cyte
+If you used environmental residuals from \code{\link{polygenic}} for 
+\code{\link{qtscore}}, used GRAMMAR and/or GRAMMAS analysis, please cite
 
-Chen WM, Abecasis GR (2007) Family-based assoication tests for 
-genome-wide association scans. Am. J. Hum. Genet. (in press)
+Aulchenko YS, de Koning DJ, Haley C. Genomewide rapid association using mixed model 
+and regression: a fast and simple method for genome-wide pedigree-based quantitative 
+trait loci association analysis. Genetics. 2007 177(1):577-85.
 
-For exact HWE, please cite:
+Amin N, van Duijn CM, Aulchenko YS. A genomic background based method for 
+association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274. 
 
-Wigginton G.E., Cutler D.J., Abecasis G.R. (2005) A note on exact tests of Hardy-Weinberg equilibrium. Am J Hum Genet, 76: 887-893.
+If you used \code{\link{mmscore}}, please cite
 
-For haplo.stats (\code{scan.haplo}, \code{scan.haplo.2D}), please cite:
+Chen WM, Abecasis GR. Family-based association tests for genome-wide association 
+scans. Am J Hum Genet. 2007 Nov;81(5):913-26. 
 
-Schaid DJ, Rowland CM, Tines DE, Jacobson RM, Poland GA. (2002) Score tests for association between traits and haplotypes when linkage phase is ambiguous. Am J Hum Genet, 70: 425-434.
+For exact HWE (used in \code{\link{summary.snp.data}}), please cite:
 
-For fast LD computations (function \code{dprfast}, \code{r2fast}), please cite:
+Wigginton G.E., Cutler D.J., Abecasis G.R. A note on exact tests of 
+Hardy-Weinberg equilibrium. Am J Hum Genet. 2005 76: 887-893.
 
-Hao K, Di X, Cawley S. (2006) LdCompare: rapid computation of single- and multiple-marker r2 and genetic coverage. Bioinformatics, 23: 252-254.
+For haplo.stats (\code{\link{scan.haplo}}, \code{\link{scan.haplo.2D}}), please cite:
+
+Schaid DJ, Rowland CM, Tines DE, Jacobson RM, Poland GA. Score tests for 
+association between traits and haplotypes when linkage phase is ambiguous. 
+Am J Hum Genet. 2002 70:425-434.
+
+For fast LD computations (function \code{\link{dprfast}}, \code{\link{r2fast}}), please cite:
+
+Hao K, Di X, Cawley S. LdCompare: rapid computation of single- and 
+multiple-marker r2 and genetic coverage. Bioinformatics. 2006 23:252-254.
+
+If you used \code{\link{npsubtreated}}, please cite
+
+Levy D, DeStefano AL, Larson MG, O'Donnell CJ, Lifton RP, Gavras H, Cupples LA, 
+Myers RH. Evidence for a gene influencing blood pressure on chromosome 17. 
+Genome scan linkage results for longitudinal blood pressure phenotypes in 
+subjects from the framingham heart study. Hypertension. 2000 Oct;36(4):477-83.
 }
 \keyword{package}
 \seealso{

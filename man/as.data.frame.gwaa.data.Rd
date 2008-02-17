@@ -29,6 +29,6 @@
 }
 \examples{
 data(srdta)
-as.hsgeno(srdta[1:5,1:10])
+as.data.frame(srdta[1:5,])
 }
 \keyword{misc}% at least one, from doc/KEYWORDS

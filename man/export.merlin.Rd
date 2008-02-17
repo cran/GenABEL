@@ -2,6 +2,7 @@
 \alias{export.merlin}
 \title{function to export GenABEL data in merlin format}
 \description{
+	Exports GenABEL data to Merlin and other pedigree formats
 }
 \usage{
 	export.merlin(data, pedfile = "merlin.ped", datafile = "merlin.dat", mapfile = "merlin.map", 
@@ -39,5 +40,10 @@
 	To load the data to GenABEL again, use \code{\link{convert.snp.ped}},
 	\code{\link{load.gwaa.data}}.
 }
-%\examples{}
+\examples{
+#
+# load(srdta)
+# export.merlin(srdta[1:50,1:3])
+#
+}
 \keyword{IO}% at least one, from doc/KEYWORDS

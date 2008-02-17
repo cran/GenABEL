@@ -13,14 +13,14 @@ snp.subset <- function(data,snpsubset) {
 
 "snp.subset.scan.gwaa" <- 
 function(data,snpsubset) {
-	norig <- length(data$name)
+	norig <- length(data$snpname)
 	tokeep <- rep(FALSE,norig)
 	if (is.numeric(snpsubset) || is.logical(snpsubset)) {
 		tokeep[snpsubset] <- TRUE
 	} else if (is.character(snpsubset)) {
 	for (i in 1:norig) {
 		for (j in 1:length(snpsubset))
-		if (length(grep(snpsubset[j],data$name[i]))>0) {
+		if (length(grep(snpsubset[j],data$snpname[i]))>0) {
 			tokeep[i]<-TRUE
 			break;
 		}

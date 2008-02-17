@@ -4,7 +4,7 @@ function(data, snpsubset, idsubset,
 			het.fdr=0.01, ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower",
 			maf, p.level=-1, 
 			fdrate = 0.2, hweidsubset, redundant="no", minconcordance = 2.0, 
-			qoption="bh95") {
+			qoption="bh95", imphetasmissing = TRUE) {
 
 # qoption = "bh95" (Benjamini & Hochberg 1995) or "storey" (Storey 2003, requires qvalue library)
 	if (class(data) == "gwaa.data") {
@@ -76,47 +76,46 @@ function(data, snpsubset, idsubset,
 	if (p.level>=0)
 		cat(ntmp," (",ptmp,"%) markers excluded because they are out of HWE (P <",p.level,")\n",sep="")
 	else
-		cat(ntmp," (",ptmp,"%) markers excluded because they are out of HWE (FDR <",fdrate*100,"%)\n",sep="")
+		cat(ntmp," (",ptmp,"%) markers excluded because they are out of HWE (FDR <",fdrate,")\n",sep="")
 	flush.console();
 # all together
 	out$snpok <- data@snpnames[(callok & freqok & redok & hweok)]
 #	cat("ok: ",out$snpok,"\n")
 
-# check call rate per person and heterozygosity
+# check call rate per person
 	spp <- perid.summary(data[,out$snpok])
 	idcallok <- (spp[,"CallPP"]>=perid.call)
 	out$idnocall <- data@idnames[which(idcallok == FALSE)]
 	ntmp <- length(out$idnocall); ptmp <- 100*ntmp/data@nids
 	cat(ntmp," (",ptmp,"%) people excluded because of low (<",perid.call*100,"%) call rate\n",sep="")
 	flush.console();
-	ssdata <- data[,out$snpok]
-	ssdata <- ssdata[,ssdata@chromosome!="X"]
-	spp <- perid.summary(ssdata)
-	rm(ssdata);gc(verbose=FALSE)
+# check heterozygosity
+	spp <- perid.summary(data[,out$snpok[out$snpok %in% autosomal(data)]])
 	het <- spp[,"Het"]; 
-	mh <- mean(het); 
-	sdh <- sd(het)
+	mh <- mean(het,na.rm=T); 
+	sdh <- sd(het,na.rm=T)
+	cat("Mean autosomal HET is ",mh," (s.e. ",sdh,")\n",sep="");
+	flush.console()
 	Zhet <- (het-mh)/sdh; 
-	Zhet <- replace(Zhet,(Zhet<0),0);
+	sigZ <- sign(Zhet)
 	Zhet <- Zhet*Zhet
 	Zhet <- (1. - pchisq(Zhet,1))
+	Zhet[is.na(Zhet)] <- 1
 	if (qoption == "storey") {
-		qobj <- qvalue(Zhet,fdr.level=het.fdr)
-		hetok <- !(qobj$significant)
+		qobj <- qvalue(Zhet,fdr.level=(het.fdr*2.0))
+		hetok <- (!(qobj$significant) | (sigZ<0 | is.na(sigZ)))
 	} else {
-		hetok <- !(qvaluebh95(Zhet,het.fdr)$significant)
+		hetok <- (!(qvaluebh95(Zhet,(het.fdr*2.0))$significant) | (sigZ<0 | is.na(sigZ)))
 	}
-	out$hetfail <- data@idnames[which(hetok == FALSE)]
-	ntmp <- length(out$hetfail); ptmp <- 100*ntmp/data@nids
-	cat(ntmp," (",ptmp,"%) people excluded because too high autosomal heterozygosity (FDR <",het.fdr*100,"%)\n",sep="")
-	flush.console()
-	cat("Mean autosomal HET was ",mh," (s.e. ",sdh,")",sep="");
-	flush.console()
-	if (ntmp>0) 
-		cat(", people excluded had HET >= ",max(het[!hetok]),"\n",sep="")
-	else 
-		cat("\n")
-	flush.console();
+	if (any(!hetok)) {
+		out$hetfail <- data@idnames[which(!hetok)]
+		ntmp <- length(out$hetfail); ptmp <- 100*ntmp/data@nids
+		cat(ntmp," (",ptmp,"%) people excluded because too high autosomal heterozygosity (FDR <",het.fdr*100,"%)\n",sep="")
+		cat("Excluded people had HET >= ",min(het[!hetok]),"\n",sep="")
+		flush.console();
+	} else {
+		cat("0 people excluded because too high autosomal heterozygosity (FDR <",het.fdr*100,"%)\n",sep="")
+	}
 	rm(spp);gc(verbose=FALSE)
 
 # check IBS
@@ -124,42 +123,43 @@ function(data, snpsubset, idsubset,
 		out$ibsfail <- NULL;
 		ibsok <- rep(TRUE,data@nids)
 	} else {
-	fromset <- match(data@snpnames,out$snpok)
-	fromset <- fromset[!is.na(fromset)]
-	fromset <- fromset[data@chromosome[fromset]!="X"]
-	if (length(fromset) > ibs.mrk) {
-		ibsset <- sort(sample(x=fromset,size=ibs.mrk,replace=FALSE))
-		saibs <- ibs(data[,ibsset],weight="no")
-	} else {
-		saibs <- ibs(data[,fromset],weight="no")
-		ibs.mrk <- length(fromset)
-	}
-	saibs[upper.tri(saibs,diag=T)] <- NA
-	mibs <- mean(as.vector(saibs),na.rm=T)
-	sdibs <- sd(as.vector(saibs),na.rm=T)
-	if (any(saibs>=ibs.threshold,na.rm=T)) {
-		ibsfailpairs <- crnames(dimnames(saibs),(saibs>=ibs.threshold))
-		if (ibs.exclude == "both") {
-			ibsfail <- unique(c(ibsfailpairs[,1],ibsfailpairs[,2]))
+#		fromset <- match(autosomal(data),out$snpok)
+		fromset <- autosomal(data)[autosomal(data) %in% out$snpok]
+		if (length(fromset) > ibs.mrk) {
+			ibsset <- sort(sample(x=fromset,size=ibs.mrk,replace=FALSE))
+			saibs <- ibs(data[,ibsset],weight="no")
 		} else {
-			cll <- perid.summary(data[ibsfailpairs[,1],])[,"CallPP"]
-			clr <- perid.summary(data[ibsfailpairs[,2],])[,"CallPP"]
-			lgr <- (cll >= clr)
-			ibsfail <- unique(c(ibsfailpairs[lgr,2],ibsfailpairs[!lgr,1]))
+			saibs <- ibs(data[,fromset],weight="no")
+			ibs.mrk <- length(fromset)
 		}
-		out$ibsfail <- ibsfail
-		ibsok <- !(data@idnames %in% ibsfail)
-		rm(ibsfailpairs,ibsfail);gc(verbose=FALSE)
-	} else {
-		out$ibsfail <- NULL;
-		ibsok <- rep(TRUE,data@nids)
-	}
-	rm(saibs);gc(verbose=FALSE)
-	ntmp <- length(out$ibsfail); ptmp <- 100*ntmp/data@nids
-	cat(ntmp," (",ptmp,"%) people excluded because of too high IBS (>=",ibs.threshold,")\n",sep="")
-	flush.console()
-	cat("Mean IBS was ",mibs," (s.e. ",sdibs,"), as based on ",ibs.mrk," autosomal markers\n",sep="")
-	flush.console();
+		saibs[upper.tri(saibs,diag=T)] <- NA
+		mibs <- mean(as.vector(saibs),na.rm=T)
+		sdibs <- sd(as.vector(saibs),na.rm=T)
+		if (any(saibs>=ibs.threshold,na.rm=T)) {
+			ibsfailpairs <- crnames(dimnames(saibs),(saibs>=ibs.threshold))
+			if (ibs.exclude == "both") {
+				ibsfail <- unique(c(ibsfailpairs[,1],ibsfailpairs[,2]))
+			} else {
+				precll <- perid.summary(data[unique(ibsfailpairs[,1]),])
+				preclr <- perid.summary(data[unique(ibsfailpairs[,2]),])
+				cll <- precll[ibsfailpairs[,1],]$CallPP
+				clr <- precll[ibsfailpairs[,2],]$CallPP
+				lgr <- (cll >= clr)
+				ibsfail <- unique(c(ibsfailpairs[lgr,2],ibsfailpairs[!lgr,1]))
+			}
+			out$ibsfail <- ibsfail
+			ibsok <- !(data@idnames %in% ibsfail)
+			rm(ibsfailpairs,ibsfail);gc(verbose=FALSE)
+		} else {
+			out$ibsfail <- NULL;
+			ibsok <- rep(TRUE,data@nids)
+		}
+		rm(saibs);gc(verbose=FALSE)
+		cat("Mean IBS is ",mibs," (s.e. ",sdibs,"), as based on ",ibs.mrk," autosomal markers\n",sep="")
+		flush.console();
+		ntmp <- length(out$ibsfail); ptmp <- 100*ntmp/data@nids
+		cat(ntmp," (",ptmp,"%) people excluded because of too high IBS (>=",ibs.threshold,")\n",sep="")
+		flush.console()
 	}
 
 	out$idok <- data@idnames[(idcallok & hetok & ibsok)]

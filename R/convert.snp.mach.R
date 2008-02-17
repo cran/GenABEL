@@ -1,7 +1,7 @@
 "convert.snp.mach" <- function(pedfile,mapfile,infofile,outfile,quality=0.9, ... ) {
 
 	cat("Converting data to raw format...\n")
-	convert.snp.ped(pedf=pedfile,mapf=mapfile,outf=outfile,format="mach", ... )
+	convert.snp.ped(pedf=pedfile,mapf=mapfile,outf=outfile,format="mach", wslash=T, ... )
 	if (quality<=0) {
 		cat("No quality filtering - Done.\n")
     		return(invisible(0))

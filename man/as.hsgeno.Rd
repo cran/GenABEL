@@ -3,13 +3,14 @@
 \title{Attempts to convert object to "hsgeno"}
 \description{
 	A function to convert an object 
-	to "hsgeno" data frame
+	to "hsgeno" data frame, to be used by 
+	"haplo.stats" library
 }
 \usage{
 	as.hsgeno(x, ...)
 }
 \arguments{
-  \item{x}{An object of \code{\link{snp.data-class}}}
+  \item{x}{An object of \code{\link{snp.data-class}} or \code{\link{gwaa.data-class}}}
   \item{\dots}{...}
 }
 \details{
@@ -28,6 +29,7 @@
 }
 \examples{
 data(srdta)
-as.hsgeno(srdta@gtdata[1:5,1:10])
+as.hsgeno(srdta[1:5,1:3])
+as.hsgeno(srdta@gtdata[1:5,1:3])
 }
 \keyword{misc}% at least one, from doc/KEYWORDS
