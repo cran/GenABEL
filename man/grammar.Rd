@@ -94,7 +94,7 @@ a <- grammar(h2ht,data=ge03d2.clean)
 a <- qtscore(h2ht$pgres,data=ge03d2.clean,clam=FALSE)
 # compare to GC:
 b <- qtscore(height ~ sex + age,data=ge03d2.clean)
-plot(b,df="Pc1df",col="red")
+plot(b,df="Pc1df")
 add.plot(a,df="Pc1df")
 # relatively large difference is due to high heritability
 # note that locus at chromosome 2 should indeed be there...

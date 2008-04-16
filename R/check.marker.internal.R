@@ -99,7 +99,7 @@ function(data, snpsubset, idsubset,
 	Zhet <- (het-mh)/sdh; 
 	sigZ <- sign(Zhet)
 	Zhet <- Zhet*Zhet
-	Zhet <- (1. - pchisq(Zhet,1))
+	Zhet <- (pchisq(Zhet,1,lower=F))
 	Zhet[is.na(Zhet)] <- 1
 	if (qoption == "storey") {
 		qobj <- qvalue(Zhet,fdr.level=(het.fdr*2.0))
@@ -143,7 +143,7 @@ function(data, snpsubset, idsubset,
 				precll <- perid.summary(data[unique(ibsfailpairs[,1]),])
 				preclr <- perid.summary(data[unique(ibsfailpairs[,2]),])
 				cll <- precll[ibsfailpairs[,1],]$CallPP
-				clr <- precll[ibsfailpairs[,2],]$CallPP
+				clr <- preclr[ibsfailpairs[,2],]$CallPP
 				lgr <- (cll >= clr)
 				ibsfail <- unique(c(ibsfailpairs[lgr,2],ibsfailpairs[!lgr,1]))
 			}

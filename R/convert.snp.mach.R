@@ -1,7 +1,7 @@
-"convert.snp.mach" <- function(pedfile,mapfile,infofile,outfile,quality=0.9, ... ) {
+"convert.snp.mach" <- function(pedfile,mapfile,infofile,outfile,quality=0.9, column.quality = 7, strand="+", ... ) {
 
 	cat("Converting data to raw format...\n")
-	convert.snp.ped(pedf=pedfile,mapf=mapfile,outf=outfile,format="mach", wslash=T, ... )
+	convert.snp.ped(pedf=pedfile,mapf=mapfile,outf=outfile,format="mach", wslash=T, strand=strand, ... )
 	if (quality<=0) {
 		cat("No quality filtering - Done.\n")
     		return(invisible(0))
@@ -55,7 +55,7 @@
 	rm(rdta,ids,mnams,chrom,pos,coding,strand);gc(verbose=FALSE)
 ### end read in raw data 
 	if (nrows != a@nsnps) stop("Number of SNPs in ped-file and info-file is different")
-	pass <- (info[,6]>=quality)
+	pass <- (info[,column.quality]>=quality)
 	a <- a[,pass]
 	psd<-table(pass)["TRUE"]
 	npsd<-table(pass)["FALSE"]

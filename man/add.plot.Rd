@@ -5,7 +5,7 @@
 Add plot of results of GWA analysis
 }
 \usage{
-add.plot(x, ..., df = 1)
+add.plot(x, ..., df = 1,  col=c("lightgreen","lightblue"), sort=TRUE, delta = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -15,6 +15,9 @@ add.plot(x, ..., df = 1)
 	}
   \item{\dots}{additional arguments to be passed to plot}
   \item{df}{P-value at which df to add (1, 2 or "Pc1df")}
+  \item{col}{which colors to use to depict consecutive chromosomes}
+  \item{sort}{whether results should be plotted after sorting by chromosome and position}
+  \item{delta}{gap width between chromosomes}
 }
 %\details{}
 \value{

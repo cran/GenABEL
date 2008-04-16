@@ -32,7 +32,10 @@ add.phdata(data, phdata)
 %\note{ ~~further notes~~ 
 % ~Make other sections like Warning with \section{Warning }{....} ~
 %}
-%\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
+\seealso{
+	\code{\link{merge.gwaa.data}},
+	\code{\link{merge.snp.data}}
+}
 \examples{
 	data(srdta)
 # take a small subset for this example

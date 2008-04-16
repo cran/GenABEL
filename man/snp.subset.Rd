@@ -35,7 +35,7 @@ mc1 <- snp.subset(mc,snps=srdta@gtdata@snpnames[20:50])
 summary(mc1)
 #plot(mc1)
 # processing scan.gwaa object
-a <- scan.glm("qt3~sex+age+CRSNP",data=srdta,snps=(1:30))
+a <- qtscore(qt3~sex+age,data=srdta)
 plot(a)
 a1 <- snp.subset(a,snps=srdta@gtdata@snpnames[10:20])
 plot(a1)

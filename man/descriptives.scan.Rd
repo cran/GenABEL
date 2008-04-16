@@ -5,7 +5,7 @@
 	Describes "top" hits in GWA scan
 }
 \usage{
-	descriptives.scan(data,file,top=10,sortby="P1df",digits = 6, sep ="\t")
+	descriptives.scan(data,file,top=10,sortby="P1df",digits = 10, sep ="\t")
 }
 \arguments{
   \item{data}{an object of \code{\link{snp.data-class}} or \code{\link{gwaa.data-class}}}

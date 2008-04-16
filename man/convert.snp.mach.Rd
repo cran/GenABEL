@@ -5,7 +5,7 @@
 Converts genotypic data from MACH format to internal genotypic data formated file
 }
 \usage{
-convert.snp.mach(pedfile, mapfile, infofile, outfile, quality = 0.9, ...)
+convert.snp.mach(pedfile, mapfile, infofile, outfile, quality = 0.9, column.quality = 7, strand = "+", ...)
 }
 \arguments{
   \item{pedfile}{
@@ -21,7 +21,17 @@ convert.snp.mach(pedfile, mapfile, infofile, outfile, quality = 0.9, ...)
 	Output data file
 	}
   \item{quality}{
-	Drop the SNPs with quality (as specified in 6th column of info-file) lower than this threshold.
+	Drop the SNPs with quality (as specified in some column of info-file) lower than this threshold.
+	}
+  \item{column.quality}{
+	What column of the info-file provides "quality". Default = 7 os r2; possible values 
+	include 6 (average postrior probability).
+	}
+  \item{strand}{
+	Specification of strand, one of "u" (unknown), "+", "-" or "file".
+	In the latter case, map-file should contain an extended map (the one 
+	including strand and coding). See options to \code{\link{convert.snp.ped}}
+	for details.
 	}
   \item{...}{
 	Other arguments passed to \code{\link{convert.snp.ped}}

@@ -1,6 +1,10 @@
 "polygenic" <-
 function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt.method="nlm",scaleh2=1000,quiet=FALSE,...) {
-	if (!missing(data)) if (class(data) == "gwaa.data") data <- data@phdata
+	if (!missing(data)) if (class(data) == "gwaa.data") 
+	{
+		checkphengen(data)
+		data <- data@phdata
+	}
 	if (!missing(data)) if (class(data) != "data.frame") stop("data should be of gwaa.data or data.frame class")
 	if (starth2<0 || starth2>1) stop("Starting value of h2 (starth2) must be between 0 and 1")
 	ttargs <- c("gaussian","binomial")
@@ -27,7 +31,9 @@ function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt
 		desmat <- model.matrix(formula,mf)
 		lmf <- glm.fit(desmat,y,family=fam)
 		iniest <- lmf$coeff
-		mids <- rownames(data) %in% rownames(mf)
+		phids <- rownames(data)[rownames(data) %in% rownames(mf)]
+		relmat <- kinship.matrix[phids,phids]*2.0
+		mids <- (rownames(data) %in% rownames(mf))
 		if (trait.type=="binomial") {
 			tvar <- var(lmf$resid)
 		} else {
@@ -36,8 +42,10 @@ function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt
 	} else {
 		clafo <- "NOT"
 		y <- formula
+		if (length(y) != dim(kinship.matrix)[1]) stop("dimension of outcome and kinship.matrix do not match")
 		mids <- (!is.na(y))
 		y <- y[mids]
+		relmat <- kinship.matrix[mids,mids]*2.0
 		sdy <- sd(y)
 		meany <- mean(y)
 		if (trait.type=="gaussian") y <- (y-meany)/sdy
@@ -52,7 +60,6 @@ function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt
 		}
 	}
 	if (!missing(data)) detach(data)
-	relmat <- kinship.matrix[mids,mids]*2.0
 	tmp <- t(relmat)
 	relmat[upper.tri(relmat)] <- tmp[upper.tri(tmp)]
 	rm(tmp);gc()

@@ -21,8 +21,8 @@ Imbedding GenABEL into R environment allows for easy data characterisation, expl
 \tabular{ll}{
 Package: \tab GenABEL\cr
 Type: \tab Package\cr
-Version: \tab 1.3-5\cr
-Date: \tab 2008-02-17\cr
+Version: \tab 1.3-7\cr
+Date: \tab 2008-04-16\cr
 License: \tab GPL (>= 2)\cr
 }
 
@@ -46,6 +46,8 @@ For converting data from other formats, see
 To load the data, see \code{\link{load.gwaa.data}}.
 
 For data managment and manipulations see
+\code{\link{merge.gwaa.data}},
+\code{\link{merge.snp.data}},
 \code{\link{gwaa.data-class}},
 \code{\link{snp.data-class}},
 \code{\link{snp.names}},

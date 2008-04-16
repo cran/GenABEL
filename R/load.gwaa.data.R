@@ -121,16 +121,17 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = TRUE, makemap=FA
 	out <- new("gwaa.data",phdata=newdta,gtdata=a)
 	rm(a,newdta);gc(verbose=FALSE)
 	if (sort) {
-		chr <- as.character(out@gtdata@chromosome)
-		names(chr) <- names(out@gtdata@chromosome)
-		mxC <- max(as.numeric(chr[autosomal(out@gtdata)]),na.rm=T)
-		if (any(chr=="XY")) chr <- replace(chr,(chr=="XY"),(mxC+1))
-		if (any(chr=="X")) chr <- replace(chr,(chr=="X"),(mxC+2))
-		if (any(chr=="mt")) chr <- replace(chr,(chr=="mt"),(mxC+3))
-		if (any(chr=="Y")) chr <- replace(chr,(chr=="Y"),(mxC+4))
-		chr <- as.numeric(chr)
-		ord <- order(chr,out@gtdata@map)
-		out <- out[,ord]
+#		chr <- as.character(out@gtdata@chromosome)
+#		names(chr) <- names(out@gtdata@chromosome)
+#		mxC <- max(as.numeric(chr[autosomal(out@gtdata)]),na.rm=T)
+#		if (any(chr=="XY")) chr <- replace(chr,(chr=="XY"),(mxC+1))
+#		if (any(chr=="X")) chr <- replace(chr,(chr=="X"),(mxC+2))
+#		if (any(chr=="mt")) chr <- replace(chr,(chr=="mt"),(mxC+3))
+#		if (any(chr=="Y")) chr <- replace(chr,(chr=="Y"),(mxC+4))
+#		chr <- as.numeric(chr)
+#		ord <- order(chr,out@gtdata@map)
+		ord <- sortmap.internal(out@gtdata@chromosome,out@gtdata@map)
+		out <- out[,ord$ix]
 	}
 	out
 }

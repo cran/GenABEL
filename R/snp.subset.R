@@ -13,20 +13,14 @@ snp.subset <- function(data,snpsubset) {
 
 "snp.subset.scan.gwaa" <- 
 function(data,snpsubset) {
-	norig <- length(data$snpname)
+	norig <- length(data$snpnames)
 	tokeep <- rep(FALSE,norig)
 	if (is.numeric(snpsubset) || is.logical(snpsubset)) {
 		tokeep[snpsubset] <- TRUE
 	} else if (is.character(snpsubset)) {
-	for (i in 1:norig) {
-		for (j in 1:length(snpsubset))
-		if (length(grep(snpsubset[j],data$snpname[i]))>0) {
-			tokeep[i]<-TRUE
-			break;
-		}
-	}
+		tokeep <- data$snpnames %in% snpsubset
 	} else {stop("snpsubset should have type numeric, logical or character")}
-	out <- list(P1df=data$P1df[tokeep],P2df=data$P2df[tokeep],Pc1df=data$Pc1df[tokeep],chi2.1df=data$chi2.1df[tokeep],chi2.2df=data$chi2.2df[tokeep],snpnames=data$snpnames[tokeep],formula=match.call(),family=data$family,map=data$map[tokeep],idnames=data$idnames,chromosome=data$chromosome,lambda=data$lambda,effB=data$effB[tokeep],effAB=data$effAB[tokeep],effBB=data$effBB[tokeep])
+	out <- list(P1df=data$P1df[tokeep],P2df=data$P2df[tokeep],Pc1df=data$Pc1df[tokeep],chi2.1df=data$chi2.1df[tokeep],chi2.2df=data$chi2.2df[tokeep],snpnames=data$snpnames[tokeep],formula=match.call(),family=data$family,map=data$map[tokeep],idnames=data$idnames,chromosome=data$chromosome[tokeep],lambda=data$lambda,effB=data$effB[tokeep],effAB=data$effAB[tokeep],effBB=data$effBB[tokeep])
 	class(out) <- "scan.gwaa"
 	out 
 }

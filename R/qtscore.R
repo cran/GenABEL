@@ -3,6 +3,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
   	if (class(data)!="gwaa.data") {
 		stop("wrong data class: should be gwaa.data")
   	}
+	checkphengen(data)
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
 	if (missing(strata)) {nstra=1; strata <- rep(0,data@gtdata@nids)}
@@ -52,6 +53,8 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 #			y <- glm(y~rep(1,length(y)),family=binomial)$resid
 #		}
 		resid <- y
+	} else {
+		stop("formula argument should be a formula or a numeric vector")
 	}
 	if (!missing(data)) detach(data@phdata)
 	if (length(strata)!=data@gtdata@nids) stop("Strata variable and the data do not match in length")
@@ -110,57 +113,50 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 			rho[abs(rho+999.99)<1.e-8] <- 0 #NA
 #			rho <- abs(rho)
 #			out$rho <- rho
-			if (lenn<100 && lenn>10) warning("Few observations used, Lambda estimated is unreliable") 
-			if (lenn<=10 && !is.numeric(clambda)) {
-				lambda <- list()
-				lambda$estimate <- NA
-				chi2.c1df <- chi2.1df;
-				chi2.c2df <- chi2.2df;
-				warning("Lambda not estimated, Pc1df = P1df")
+
+			lambda <- list()
+			if (is.logical(clambda)) {
+				if (lenn<10) {
+					warning("no. observations < 10; Lambda set to 1")
+					lambda$estimate <- 1.0
+					lambda$se <- NA
+				} else {
+					if (lenn<100) warning("Number of observations < 100, Lambda estimate is unreliable")
+					lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
+					if (lambda$estimate<1.0 && clambda==TRUE) {
+						warning("Lambda estimated < 1, set to 1")
+						lambda$estimate <- 1.0
+						lambda$se <- NA
+					}
+				}
 			} else {
-				if (is.list(clambda)) {
+				if (is.numeric(clambda)) {
+					lambda$estimate <- clambda
+					lambda$se <- NA
+				} else if (is.list(clambda)) {
+					if (any(is.na(match(c("estimate","se"),names(clambda)))))
+						stop("when clambda is list, should contain estimate and se")
 					lambda <- clambda
-					chi2.c1df <- chi2.1df/lambda$estimate;
-#					chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0)*sqrt(lambda$iz2)*lambda$irho))/(1.- (rho/lambda$irho)*(rho/lambda$irho))
-#					chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*lambda$irho/(sqrt(lambda$iz0)*sqrt(lambda$iz2)))/(1.- (lambda$irho*lambda$irho))
+					lambda$se <- NA
+				} else {
+					stop("clambda should be logical, numeric, or list")
+				}
+			}
+			chi2.c1df <- chi2.1df/lambda$estimate
+
+			if (is.logical(clambda)) {
+				lambda$iz0 <- estlambda(z0*z0,plot=FALSE,prop=propPs)$estimate 
+				lambda$iz2 <- estlambda(z2*z2,plot=FALSE,prop=propPs)$estimate
+				if (clambda && lambda$iz0<1.0) {warning("z0 lambda < 1, set to 1");lambda$iz0<-1.0}
+				if (clambda && lambda$iz2<1.0) {warning("z2 lambda < 1, set to 1");lambda$iz2<-1.0}
+				chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0*lambda$iz2)))/(1.- rho*rho)
+			} else {
+				if (is.list(clambda) && !any(is.na(match(c("estimate","iz0","iz2"),names(clambda))))) {
 					chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0*lambda$iz2)))/(1.- rho*rho)
 				} else {
-					lambda <- list();
-					lambda$estimate <- estlambda(chi2.1df,plot=FALSE,prop=propPs)$estimate
-					lambda$iz0 <- estlambda(z0*z0,plot=FALSE,prop=propPs)$estimate 
-							#median(z0*z0,na.rm=T)/0.456
-					lambda$iz2 <- estlambda(z2*z2,plot=FALSE,prop=propPs)$estimate
-							#median(z2*z2,na.rm=T)/0.456
-#					lambda$irho <-  mean(rho,na.rm=T)
-					def <- 1./lambda$estimate
-					if (def > 1. && clambda) {
-						chi2.c1df <- chi2.1df;
-						if (!quiet) warning(paste("Lambda<1 in 1df test; constrained to 1"))
-					} else {
-						chi2.c1df <- def*chi2.1df;
-#						out$chi2.c1df <- chi2.c1df
-					}
-					if (clambda) {
-						if (lambda$iz0>1 && lambda$iz2>1) chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0*lambda$iz2)))/(1.- rho*rho)
-						if (lambda$iz0>1 && lambda$iz2<1) {
-							chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2 - 2.*z0*z2*rho/(sqrt(lambda$iz0)))/(1.- rho*rho)
-							if (!quiet) warning(paste("One Lambda constrained to 1 in 2df test; results may be incorrect"))
-						}
-						if (lambda$iz0<1 && lambda$iz2>1) {
-							chi2.c2df <- (z0*z0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz2)))/(1.- rho*rho)
-							if (!quiet) warning(paste("One Lambda constrained to 1 in 2df test; results may be incorrect"))
-						}
-						if (lambda$iz0<1 && lambda$iz2<1) { 
-							chi2.c2df <- chi2.2df;
-							if (!quiet) warning(paste("Both Lambda<1 in 2df test; constrained to 1"))
-						}
-#						out$chi2.c2df <- chi2.c2df
-					} else {
-#						chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0)*sqrt(lambda$iz2)*lambda$irho))/(1.- (rho/lambda$irho)*(rho/lambda$irho))
-#						chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*lambda$irho/(sqrt(lambda$iz0)*sqrt(lambda$iz2)))/(1.- (lambda$irho*lambda$irho))
-						chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0*lambda$iz2)))/(1.- rho*rho)
-#						out$chi2.c2df <- chi2.c2df
-					}
+					lambda$iz0 <- 1.0
+					lambda$iz2 <- 1.0
+					chi2.c2df <- chi2.2df
 				}
 			}
 			effB <- chi2[(3*lenn+1):(lenn*4)]
@@ -199,10 +195,10 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		out$Pc2df <- pr.c2df/times
 		out$Pc2df <- replace(out$Pc2df,(out$Pc2df==0),1/(1+times))
 	} else {
-		out$P1df <- 1. - pchisq(chi2.1df,1)
-		out$P2df <- 1. - pchisq(chi2.2df,actdf)
-		out$Pc1df <- 1. - pchisq(chi2.c1df,1)
-		out$Pc2df <- 1. - pchisq(chi2.c2df,2)
+		out$P1df <- pchisq(chi2.1df,1,lower=F)
+		out$P2df <- pchisq(chi2.2df,actdf,lower=F)
+		out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
+		out$Pc2df <- pchisq(chi2.c2df,2,lower=F)
 	}
 	out$lambda <- lambda
 	out$effB <- effB
@@ -221,6 +217,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 	out
 }
 
+###### ----------------------- ##################
 
 "qtscore.old" <-
 function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
@@ -374,9 +371,9 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		out$Pc1df <- pr.c1df/times
 		out$Pc1df <- replace(out$Pc1df,(out$Pc1df==0),1/(1+times))
 	} else {
-		out$P1df <- 1. - pchisq(chi2.1df,1)
-		out$P2df <- 1. - pchisq(chi2.2df,actdf)
-		out$Pc1df <- 1. - pchisq(chi2.c1df,1)
+		out$P1df <- pchisq(chi2.1df,1,lower=F)
+		out$P2df <- pchisq(chi2.2df,actdf,lower=F)
+		out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
 	}
 	out$lambda <- lambda
 	out$effB <- effB

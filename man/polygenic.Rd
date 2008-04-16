@@ -127,6 +127,9 @@ association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274.
 	Presence of twins may screw up your analysis. Check kinship matrix for 
 	singularities, or rather use \code{\link{check.marker}} for identification 
 	and exclusion of twin samples.
+
+	If a trait (no covarites) is used, make sure that order of IDs in 
+	kinship.matrix is exactly the same as in the outcome
 }
 \seealso{
 \code{\link{mmscore}},

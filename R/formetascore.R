@@ -1,44 +1,33 @@
 "formetascore" <-
 function(formula,data,stat=qtscore,transform=ztransform,build="unknown",verbosity=1, ...) {
-	if (is.character(transform)) {
-		if (transform=="no") {
-			attach(data@phdata,pos=2,warn.conflicts=FALSE)
-			if (class(formula) == "formula") {
-				mf <- model.frame(formula,data@phdata,na.action=na.omit,drop.unused.levels=TRUE)
-				y <- model.response(mf)
-				desmat <- model.matrix(formula,mf)
-				tmp <- pmatch(names(match.call()),"family")
-				tmp <- tmp[!is.na(tmp)]
-				if (any(tmp==1)) {
-					lmf <- glm.fit(desmat,y,family=family)
-				} else {
-					lmf <- glm.fit(desmat,y,family=gaussian())
-				}
-				mids <- rownames(data) %in% rownames(mf)
-				resid <- lmf$resid
-			} else if (class(formula) == "numeric" || class(formula) == "integer" || class(formula) == "double") {
-				y <- formula
-				mids <- (!is.na(y))
-				y <- y[mids]
-				resid <- y
-				if (length(unique(resid))==1) stop("trait is monomorphic")
-				if (length(unique(resid))==2) stop("trait is binary")
-			} else {
-				stop("formula argument must be a formula or one of (numeric, integer, double)")
-			}
-			detach(data@phdata)
-			trvar <- resid
-		} else {
-			stop("transform argument not recognised")
-		}
-	} else {
-		trvar <- transform(formula=formula,data=data)
+	if (class(data) != "gwaa.data") stop("data argument must have gwaa.data-class")
+	checkphengen(data)
+	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
+	if (class(formula)=="polygenic") {
+		pm <- pmatch("stat",names(match.call()))
+		pm <- (pm[!is.na(pm)])[1]
+		a <- match.call()[[pm]]
+		if (a != "mmscore" && a != "mmscore()") stop("stat should be mmscore when polygenic object is analysed")
+		if (class(transform) != "character") stop("transform should be \"no\" when polygenic object is analysed")
+		if (transform != "no") stop("transform should be \"no\" when polygenic object is analysed")
 	}
+	if (is.character(transform)) {
+		if (transform!="no") stop("transform argument not recognised")
+	} else {
+		formula <- transform(formula=formula,data=data)
+	}
+	if (class(formula) == "formula") {
+		mf <- model.frame(formula,data@phdata,na.action=na.omit,drop.unused.levels=TRUE)
+		mids <- rownames(data@phdata) %in% rownames(mf)
+	} else if (class(formula) == "polygenic") {
+		mids <- which(!is.na(formula$residualY))
+	} else {
+		mids <- which(!is.na(formula))
+	}
+	if (!missing(data)) detach(data@phdata)
 	if (verbosity<0) stop("verbosity parameter must be positive integer")
-	data <- data[!is.na(trvar),]
-	trvar <- trvar[!is.na(trvar)]
-	res <- stat(trvar,data,...)
-	sum <- summary(data@gtdata)
+	res <- stat(formula,data,...)
+	sum <- summary(data@gtdata[mids,])
 	callr <- sum$Call
 	Phwe <- sum$Pexact
 	efff <- sum$Q.2

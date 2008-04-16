@@ -1,5 +1,5 @@
 "descriptives.scan" <-
-function(data,file,top=10,sortby="P1df",digits=6,sep="\t") {
+function(data,file,top=10,sortby="P1df",digits=10,sep="\t") {
 	if (class(data) != "scan.gwaa") stop("data argument must be of scan.gwaa-class")
 
 	sbargs <- c("no","P1df","P2df","Pc1df")

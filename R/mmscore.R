@@ -1,6 +1,10 @@
 "mmscore" <-
 function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0) {
-  	if (class(data)=="gwaa.data") data <- data@gtdata
+  	if (class(data)=="gwaa.data") 
+	{
+		checkphengen(data)
+		data <- data@gtdata
+	}
   	if (class(data)!="snp.data") {
 		stop("wrong data class: should be gwaa.data or snp.data")
   	}
@@ -51,27 +55,35 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cl
 			out$chi2.1df <- chi2.1df
 			out$chi2.2df <- chi2.2df
 			actdf <- chi2[(2*lenn+1):(3*lenn)];
-			if (lenn<=10 && !is.numeric(clambda)) {
-				lambda <- list()
-				lambda$estimate <- NA
-				lambda$se <- NA
-				chi2.c1df <- chi2.1df;
-			} else {
-				if (is.numeric(clambda)) {
-					lambda <- list()
-					lambda$estimate <- clambda
+			lambda <- list()
+			if (is.logical(clambda)) {
+				if (lenn<10) {
+					warning("no. observations < 10; Lambda set to 1")
+					lambda$estimate <- 1.0
 					lambda$se <- NA
-					chi2.c1df <- chi2.1df/lambda$estimate;
 				} else {
+					if (lenn<100) warning("Number of observations < 100, Lambda estimate is unreliable")
 					lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
-					def <- 1/lambda$estimate
-					if (def > 1 && clambda) {
-						chi2.c1df <- chi2.1df;
-					} else {
-						chi2.c1df <- def*chi2.1df;
+					if (lambda$estimate<1.0 && clambda==TRUE) {
+						warning("Lambda estimated < 1, set to 1")
+						lambda$estimate <- 1.0
+						lambda$se <- NA
 					}
 				}
+			} else {
+				if (is.numeric(clambda)) {
+					lambda$estimate <- clambda
+					lambda$se <- NA
+				} else if (is.list(clambda)) {
+					if (any(is.na(match(c("estimate","se"),names(clambda)))))
+						stop("when clambda is list, should contain estimate and se")
+					lambda <- clambda
+					lambda$se <- NA
+				} else {
+					stop("clambda should be logical, numeric, or list")
+				}
 			}
+			chi2.c1df <- chi2.1df/lambda$estimate
 			effB <- chi2[(3*lenn+1):(lenn*4)]
 #			effAB <- chi2[(4*lenn+1):(lenn*5)]
 #			effBB <- chi2[(5*lenn+1):(lenn*6)]
@@ -101,12 +113,12 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cl
 		out$Pc1df <- pr.c1df/times
 #		out$Pc1df <- replace(out$Pc1df,(out$Pc1df==0),1/(1+times))
 	} else {
-		out$P1df <- 1. - pchisq(chi2.1df,1)
-#		out$P2df <- 1. - pchisq(chi2.2df,actdf)
-		out$Pc1df <- 1. - pchisq(chi2.c1df,1)
+		out$P1df <- pchisq(chi2.1df,1,lower=F)
+#		out$P2df <- pchisq(chi2.2df,actdf,lower=F)
+		out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
 	}
 	out$lambda <- lambda
-	out$effB <- effB
+	out$effB <- effB*var(h2object$residualY,na.rm=T)
 #	out$effAB <- effAB
 #	out$effBB <- effBB
 	out$snpnames <- data@snpnames

@@ -35,7 +35,7 @@ function(formula,data,family=gaussian) {
 		else 
 			mids <- (!is.na(get(as.character(formula[2]))))
 		resid <- lmf$resid
-		print(formula)
+#		print(formula)
 	} else if (class(formula) == "numeric" || class(formula) == "integer" || class(formula) == "double") {
 		y <- formula
 		mids <- (!is.na(y))

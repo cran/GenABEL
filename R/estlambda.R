@@ -1,5 +1,5 @@
 "estlambda" <-
-function(data,plot=TRUE,proportion=1.0) {
+function(data,plot=TRUE,proportion=1.0, ...) {
 	data <- data[which(!is.na(data))]
 	if (proportion>1.0 || proportion<=0) stop("proportion argument should be greater then zero and less than or equal to one")
 	ntp <- round(proportion*length(data))
@@ -11,7 +11,11 @@ function(data,plot=TRUE,proportion=1.0) {
 	if (ntp<10) warning(paste("number of points is too small:",ntp))
 	if (min(data)<0) stop("data argument has values <0")
 	if (max(data)<=1) {
-		data[data==0] <- 1e-16
+		lt16 <- (data < 1.e-16)
+		if (any(lt16)) {
+			warning(paste("Some probabilities < 1.e-16; set to 1.e-16"))
+			data[lt16] <- 1.e-16
+		}
 		data <- qchisq(1-data,1)
 	}
 	data <- sort(data)
@@ -22,7 +26,8 @@ function(data,plot=TRUE,proportion=1.0) {
 	s <- summary(lm(data~offset(ppoi)))$coeff
 	if (plot) {
 		lim <- c(0,max(data,ppoi,na.rm=T))
-		plot(ppoi,data,xlim=lim,ylim=lim,xlab="Expected",ylab="Observed")
+#		plot(ppoi,data,xlim=lim,ylim=lim,xlab="Expected",ylab="Observed", ...)
+		plot(ppoi,data,xlab="Expected",ylab="Observed", ...)
 		abline(a=0,b=1)
 		abline(a=0,b=(1+s[1,1]),col="red")
 	}

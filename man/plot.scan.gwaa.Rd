@@ -5,7 +5,7 @@
 Plots results of GWA analysis
 }
 \usage{
-plot.scan.gwaa(x, y, ..., df=1,ylim)
+plot.scan.gwaa(x, y, ..., df=1, ystart=0, col=c("blue","green"), sort=TRUE, ylim, delta = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -13,9 +13,13 @@ plot.scan.gwaa(x, y, ..., df=1,ylim)
 		\code{\link{ccfast}}, \code{\link{emp.ccfast}}, \code{\link{emp.qtscore}}, or \code{\link{scan.haplo}}}
   \item{y}{this argument is not used}
   \item{\dots}{additional arguments to be passed to plot}
-  \item{df}{Plot results of 1 or 2-df test (1, 2). Could be also "Pc1df" (for GC corrected P-values), "Pc2df" 
-		(for robust genomic control of the 2 df test) or "all" (all results)}
+  \item{df}{Plot results of 1 or 2-df test (1, 2). Could be also "Pc1df" (for GC corrected P-values) 
+		and "Pc2df" (for robust genomic control of the 2 df test)}
+  \item{ystart}{truncate lower value of Y at this point (can help avoiding plotting too may points)}
   \item{ylim}{ylim, same as in the standard plot function}
+  \item{col}{which colors to use to depict consecutive chromosomes}
+  \item{sort}{whether results should be plotted after sorting by chromosome and position}
+  \item{delta}{gap width between chromosomes}
 }
 %\details{}
 \value{

@@ -28,7 +28,7 @@ function (trait,data,fdrate=0.05,graph=TRUE,binshow=FALSE,qoption="bh95") {
 		tt <- tra[seq(1:(length(tra)-1))]
 	muj <- mean(tt,na.rm=TRUE)
 	rvarj <- 1./var(tt,na.rm=TRUE)
-	Pv[j] = 1.-pchisq((tra[j]-muj)*(tra[j]-muj)*rvarj,1)
+	Pv[j] = pchisq((tra[j]-muj)*(tra[j]-muj)*rvarj,1,lower=F)
 	}
      }
     cat("--------------------------------\n")

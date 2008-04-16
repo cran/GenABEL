@@ -46,7 +46,7 @@ export(
 	hom,
 	ibs,
 	load.gwaa.data,
-#	merge.snp.data,
+	merge.snp.data,
 	mmscore,
 	npsubtreated,
 	perid.summary,

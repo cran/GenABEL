@@ -9,11 +9,13 @@
 	the mean of the above-ranked substituted QT value.
 }
 \usage{
-npsubtreated(trait, medication)
+npsubtreated(trait, medication, increase = FALSE)
 }
 \arguments{
   \item{trait}{vector if trait values}
   \item{medication}{medication indicator (0/1)}
+  \item{increase}{if medication INCREASE the value of the trait (should never be true 
+	for e.g. blood pressure, LDL cholesterol, etc.)}
 }
 \details{
 	Should put the formulas here...

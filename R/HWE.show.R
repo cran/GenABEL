@@ -35,7 +35,7 @@ function(data,idsubset=c(1:data@gtdata@nids),snpsubset =c(1:data@gtdata@nsnps)) 
 			out[3,] <- (out[1,]-out[2,])^2
 		rownames(out) <- c("observed","expected","chi2+")
 		chi2 <- sum(out[3,])	
-		pv <- 1 - pchisq(chi2,1)
+		pv <- pchisq(chi2,1,lower=F)
 		sco <- cat("HWE summary for",snpsubset[i],":\n")
 		sco <- print(out)
 		sco <- cat("Chi2 =",chi2,"; P =",pv)

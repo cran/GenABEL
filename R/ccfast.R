@@ -83,9 +83,9 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,pro
 		out$Pc1df <- pr.c1df/times
 		out$Pc1df <- replace(out$Pc1df,(out$Pc1df==0),1/(1+times))
 	} else {
-		out$P1df <- 1. - pchisq(chi2.1df,1)
-		out$P2df <- 1. - pchisq(chi2.2df,actdf)
-		out$Pc1df <- 1. - pchisq(chi2.c1df,1)
+		out$P1df <- pchisq(chi2.1df,1,lower=F)
+		out$P2df <- pchisq(chi2.2df,actdf,lower=F)
+		out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
 	}
 	out$lambda <- lambda
 	out$effB <- effB

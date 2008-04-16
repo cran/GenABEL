@@ -83,7 +83,7 @@ gc <- qtscore(height ~ sex + age,data=ge03d2.clean)
 #compare
 plot(mm,df="Pc1df",cex=0.5)
 add.plot(gc,df="Pc1df",col="red")
-add.plot(gr,df="Pc1df",col="green",cex=1.1)
+add.plot(gr,df="Pc1df",col="lightgreen",cex=1.1)
 # can see that mmscore and grammar are quite the same... in contrast to GC
 }
 \keyword{htest}% at least one, from doc/KEYWORDS
