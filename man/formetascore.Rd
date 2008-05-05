@@ -13,6 +13,7 @@ formetascore(formula, data, stat = qtscore, transform = ztransform,
   \item{formula}{standard formula}
   \item{data}{object of \code{\link{gwaa.data-class}}}
   \item{stat}{which GWA analysis function to apply. Could be 
+	 \code{\link{mlreg}}, 
 	 \code{\link{qtscore}}, 
 	 \code{\link{mmscore}}, 
 	 \code{\link{grammar}}, 

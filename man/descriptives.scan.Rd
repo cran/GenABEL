@@ -15,17 +15,17 @@
   \item{digits}{number of digits to be printed}
   \item{sep}{field separator (takes effect only if file argument provided)}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	A descritive table
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
-\seealso{
-}
+%\note{
+%}
+%\seealso{
+%}
 \examples{
 	data(srdta)
 	x <- qtscore(qt2,srdta)

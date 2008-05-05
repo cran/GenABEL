@@ -15,17 +15,19 @@ sset(data, nsnps, nids, list)
   \item{list}{something internal...}
 }
 \details{
+	Rather simple function which I wrote before 
+	discovering \R's setdiff, etc. functions.
 }
 \value{
 	Sub-set from snp.mx-class object
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{snp.mx-class}} 
 }
-\examples{
-}
+%\examples{
+%}
 \keyword{misc}% at least one, from doc/KEYWORDS

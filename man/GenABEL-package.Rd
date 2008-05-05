@@ -21,8 +21,8 @@ Imbedding GenABEL into R environment allows for easy data characterisation, expl
 \tabular{ll}{
 Package: \tab GenABEL\cr
 Type: \tab Package\cr
-Version: \tab 1.3-7\cr
-Date: \tab 2008-04-16\cr
+Version: \tab 1.3-9\cr
+Date: \tab 2008-05-05\cr
 License: \tab GPL (>= 2)\cr
 }
 
@@ -37,11 +37,14 @@ case, try demo(srdtawin).
 The most important functions and classes are:
 
 For converting data from other formats, see
+\code{\link{convert.snp.illumina}} (Illumina/Affymetrix-like format). This is 
+our preferred converting function, very extensively tested. Other conversion 
+functions include:  
 \code{\link{convert.snp.text}} (conversion from human-readable GenABEL format),
 \code{\link{convert.snp.ped}} (Linkage, Merlin, Mach, and similar files),
 \code{\link{convert.snp.mach}} (Mach-format),
 \code{\link{convert.snp.tped}} (from PLINK TPED format),
-\code{\link{convert.snp.illumina}} (Illumina/Affymetrix-like format). 
+\code{\link{convert.snp.affymetrix}} (BRML-style files).
 
 To load the data, see \code{\link{load.gwaa.data}}.
 
@@ -180,12 +183,9 @@ Packages \code{genetics},
 \code{qvalue},
 }
 \examples{
-# to see more or less complete functionality, run
-#	demo(ge03d2)
-# also try
-#	demo(srdta)
-# it will take a while!
-# if demo(srdta) does not work (for Windows) try
-#	demo(srdtawin)
-#
+	\dontrun{
+	demo(ge03d2)
+	demo(srdta)
+	demo(srdtawin)
+	}
 }

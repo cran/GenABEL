@@ -65,7 +65,7 @@ extern "C" {
     vector<int> strand; string tmp_strand;
     vector<string> codeset(ncodes); 
     char tmp_chcoding [10];
-    char tmp_chcoding1 [10];
+//    char tmp_chcoding1 [10];
 
     for (int i=0;i<ncodes;i++) codeset[i].assign(allele_codes[i]);
 

@@ -12,16 +12,16 @@
   \item{x}{An object of \code{\link{snp.coding-class}}}
   \item{\dots}{...}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	A vector containing actual (nucleotide) coding, for corresponding 
 	SNPs, in character format
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{as.character.snp.strand}},
 \code{\link{as.character.snp.data}},

@@ -15,18 +15,18 @@
   \item{by.var}{a binary trait; statistics will be produced seprately for the groups and compared}
   \item{digits}{number of digits to be printed}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	A table with descriptive statistics. Ptt: t-test; Pkw: kruskal.test;
 	Pex: Fisher exact test (for factors with <5 levels)
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
-\seealso{
-}
+%\note{
+%}
+%\seealso{
+%}
 \examples{
 	data(srdta)
 	descriptives.trait(srdta)

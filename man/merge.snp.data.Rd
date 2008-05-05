@@ -64,7 +64,7 @@ merge.snp.data(x, y, ... , error_amount = 1e+06, replacena = TRUE, forcestrandus
   \item{data}{merged object of \code{\link{snp.data-class}}}
 }
 %\references{ ~put references to the literature/web site here ~ }
-\author{Maksim Struchalin}
+\author{Maksim Struchalin, Yurii Aulchenko}
 %\note{ ~~further notes~~ 
 %}
 \seealso{

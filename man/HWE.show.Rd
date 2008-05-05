@@ -21,8 +21,7 @@ HWE.show(data, idsubset = c(1:data@gtdata@nids),
 }
 %\references{}
 \author{Yurii Aulchenko}
-%\note{
-%}
+%\note{}
 \seealso{
 \code{\link{check.marker}}
 }

@@ -12,16 +12,16 @@
   \item{x}{An object of \code{\link{snp.strand-class}}}
   \item{\dots}{...}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	A vector containing strand ("+", "-" or "u"), for corresponding 
 	SNPs, in character format
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{as.character.snp.coding}},
 \code{\link{as.character.snp.data}},

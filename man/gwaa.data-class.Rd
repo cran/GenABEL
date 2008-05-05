@@ -15,8 +15,8 @@ phenotypes, genotypes and other relevant information
     \item{\code{gtdata}:}{object of class \code{\link{snp.data-class}} used to store genotypic data, map, etc.}
 	}
 }
-\section{Extends}{
-}
+%\section{Extends}{
+%}
 \section{Methods}{
   \describe{
     \item{[}{\code{signature(x = "gwaa.data", i = "ANY", j = "ANY", drop = "ANY")}: subset

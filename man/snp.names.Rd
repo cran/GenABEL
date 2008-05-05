@@ -21,7 +21,7 @@ snp.names(data, begin, end, chromosome)
 \value{
 	A vector of names of SNPs located in the region
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
 %\note{}
 \seealso{\code{\link{snp.data-class}}}

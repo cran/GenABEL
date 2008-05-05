@@ -22,8 +22,8 @@ scan.glm.2D(formula, family = gaussian(), data, snpsubset, idsubset,
   \item{data}{object of class "gwaa.data"}
   \item{bcast}{show progress every \code{bcast} SNPs}
 }
-\details{
-}
+%\details{
+%}
 \value{
   Object of class \code{\link{scan.gwaa.2D-class}}
 }

@@ -9,7 +9,6 @@ function is \code{\link{qtscore}}.
 emp.qtscore(formula , data, snpsubset, idsubset, strata, trait.type="gaussian", times = 100, 
 		quiet=FALSE, bcast = 10)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   All arguments are the same as in and passed intact to the \code{\link{qtscore}}.
   See help for this function. 
@@ -50,10 +49,10 @@ emp.qtscore(formula , data, snpsubset, idsubset, strata, trait.type="gaussian", 
 \value{
 	Object of class \code{\link{scan.gwaa-class}}
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{qtscore}},
 \code{\link{emp.ccfast}},

@@ -170,17 +170,25 @@ names(alleleID_reverse_raw) <- NULL #17 18 07 09 08 0a 03 05 04 06 10 0f 11 12 0
 
 
 return_val <-  .C("fast_merge_C_",
-								as.raw(x@gtps), as.integer(x@nids), as.integer(x@nsnps), 
-								as.raw(y@gtps), as.integer(y@nids), as.integer(y@nsnps),
-							  as.integer(num_ids_intersected), as.integer(num_snps_intersected), as.integer(snp_intersected), as.integer(ids_intersected),
+								as.raw(x@gtps), as.integer(x@nids), 
+# Yurii: replaced with double
+								as.double(x@nsnps), 
+								as.raw(y@gtps), as.integer(y@nids), 
+# Yurii: replaced with double
+								as.double(y@nsnps),
+								as.integer(num_ids_intersected), 
+# Yurii: replaced with double
+								as.double(num_snps_intersected), 
+								as.integer(snp_intersected), as.integer(ids_intersected),
 							 	as.logical(replacena),
 							 	x@strand@.Data, y@strand@.Data, #strands raw array
 							 	x@coding@.Data, y@coding@.Data, #coding raw array
 								alleleID_raw, alleleID_names_char, as.integer(alleleID_amount), #allele names in accordance with coding 
 								alleleID_reverse_raw,
-								as.integer(error_amount),
-								found_error_amount_snp = integer(1),
-								found_id_error_amount_id = integer(1),
+# Yurii: replaced with double
+								as.double(error_amount),
+								found_error_amount_snp = double(1),
+								found_id_error_amount_id = double(1),
 								id_position_error = integer(error_amount), id_snpposition_error = integer(error_amount), val_x_error = raw(error_amount), val_y_error = raw(error_amount),
 								snp_position_error = integer(error_amount), snp_x_codding_error = raw(error_amount), snp_y_codding_error = raw(error_amount),
 								as.logical(forcestranduse),

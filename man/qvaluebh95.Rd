@@ -13,8 +13,8 @@ qvaluebh95(p, fdrate=0.1)
   \item{p}{vector containing p-values}
   \item{fdrate}{desired FRD}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	List
 	\section{Names}{
@@ -25,8 +25,8 @@ qvaluebh95(p, fdrate=0.1)
 %\references{}
 \author{Yurii Aulchenko}
 %\note{}
-\seealso{
-}
+%\seealso{
+%}
 \examples{
 data(srdta)
 a<-qtscore(qt2,data=srdta)

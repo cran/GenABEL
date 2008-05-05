@@ -12,15 +12,15 @@
   \item{x}{An object of \code{\link{snp.data-class}}}
   \item{\dots}{...}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	A data-frame containing genotypes consumable by "genetics" library
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{as.character.snp.data}},
 \code{\link{as.double.snp.data}},

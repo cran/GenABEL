@@ -36,24 +36,24 @@
 class gtps_container
 	{
 	public:
-		gtps_container(char * gtps_array_raw, char * strand_array, char *  coding_array, unsigned id_numbers, unsigned snp_numbers);
-		gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers);
+		gtps_container(char * gtps_array_raw, char * strand_array, char *  coding_array, unsigned id_numbers, unsigned long int snp_numbers);
+		gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned long int snp_numbers);
 		~gtps_container(void);
 
 		//Get polymorphism for person who have ID=id_position for SNP=snp_position
 		//Here the first id_position equal zerro, the second - one etc...
 		//id_position=1 - THE FIRST ARGUMENT (id_position!=O NEVER!!!). snp_position - same
-		char get(unsigned id_position, unsigned snp_position);
-		char* get_gtps_array_for_snp(unsigned snp_position);
-		char get_strand(unsigned snp_position);
-		char get_coding(unsigned snp_position);
+		char get(unsigned id_position, unsigned long int snp_position);
+		char* get_gtps_array_for_snp(unsigned long int snp_position);
+		char get_strand(unsigned long int snp_position);
+		char get_coding(unsigned long int snp_position);
 		
 		
 		//id_position=1 - THE FIRST ARGUMENT (id_position!=O NEVER!!!). snp_position - same
-		void set(unsigned id_position, unsigned snp_position, char data);
+		void set(unsigned id_position, unsigned long int snp_position, char data);
 
 	private:
-		void get_our_byte_number_and_local_person_number(unsigned id_position, unsigned snp_position);
+		void get_our_byte_number_and_local_person_number(unsigned id_position, unsigned long int snp_position);
 		bool do_we_have_strand_and_codding_arrays;
 		char *gtps_array; //pointer to array where we stotages our data (passed from R)
 		char * strand_array;

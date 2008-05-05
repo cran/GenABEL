@@ -18,10 +18,10 @@
 \value{
 	A data-frame containing phenotypic data
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{as.character.snp.data}},
 \code{\link{as.double.snp.data}},

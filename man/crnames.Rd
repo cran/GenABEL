@@ -13,12 +13,12 @@ crnames(dnames,idx)
 	\item{dnames}{object \code{\link{dimnames}}}
 	\item{idx}{index (or logical condition on the original object)}
 }
-\details{
-}
-\source{
-}
-\references{
-}
+%\details{
+%}
+%\source{
+%}
+%\references{
+%}
 \examples{
 	data(ge03d2ex)
 	a <- as.numeric(ge03d2ex[1:20,1:3])

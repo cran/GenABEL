@@ -9,7 +9,6 @@ function is \code{\link{ccfast}}.
 emp.ccfast(y, data, snpsubset, idsubset, times = 100, quiet=FALSE,
 		bcast = 10)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
 
   All arguments are the same as in and passed intact to the \code{\link{ccfast}}.
@@ -44,8 +43,8 @@ analysis of the original (not permuted) data set
 }
 %\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{ccfast}},
 \code{\link{emp.qtscore}},

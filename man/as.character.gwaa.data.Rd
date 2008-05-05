@@ -12,15 +12,15 @@
   \item{x}{An object of \code{\link{gwaa.data-class}}}
   \item{\dots}{...}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	A matrix containing genotypes in character format
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{as.character.snp.data}},
 \code{\link{as.double.gwaa.data}},

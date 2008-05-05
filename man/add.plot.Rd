@@ -7,7 +7,6 @@ Add plot of results of GWA analysis
 \usage{
 add.plot(x, ..., df = 1,  col=c("lightgreen","lightblue"), sort=TRUE, delta = 1)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{object of type scan.gwaa-class, as returned by \code{\link{scan.glm}}, \code{\link{qtscore}},
 		\code{\link{ccfast}}, \code{\link{emp.ccfast}}, \code{\link{emp.qtscore}}, or \code{\link{scan.haplo}}; 

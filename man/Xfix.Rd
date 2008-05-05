@@ -23,7 +23,7 @@ Sets impossible genotypes (e.g. heterozygous male X-linked genotypes) to missing
 	The same object of \link{gwaa.data-class}, with fixed 
 	genotypes
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
 %\note{
 %}

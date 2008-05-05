@@ -15,16 +15,16 @@ catable(data, categories = c(quantile(data,c(0.01,0.1,0.5,0.9,0.99),na.rm=TRUE))
   \item{na.rm}{how to treat NAs}
   \item{digits}{number of digits to be saved in rounding}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	table with number and proportion of observations falling between 
 	categories
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 	\code{\link{summary.snp.data}},
 	\code{\link{perid.summary}}

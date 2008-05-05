@@ -64,7 +64,7 @@ extern "C" {
     vector<int> strand; string tmp_strand;
     vector<string> codeset(ncodes); 
     char tmp_chcoding [10];
-    char tmp_chcoding1 [10];
+//    char tmp_chcoding1 [10];
 
     for (int i=0;i<ncodes;i++) codeset[i].assign(allele_codes[i]);
 
@@ -152,7 +152,7 @@ extern "C" {
 
       istringstream datas (data);
 
-      char gdata;
+//      char gdata;
 
       if (datas >> token >> tmp_iid >> token >> token >> token) {
 	      for (int i=0;i<traits;i++) {datas >> token;}
@@ -195,7 +195,7 @@ extern "C" {
 
       istringstream datas (data);
 
-      char gdata;
+//      char gdata;
 
       if (datas >> token >> tmp_iid >> token) {
 	      iid.push_back(tmp_iid);

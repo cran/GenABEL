@@ -13,15 +13,15 @@
   \item{x}{An object of \code{\link{snp.data-class}} or \code{\link{gwaa.data-class}}}
   \item{\dots}{...}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	A data-frame containing alleles, consumable by "haplo.stats" library
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{as.character.snp.data}},
 \code{\link{as.double.snp.data}},

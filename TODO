@@ -1,31 +1,8 @@
-2006.08.05	Arrange fast "glm"-like for use in gwaa.scan
-		(low)
-
-2006.08.17	implement a function to read WTCCC type of data
-		(directly from R or at least indirectly through a
-		companion parogram)
-		(high)
-
-2006.10.11	optimisation of emp.ccfast and emp.qtscore 
-		As most of the time in C is spent on extracting data 
-		from 2-bit format, most efficient would be to pass list 
-		of permuted indexes to the C procedure.
-
-2006.10.11	check.marker test for redundancy: also limit by region 
-		(low)
-
 2006.11.06	Arrange formal class for check.marker-class, scan.gwaa-class
 		and scan.gwaa.2D-class
 
 2007.02.14	Implement Fisher Product Method for multiple traits and 
 		multiple SNPs
-
-2007.02.14	When the map is not cumulative, would be good to store 
-		the "delta"s for every chromosome and somehow let user
-		choose which values (GW or chromosome-specific) to
-		use and report.
-
-2007.02.23	Arrange a function to study time-till-event
 
 2007.02.23	Permutations (adaptive) for qtscore nominal significance
 
@@ -36,4 +13,6 @@
 2007.11.04	QC: checks for autosomal SNPs which predict sex
 
 2007.12.21	Add Pc2df to scan.gwaa output
+
+2008.05.05	reg.gwaa: add permutations and report back residual variance
 

@@ -1,6 +1,5 @@
 \name{hom}
 \alias{hom}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{function to compute average homozygosity within a person}
 \description{
 This function computes average homozygosity (inbreeding) for a set of 
@@ -10,7 +9,6 @@ people, across multiple markers. Can be used for Quality Control
 \usage{
 	hom(data, snpsubset, idsubset, weight="no")
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{Object of \link{gwaa.data-class} or \link{snp.data-class}}
   \item{snpsubset}{Subset of SNPs to be used}
@@ -57,8 +55,8 @@ people, across multiple markers. Can be used for Quality Control
 	linkage analyses. Am. J. Hum. Genet.
 }
 \author{Yurii Aulchenko}
-\note{
-}
+%\note{
+%}
 \seealso{
 \code{\link{ibs}},
 \code{\link{gwaa.data-class}},

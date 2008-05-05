@@ -18,15 +18,17 @@
 \format{
 	Standard object of class \code{\link{gwaa.data-class}}
 }
-\details{
-}
-\source{
-}
-\references{
-}
+%\details{
+%}
+%\source{
+%}
+%\references{
+%}
 \examples{
-#main example: use this to see full functionality
-# demo(srdta)
+
+\dontrun{
+demo(srdta)
+}
 
 # load and work with srdta
 data(srdta)

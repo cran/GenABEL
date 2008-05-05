@@ -20,17 +20,17 @@
   \item{idcc}{vector containing desired cut-off levels for individual SNP call rate}
   \item{digits}{number of digits to be printed}
 }
-\details{
-}
+%\details{
+%}
 \value{
 	A list containing descriptive tables and statistics
 }
-\references{}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
-\seealso{
-}
+%\note{
+%}
+%\seealso{
+%}
 \examples{
 	data(srdta)
 	descriptives.marker(srdta)

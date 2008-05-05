@@ -14,15 +14,17 @@ show.ncbi(region)
 \details{
   	The elements of input vector could be SNP rs-names
 }
-\value{
-}
-\references{}
+%\value{
+%}
+%\references{}
 \author{Yurii Aulchenko}
-\note{
-}
-\seealso{
-}
+%\note{
+%}
+%\seealso{
+%}
 \examples{
-show.ncbi(c("rs7926624","rs11564708"))
+	\dontrun{
+	show.ncbi(c("rs7926624","rs11564708"))
+	}
 }
 \keyword{misc}% at least one, from doc/KEYWORDS
