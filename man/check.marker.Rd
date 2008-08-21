@@ -13,7 +13,7 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 		perid.call=0.95, extr.call = 0.1, extr.perid.call = 0.1, het.fdr = 0.01, 
 		ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower", maf, p.level = -1, fdrate = 0.2, 
 		odds = 1000, hweidsubset, redundant = "no", 
-		minconcordance = 2.0, qoption = "bh95", imphetasmissing = TRUE, XXY.call=0.5) 
+		minconcordance = 2.0, qoption = "bh95", imphetasmissing = TRUE, XXY.call=0.8) 
 }
 \arguments{
   \item{data}{gwaa.data or snp.data object}

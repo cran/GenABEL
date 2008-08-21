@@ -57,7 +57,15 @@ names(alleleID_raw) <- NULL
 alleleID_amount <- length(alleleID_raw)
 
 
-d <- .C("convert_snp_affymetrix_C", dir, fileslist, files_amount, map, outfile, skipaffym, alleleID_names_char, alleleID_raw, alleleID_amount)
+d <- .C("convert_snp_affymetrix_C", as.character(dir),
+				as.character(fileslist),
+			 	as.integer(files_amount),
+			 	as.character(map),
+			 	as.character(outfile),
+			 	as.integer(skipaffym),
+			 	as.character(alleleID_names_char),
+			 	as.raw(alleleID_raw),
+			 	as.integer(alleleID_amount))
 
 
 }

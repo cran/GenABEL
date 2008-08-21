@@ -4,7 +4,7 @@ function(data, snpsubset, idsubset,
 			het.fdr=0.01, ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower",
 			maf, p.level=-1, 
 			fdrate = 0.2, odds = 1000, hweidsubset, redundant="no", minconcordance = 2.0, 
-			qoption="bh95",imphetasmissing=TRUE,XXY.call=0.5) {
+			qoption="bh95",imphetasmissing=TRUE,XXY.call=0.8) {
 
 	if (class(data) == "gwaa.data") data <- data@gtdata
 	if (class(data) != "snp.data") stop("data argument should be of type gwaa.data or snp.data");
@@ -29,6 +29,10 @@ function(data, snpsubset, idsubset,
 	out$idok <- data@idnames[!(data@idnames %in% out$idnocall)]
 	cat(length(out$idnocall),"people excluded because of call rate <",extr.perid.call,"\n")
 	ts <- summary(data)
+	if (any(as.character(data@chromosome) == "Y") && any(data@male==1)) {
+		tsY <- summary(data[which(data@male==1),(which(as.character(data@chromosome) == "Y"))])
+		ts[(which(as.character(data@chromosome) == "Y")),] <- tsY
+	}
 	out$nocall <- rownames(ts[ts[,"CallRate"]<extr.call,])
 	out$snpok <- data@snpnames[!(data@snpnames %in% out$nocall)]
 	cat(length(out$nocall),"markers excluded because of call rate <",extr.call,"\n")
@@ -60,7 +64,7 @@ function(data, snpsubset, idsubset,
 # XXY checks
 	if (any(data@chromosome=="Y")) {
 		totest <- unique(c(out$isfemale,intersect(data@idnames[data@male==0],out$idok)))
-		Ytab <- perid.summary(data[totest,(data@chromosome == "Y")])
+		Ytab <- perid.summary(data[totest,(as.character(data@chromosome) == "Y")])
 		Ytab <- Ytab[Ytab$NoMeasured>0,]
 		cat("\n",sum(Ytab$NoMeasured),"possibly female Y genotypes identified")
 		Ytabexc <- Ytab[Ytab$CallPP>=XXY.call,]

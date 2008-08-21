@@ -11,28 +11,30 @@ function(data,plot=TRUE,proportion=1.0, ...) {
 	if (ntp<10) warning(paste("number of points is too small:",ntp))
 	if (min(data)<0) stop("data argument has values <0")
 	if (max(data)<=1) {
-		lt16 <- (data < 1.e-16)
-		if (any(lt16)) {
-			warning(paste("Some probabilities < 1.e-16; set to 1.e-16"))
-			data[lt16] <- 1.e-16
-		}
-		data <- qchisq(1-data,1)
+#		lt16 <- (data < 1.e-16)
+#		if (any(lt16)) {
+#			warning(paste("Some probabilities < 1.e-16; set to 1.e-16"))
+#			data[lt16] <- 1.e-16
+#		}
+		data <- qchisq(data,1,low=FALSE)
 	}
 	data <- sort(data)
 	ppoi <- ppoints(data)
 	ppoi <- sort(qchisq(1-ppoi,1))
 	data <- data[1:ntp]
 	ppoi <- ppoi[1:ntp]
-	s <- summary(lm(data~offset(ppoi)))$coeff
+#	s <- summary(lm(data~offset(ppoi)))$coeff
+# 	bug fix thanks to Franz Quehenberger
+	s <- summary(lm(data~0+ppoi))$coeff
 	if (plot) {
 		lim <- c(0,max(data,ppoi,na.rm=T))
 #		plot(ppoi,data,xlim=lim,ylim=lim,xlab="Expected",ylab="Observed", ...)
 		plot(ppoi,data,xlab="Expected",ylab="Observed", ...)
 		abline(a=0,b=1)
-		abline(a=0,b=(1+s[1,1]),col="red")
+		abline(a=0,b=(s[1,1]),col="red")
 	}
 	out <- list()
-	out$estimate <- s[1,1]+1.0
+	out$estimate <- s[1,1]
 	out$se <- s[1,2]
 	out
 }

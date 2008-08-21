@@ -46,7 +46,7 @@ convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1,
 	Pedfile must be standard pre-makeped/Merlin linkage file, or a Mach file. 
 	In pre-makeped linkage file, columns are
 	
-	ped id fa mo sex snp1.allele1 snp1.allele2 snp2.allele1 snp2.allele2 ...
+	ped id fa mo sex trait snp1.allele1 snp1.allele2 snp2.allele1 snp2.allele2 ...
 
 	For example
 

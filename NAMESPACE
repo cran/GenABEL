@@ -48,6 +48,7 @@ export(
 	hom,
 	ibs,
 	load.gwaa.data,
+	merge.gwaa.data,
 	merge.snp.data,
 	mlreg,
 	mmscore,

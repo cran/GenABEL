@@ -21,7 +21,6 @@
 #include <vector>
 #include <map>
 #include "Chip.h"
-//#include "/home/maksim/work/GenABEL_dev/GenABEL/src/gtps_container.h"
 
 #include <R.h>  // to include Rconfig.h
 
@@ -63,19 +62,24 @@ for(unsigned i=0 ; i<*alleleID_amount ; i++)
 	}
 
 
-std::cout<<"reading map...\n";
+Rprintf("reading map...\n");
+//std::cout<<"reading map...\n";
 AffymetrixChipMap Map(map_filename, 2, 0, 2, 4, 5, 3, 9, 10, 6);
-std::cout<<"map is read...\n";
+//std::cout<<"map is read...\n";
+Rprintf("map is read...\n");
 
-
+if(Map.get_exclude_amount() != 0) 
+	{
+	Rprintf("%i SNPs excluded from annotation because of absent enough information annotation file\n", Map.get_exclude_amount());			
+	}
 
 
 
 std::vector<ChipData *> ids_chip;
 for(unsigned i=0 ; i<files_amount ; i++)
 	{
-	const char * file = (std::string(dirname) + "/" + std::string(filelist[i])).c_str();
-	std::cout<<"opening file "<<file<<"...\n";
+	std::string file = (std::string(dirname) + "/" + std::string(filelist[i]));
+	Rprintf("%i: opening file %s\n", i+1, file.c_str());
 	ids_chip.push_back(new affymetrix_chip_data(file, 0, 1, *skipaffym));
 	}
 
@@ -87,15 +91,16 @@ unsigned id_amount=ids_chip.size();
 
 
 std::ofstream outfile(outfilename);
-if(!outfile.is_open()){std::cout<<"Can not open file "<<outfilename<<"\n"; exit(1);}
+if(!outfile.is_open()){error("Can not open file \"\"\n",outfilename);}
 
-std::cout<<"Save to file "<<outfilename<<"\n";
+
+Rprintf("Save to file %s\n", outfilename);
 
 
 outfile << "#GenABEL raw data version 0.1\n";
 
 //save IDs
-std::cout<<"saving Id names...\n";
+Rprintf("saving Id names...\n");
 for(unsigned id=0 ; id<files_amount ; id++)
 	{
 	outfile<<replace(std::string(filelist[id]), ' ', '_')<<" ";
@@ -104,18 +109,23 @@ outfile<<"\n";
 
 std::string snpname;
 
+
+unsigned long snp_excludet_from_output_data=0;
+
+
 //save snpnames
-std::cout<<"saving SNP names...\n";
+Rprintf("saving SNP names...\n");
 unsigned snp_amount=ids_chip[0]->get_snp_amount();
 for(unsigned snp=0 ; snp<snp_amount ; snp++)
 	{
 	snpname = ids_chip[0]->get_snp_name(snp);
 	if(Map.is_snp_in_map(snpname)){outfile<<Map.recode_snp(snpname.c_str())<<" ";}
+	else{snp_excludet_from_output_data++;}
 	}
 outfile<<"\n";
 
 //save chromosome 
-std::cout<<"saving chromosome data...\n";
+Rprintf("saving chromosome data...\n");
 for(unsigned snp=0 ; snp<snp_amount ; snp++)
 	{
 	snpname = ids_chip[0]->get_snp_name(snp);
@@ -125,7 +135,7 @@ outfile<<"\n";
 
 
 //save position (map) 
-std::cout<<"saving position data...\n";
+Rprintf("saving position data...\n");
 for(unsigned snp=0 ; snp<snp_amount ; snp++)
 	{
 	snpname = ids_chip[0]->get_snp_name(snp);
@@ -136,7 +146,7 @@ outfile<<"\n";
 
 
 //save coding
-std::cout<<"saving coding data...\n";
+Rprintf("saving coding data...\n");
 outfile.flags(std::ios_base::hex); //for what is it <-?
 for(unsigned snp=0 ; snp<snp_amount ; snp++)
 	{
@@ -158,7 +168,7 @@ outfile<<"\n";
 
 
 //save strand
-std::cout<<"saving strand data...\n";
+Rprintf("saving strand data...\n");
 std::map<char, unsigned> strand_recode;
 strand_recode['u']=0;
 strand_recode['+']=1;
@@ -181,7 +191,7 @@ outfile<<"\n";
 
 
 //save polymorphism data
-std::cout<<"saving polymorphism data...\n";
+Rprintf("saving polymorphism data...\n");
 unsigned long gtps_byte_amount = (unsigned long)ceil((double)id_amount/4.);
 char *gtps_for_one_snp = new char[gtps_byte_amount];
 
@@ -222,10 +232,10 @@ for(unsigned snp=0 ; snp<snp_amount ; snp++)
 delete gtps_for_one_snp;	
 delete rearrangement_array;
 
+Rprintf("%i SNPs excluded bacause of absent in annotation\n", snp_excludet_from_output_data);
+Rprintf("Total %i SNPs are written into output file\n", snp_amount-snp_excludet_from_output_data);
 
-if(Map.get_exclude_amount() != 0) std::cout<<Map.get_exclude_amount()<<" SNPs excluded because of absent enough information in map file\n";
-
-std::cout<<"Finshed... Data saved into file "<<outfilename<<"\n";
+Rprintf("Finshed... Data saved into file %s\n", outfilename);
 outfile.close();
 }
 

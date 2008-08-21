@@ -39,6 +39,10 @@ function(data, snpsubset, idsubset,
 	}
 # run summary
 	s <- summary(data)
+	if (any(as.character(data@chromosome) == "Y") && any(data@male==1)) {
+		sY <- summary(data[which(data@male==1),(which(as.character(data@chromosome) == "Y"))])
+		s[(which(as.character(data@chromosome) == "Y")),] <- sY
+	}
 # check frequency
 	freqok <- pmin(s$Q.2,1-s$Q.2)
 	freqok <- (freqok>=maf)

@@ -47,7 +47,7 @@ function(formula,data,family=gaussian) {
 		stop("formula argument must be a formula or one of (numeric, integer, double)")
 	}
 	y <- (resid-mean(resid))/sd(resid)
-	if (wasdata) detach(data)
+	if (wasdata==1) detach(data)
 	tmeas <- as.logical(mids)
 	out <- rep(NA,length(mids))
 	out[tmeas] <- y

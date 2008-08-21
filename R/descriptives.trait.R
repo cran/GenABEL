@@ -8,9 +8,9 @@ function (data,subset,file,by.var=NULL,digits=3) {
 	if (!missing(subset)) data <- data[subset,]
 	if (!is.null(by.var)) {
 		svar <- by.var
-		if (length(unique(svar))!=2) stop("The by.var argument should contain a binary variable")
+		if (length(levels(factor(svar)))!=2) stop("The by.var argument should contain a binary variable")
 		out <- matrix(data=NA,nrow=ntra,ncol=9)
-		lvls <- unique(svar)
+		lvls <- levels(factor(svar))
 		for (i in (1:ntra)) {
 			ctrao <- data[,i]
 			if (!is.numeric(ctrao) | all(ctrao==svar)) {

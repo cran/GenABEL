@@ -18,12 +18,11 @@
 #include "gtps_container.h"
 #include <cstdlib>  
 #include <math.h>
-#include <Rinternals.h>
 
 
 
 
-gtps_container::gtps_container(char * gtps_array_, char * strand_array_, char * coding_array_, unsigned id_numbers_, unsigned long int snp_numbers_)
+gtps_container::gtps_container(char * gtps_array_, char * strand_array_, char * coding_array_, unsigned id_numbers_, unsigned snp_numbers_)
 {
 do_we_have_strand_and_codding_arrays = true; //of course
 rearrangement_array = new unsigned[4];
@@ -51,7 +50,7 @@ nbytes_for_one_snp = unsigned(ceil(double(id_numbers)/4.) + 0.5);
 
 
 //------------------------------------------------------------------
-gtps_container::gtps_container(char * gtps_array_, unsigned id_numbers_, unsigned long int snp_numbers_)
+gtps_container::gtps_container(char * gtps_array_, unsigned id_numbers_, unsigned snp_numbers_)
 {
 do_we_have_strand_and_codding_arrays = true; //of course
 rearrangement_array = new unsigned[4];
@@ -85,7 +84,7 @@ delete[] rearrangement_array;
 
 
 //------------------------------------------------------------------
-void gtps_container::get_our_byte_number_and_local_person_number(unsigned id_position, unsigned long int snp_position)
+void gtps_container::get_our_byte_number_and_local_person_number(unsigned id_position, unsigned snp_position)
 {
 our_byte_number = int(ceil(id_position/4.)+0.5) + (snp_position-1)*nbytes_for_one_snp;   //What byte is our id in? 
 
@@ -102,11 +101,11 @@ local_person_number = id_position - ((our_byte_number-(snp_position-1)*nbytes_fo
 
 
 //------------------------------------------------------------------
-char gtps_container::get(unsigned id_position, unsigned long int snp_position)
+char gtps_container::get(unsigned id_position, unsigned snp_position)
 {
 get_our_byte_number_and_local_person_number(id_position, snp_position); //calculate our_byte_number value
 
-//char our_byte_vallue = gtps_array[our_byte_number-1];
+char our_byte_vallue = gtps_array[our_byte_number-1];
 
 
 
@@ -120,13 +119,17 @@ return char((gtps_array[our_byte_number-1] >> rearrangement_array[local_person_n
 //------------------------------------------------------------------
 //Attention! This class does not carry about allocated in this function memory.
 //In order to avoid memory leak "delete" must be performed for every array created in this function.
-char* gtps_container::get_gtps_array_for_snp(unsigned long int snp_position)
+char* gtps_container::get_gtps_array_for_snp(unsigned snp_position)
 {
 char* gtps_for_one_snp = new char(nbytes_for_one_snp);
 get_our_byte_number_and_local_person_number(1, snp_position); //calculate our_byte_number value
 
-		
-for(unsigned i=0 ; i<=nbytes_for_one_snp; i++)
+std::cout<<"gtps_container::get_gtps_array_for_snp:  our_byte_number="<<our_byte_number<<"\n";
+std::cout<<"gtps_container::get_gtps_array_for_snp:  nbytes_for_one_snp="<<nbytes_for_one_snp<<"\n";
+	
+std::cout<<"gtps_array[0]="<<int(gtps_array[0])<<"\n";
+
+for(int i=0 ; i<nbytes_for_one_snp; i++)
 	{
 	gtps_for_one_snp[i]=gtps_array[our_byte_number-1+i];
 	}
@@ -144,31 +147,23 @@ return gtps_for_one_snp;
 
 
 
-char gtps_container::get_strand(unsigned long int snp_position)
+char gtps_container::get_strand(unsigned snp_position)
 {
-if(!do_we_have_strand_and_codding_arrays) {
-//  std::cout<<"gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)\n";
-//  exit(1);
-	error("you can not get strand!\n");
-}
-  return strand_array[snp_position-1]; 
+if(do_we_have_strand_and_codding_arrays) return strand_array[snp_position-1]; 
+else std::cout<<"gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)\n";
 }
 
 
 
-char gtps_container::get_coding(unsigned long int snp_position)
+char gtps_container::get_coding(unsigned snp_position)
 {
-if(!do_we_have_strand_and_codding_arrays) {
-//	std::cout<<"gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)\n";
-//	exit(1);
-	error("you can not get strand!\n");
-}
-  return coding_array[snp_position-1]; 
+if(do_we_have_strand_and_codding_arrays) return coding_array[snp_position-1]; 
+else std::cout<<"gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)\n";
 }
 
 
 //------------------------------------------------------------------
-void gtps_container::set(unsigned id_position, unsigned long int snp_position, char data)
+void gtps_container::set(unsigned id_position, unsigned snp_position, char data)
 {
 //for(int i=0 ; i<4 ; i++)
 //std::cout<<"rearrangement_array["<<i<<"]="<<rearrangement_array[i]<<"\n";

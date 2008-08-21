@@ -1,12 +1,26 @@
+//=====================================================================================
+//
+//     		   Filename:  Chip.cpp
+//
+//		    Description:  Function for converting affymetrix data to GenABEL raw data format
+//
+//    		    Version:  1.0
+//      		  Created:  16-Apr-2008
+//    		   Revision:  none
+//	last modification:  Wed May 14 16:39:33 CEST 2008
+//
+//  		       Author:  Maksim V. Struchalin, Yurii S. Aulchenko
+//     		 	  Company:  ErasmusMC, Epidemiology & Biostatistics Department, The Netherlands.
+//       		   	Email:  m.struchalin@erasmusmc.nl, i.aoultchenko@erasmusmc.nl
+//
+//=====================================================================================
 
 #include "Chip.h"
 #include <R.h>
 
-void error(const char *format, ...);
-
 
 //__________________________________________________________
-affymetrix_chip_data::affymetrix_chip_data(const char * filename_, unsigned snp_position, unsigned polymorphism_position, unsigned skip_first_lines)
+affymetrix_chip_data::affymetrix_chip_data(std::string filename_, unsigned snp_position, unsigned polymorphism_position, unsigned skip_first_lines)
 {
 unsigned BUFSIZE=10000000;
 char * buf = new char[BUFSIZE];
@@ -14,14 +28,11 @@ char * buf = new char[BUFSIZE];
 std::vector<char> polymorphism_vec;
 std::vector<std::string> snp_name_vec;
 
+
 filename = filename_;
 
-std::ifstream file(filename_);
-if(!file.is_open()){
-//	std::cout<<"Can not open file "<<filename_<<"\n"; exit(1);
-//	error("can not open file %s\n",filename_);
-	error("can not open file\n");
-}
+std::ifstream file(filename.c_str());
+if(!file.is_open()){error("Can not open file \"%s\"\n", filename.c_str());}
 
 for(unsigned i=0 ; i<skip_first_lines ; i++) file.getline(buf,BUFSIZE-1); //skip first line
 
@@ -38,7 +49,7 @@ while(!file.eof())
 		if(col==snp_position) {snp_name_vec.push_back(val);}
 		if(col==polymorphism_position) 
 			{
-			if(std::string(val) == std::string("AA") || val == std::string("1"))	polymorphism_vec.push_back(1);
+			if(std::string(val) == std::string("AA") || val == std::string("1")) polymorphism_vec.push_back(1);
 			else if(val == std::string("AB") || val == std::string("2")) polymorphism_vec.push_back(2);
 			else if(val == std::string("BB") || val == std::string("3") ) polymorphism_vec.push_back(3);
 			else polymorphism_vec.push_back(0);
@@ -98,11 +109,7 @@ return snp_amount;
 //__________________________________________________________
 const int affymetrix_chip_data::get_polymorphism(unsigned snp_num)
 {
-if(snp_num >= snp_amount) {
-//	std::cout<<"affymetrix_chip_data::get_polymorphism: error: file "<<filename<<": input SNP number "<<snp_num<<" is too big. Maximum is "<<snp_amount-1<<"\n"; exit(1);
-//	error("file %s: input SNP number %d is too much :) Max is %d\n",filename,snp_num,snp_amount-1);
-	error("file : too many SNPs \n");
-} 
+if(snp_num >= snp_amount) {error("file %s: input SNP amount %i is too big. Maximum is %i\n", filename.c_str(), snp_num, snp_amount-1);} 
 return int(polymorphism[snp_num]);
 }
 //__________________________________________________________
@@ -111,11 +118,7 @@ return int(polymorphism[snp_num]);
 //__________________________________________________________
 const char * affymetrix_chip_data::get_snp_name(unsigned snp_num_)
 {
-if(snp_num_ >= snp_amount) {
-//	std::cout<<"affymetrix_chip_data::get_snp_name: error: file "<<filename<<": input SNP number "<<snp_num_<<" is too big. Maximum is "<<snp_amount-1<<"\n"; exit(1);
-//	error("file %s: input SNP number %d is too much :) Max is %d\n",filename,snp_num_,snp_amount-1);
-	error("file : too many SNPs \n");
-} 
+if(snp_num_ >= snp_amount) {error("file %s: input SNP amount %i is too big. Maximum is %i\n", filename.c_str(), snp_num_, snp_amount-1);} 
 return snp_name[snp_num_];
 }
 //__________________________________________________________
@@ -210,11 +213,7 @@ unsigned BUFSIZE=10000000;
 char * buf = new char[BUFSIZE];
 
 std::ifstream file(filename);
-if(!file.is_open()){
-//	std::cout<<"Can not open file"<<filename<<"\n"; exit(1);
-//	error("can not open file %s\n",filename);
-	error("can not open file\n");
-}
+if(!file.is_open()){error("Can not open file %s\n", filename);}
 
 for(unsigned i=0 ; i<skip_first_lines ; i++) file.getline(buf,BUFSIZE-1); //skip first line
 

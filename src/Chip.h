@@ -25,7 +25,7 @@ class ChipData
 class affymetrix_chip_data : public ChipData
 	{
 	public:
-		affymetrix_chip_data(const char * filename, unsigned snp_positionm, unsigned polymorphism_position,  unsigned skip_first_line);
+		affymetrix_chip_data(std::string filename, unsigned snp_positionm, unsigned polymorphism_position,  unsigned skip_first_line);
 		~affymetrix_chip_data();
 	
 		const unsigned get_snp_amount(void);
