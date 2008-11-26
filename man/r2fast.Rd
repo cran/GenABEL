@@ -5,12 +5,16 @@
 	Given a set of SNPs, computes a matrix of r2 
 }
 \usage{
-r2fast(data, snpsubset, idsubset)
+r2fast(data, snpsubset, cross.snpsubset, idsubset)
 }
 \arguments{
   \item{data}{object of \code{\link{snp.data-class}}}
   \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
 		If missing, all SNPs from \code{data} are used for analysis.}
+  \item{cross.snpsubset}{Parameter allowing parallel implementation. Not to be used normally.
+		If supplied together with snpsubset, the r2 for all pairs between 
+		snpsubset and cross.snpsubset computed. 
+		}
   \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
 		If missing, all people from \code{data} are used for analysis.}
 }

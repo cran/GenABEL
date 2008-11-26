@@ -16,3 +16,6 @@
 
 2008.05.05	reg.gwaa: add permutations and report back residual variance
 
+2008.09.18	Lambda correction with no. people
+
+2008.09.18	mlreg with intercept & SNP only, no covariates

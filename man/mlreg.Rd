@@ -6,15 +6,16 @@
 Linear and logistic regression and Cox models for genome-wide SNP data
 }
 \usage{
-mlreg(formula, data, snpsubset, idsubset, gtmode = "additive", trait.type = "guess", propPs = 1)
+% mlreg(formula, data, snpsubset, idsubset, gtmode = "additive", trait.type = "guess", propPs = 1)
+mlreg(formula, data, gtmode = "additive", trait.type = "guess", propPs = 1)
 }
 \arguments{
   \item{formula}{Standard formula object}
   \item{data}{an object of \code{\link{gwaa.data-class}}}
-  \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
-		If missing, all SNPs from \code{data} are used for analysis.}
-  \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
-		If missing, all people from \code{data/cc} are used for analysis.}
+%  \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
+%		If missing, all SNPs from \code{data} are used for analysis.}
+%  \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
+%		If missing, all people from \code{data/cc} are used for analysis.}
   \item{gtmode}{Either "additive", "dominant", "recessive" or "overdominant". Specifies the 
 		analysis model.}
   \item{trait.type}{Either "gaussian", "binomial" or "survival", corresponding to 

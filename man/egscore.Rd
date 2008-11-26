@@ -52,6 +52,12 @@ axes.
 
 This test is defined only for 1 d.f.
 }
+\note{
+Original method of Price et al. uses covariance for both diagonal and off-diagonal
+elements of the matrix on which PC are computed. Kinship matrix returned by GenABEL
+contains 0.5+F (!= covariance) on the diagonal. As a temporary solution we now 
+replace diagonal elements with 0.5
+}
 \value{
   Object of class \code{\link{scan.gwaa-class}}
 }

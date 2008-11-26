@@ -5,7 +5,7 @@
 	Produces call rate and heterozygosity per person
 }
 \usage{
-perid.summary(data, snpsubset, idsubset)
+perid.summary(data, snpsubset, idsubset, ... )
 }
 \arguments{
   \item{data}{object of \code{\link{snp.data-class}}}
@@ -13,6 +13,7 @@ perid.summary(data, snpsubset, idsubset)
 		If missing, all SNPs from \code{data} are used for analysis.}
   \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
 		If missing, all people from \code{data} are used for analysis.}
+  \item{...}{additional parameters to be passed to \code{\link{hom}}}
 }
 \details{
 	This function facilitates quality control of genomic data. 

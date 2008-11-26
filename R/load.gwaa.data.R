@@ -8,7 +8,14 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = TRUE, makemap=FA
 	class(dta$id) <- "character"
 	if (!any(names(dta)=="sex",na.rm=TRUE)) 
 		stop("the column named \"sex\", containing the male identifier was not found in the phenofile")
-	a <- table(dta$sex,exclude=NULL)
+#### 2.8.0!
+	v <- version
+	if ((as.numeric(v$major) >= 2) && (as.numeric(v$minor) >= 8.0)) {
+		a <- table(dta$sex,useNA="ifany")
+	} else {
+		a <- table(dta$sex,exclude=NULL)
+	}
+####
 	if (length(a) > 2)
 		stop("column named \"sex\" contains more then 2 codes")
 	if (length(a) == 1 && !(names(a)[1] == 0 || names(a)[1] == 1))

@@ -7,7 +7,7 @@ people, across multiple markers. Can be used for Quality Control
 (e.g. contamination checks)
 }
 \usage{
-	hom(data, snpsubset, idsubset, weight="no")
+	hom(data, snpsubset, idsubset, weight="no", snpfreq, n.snpfreq = 1000)
 }
 \arguments{
   \item{data}{Object of \link{gwaa.data-class} or \link{snp.data-class}}
@@ -17,12 +17,19 @@ people, across multiple markers. Can be used for Quality Control
 		homozygous genotypes. When "freq", an estimate of 
 		inbreeding coefficint is computed (see details).
 		}
+  \item{snpfreq}{when option weight="freq" used, you can provide 
+		fixed allele frequencies}
+  \item{n.snpfreq}{when option weight="freq" used, you can provide 
+		number of people used to estimate allele frequencies}
 }
 \details{
+	Without "freq" option, homozygosity is measured as proportion of 
+	homozygous genotypes observed in a person.
+
 	With "freq" option, for person $i$ inbreeding is estimated with 
 
 	$$
-	f_i = \frac{O_i - E_i)}{(L_i - E_i)}
+	f_i = \frac{(O_i - E_i)}{(L_i - E_i)}
 	$$
 
 	where $O_i$ is observed homozygosity, $L_i$ is the number of SNPs 
@@ -32,9 +39,12 @@ people, across multiple markers. Can be used for Quality Control
 	E_i = \Sigma_{j=1}^{L_i} (1 - 2 p_j (1 - p_j) \frac{T_{Aj}}{T_{Aj}-1})
 	$$
 
-	where $T_{Aj}$ is the numer of measured genotypes at locus $j$.
+	where $T_{Aj}$ is the numer of measured genotypes at locus $j$; 
+	$T_{Aj}$ is either estimated from data or provided by "n.snpfreq" 
+	parameter (vector). Alleleic frequencies are either estimated from 
+	data or provided by the "snpfreq" vector.
 
-	Only polymorphic loci with number of measured henotypes >1 are used
+	Only polymorphic loci with number of measured genotypes >1 are used
 	with this option.
 
 	This measure is the same as used by PLINK (see reference).

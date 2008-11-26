@@ -54,6 +54,9 @@ function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,q
 	if (tmp[1] == tmp[2]) {
 		tmp <- t(kinship.matrix)
 		kinship.matrix[upper.tri(kinship.matrix)] <- tmp[upper.tri(tmp)]
+# temporary solution: should be covariance!
+		diag(kinship.matrix) <- .5
+####################
 		ev <- eigen(kinship.matrix,symmetric=TRUE)$vectors
 		rownames(ev) <- rownames(kinship.matrix)
 		ev <- ev[data@phdata$id,1:naxes]

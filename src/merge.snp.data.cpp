@@ -77,8 +77,6 @@ class Search
 
 
 
-
-
 //---------------------------------------------------------
 Search::Search(unsigned *snp_intersected, unsigned *ids_intersected, unsigned num_snps_intersected, unsigned num_ids_intersected)
 {
@@ -136,22 +134,92 @@ else return array_ids_intersected_keys_from_set2[id_num_in_set2];
 
 
 
+//_______________________________________________________ 
+char inverse_genotype(char set_val)
+{
+switch(set_val)
+	{
+	case 1:
+			set_val=3;
+			break;
+	case 3:
+			set_val=1;
+			break;
+	default:
+			break;
+	}
+return set_val;
+}
+//_______________________________________________________
+
+
+
+
+
+
+
+//_______________________________________________________
+void coding_error(unsigned snp_in_set1,
+									unsigned coding_set1_origin, unsigned coding_set2_origin,
+									unsigned *snp_error_counter,
+			 						unsigned *snp_position_error,
+								 	char* snp_set2_codding_error,
+								 	char* snp_set1_codding_error,
+									unsigned *found_error_amount_snp,
+									int *error_amount_)
+{
+
+//std::ostringstream error_stream;
+
+if(*snp_error_counter == 0)
+	{
+	snp_position_error[*snp_error_counter] = snp_in_set1;
+	snp_set1_codding_error[*snp_error_counter] = coding_set1_origin; 
+	snp_set2_codding_error[*snp_error_counter] = coding_set2_origin;
+	(*snp_error_counter)++;
+	*found_error_amount_snp = *snp_error_counter;
+	}
+else if(snp_position_error[*snp_error_counter-1] != snp_in_set1)
+	{
+	snp_position_error[*snp_error_counter] = snp_in_set1;
+	snp_set1_codding_error[*snp_error_counter] = coding_set1_origin; 
+	snp_set2_codding_error[*snp_error_counter] = coding_set2_origin;
+	(*snp_error_counter)++;
+	*found_error_amount_snp = *snp_error_counter;
+	}
+
+if(*snp_error_counter >= *error_amount_)
+	{	
+	Rprintf("ID:Error: Too many errors while merging sets (see error table). Change error_amount value to increase error-table size.\n");
+	*error_amount_=-1;
+	}
+
+}
+
+
+//_______________________________________________________
+
+
+
+
+
 
 
 
 //---------------------------------------------------------
-char recoding_snp_data_under_coding_and_strand(char set1_val_, gtps_container *Set1, gtps_container *Set2, unsigned snp_in_set1, unsigned snp_in_set2, std::map<char, char*>* coding_polymorphism_map_, std::map<char, char> *alleleID_reverse_, unsigned *snp_position_error, char* snp_set1_codding_error, char* snp_set2_codding_error, int *error_amount_, unsigned *found_error_amount_snp, unsigned *snp_error_counter, bool user_want_to_look_at_strand, std::map<std::string, std::string> *complemetntary)		
+char recoding_snp_data_under_coding_and_strand(char set2_val_, gtps_container *Set2, gtps_container *Set1, unsigned snp_in_set2, unsigned snp_in_set1, std::map<char, char*>* coding_polymorphism_map_, std::map<char, char> *alleleID_reverse_, unsigned *snp_position_error, char* snp_set2_codding_error, char* snp_set1_codding_error, int *error_amount_, unsigned *found_error_amount_snp, unsigned *snp_error_counter, bool forcestrand, std::map<std::string, std::string> *complemetntary)		
 {
 //here is coding_polymorphism_map_->first = alleleID, coding_polymorphism_map_->second="name"
-char coding_set1, coding_set2; 
-unsigned set1_val = unsigned(set1_val_);
+unsigned set2_val = unsigned(set2_val_);
+
+char coding2_val=Set2->get_coding(snp_in_set2),
+		 coding1_val=Set1->get_coding(snp_in_set1); 
+
+std::string coding2=(*coding_polymorphism_map_)[coding2_val],
+						coding1=(*coding_polymorphism_map_)[coding1_val];
 
 
-
-coding_set1 = Set1->get_coding(snp_in_set1);
-char *coding_set1_name = (*coding_polymorphism_map_)[coding_set1];
-
-CI iter=complemetntary->find(coding_set1_name);
+CI iter=complemetntary->find(coding2);
 bool two_nucl_is_complement=false;
 
 if(iter != complemetntary->end())
@@ -160,19 +228,164 @@ two_nucl_is_complement=true;
 }
 
 
+//char coding2 = coding_set2_origin,
+//		 coding1 = coding_set1_origin;
+//
+//std::string coding1=(*coding_polymorphism_map_)[coding_set1_origin],
+//  					coding2=(*coding_polymorphism_map_)[coding_set2_origin];
+										 
+char coding2_inverse_tmp[3] = {coding2[1], coding2[0], '\0'};
+std::string coding2_inverse(coding2_inverse_tmp);
 
-char coding_set1_origin=coding_set1,
-		 coding_set2_origin=Set2->get_coding(snp_in_set2); 
+std::string coding2_fliped = (*coding_polymorphism_map_)[alleleID_reverse_->find(coding2_val)->second];
 
 
-bool made_strand_flip = false;
+char coding2_fliped_inverse_tmp[3] = {coding2_fliped[1], coding2_fliped[0], '\0'};
+std::string coding2_fliped_inverse(coding2_fliped_inverse_tmp);					
 
 
 
-char strand1 = Set1->get_strand(snp_in_set1);
+
+
 char strand2 = Set2->get_strand(snp_in_set2);
+char strand1 = Set1->get_strand(snp_in_set1);
 
 
+//start
+
+
+
+if(forcestrand)
+	{
+	if(strand1!=0 && strand2!=0)
+		{
+		FORCESTRAND:
+		if(strand1 != strand2)
+			{
+			coding2 = coding2_fliped;
+			}
+		
+
+		if(coding1 == coding2)
+	 		{
+			return set2_val;
+			}
+		else
+	 		{
+			if(coding1 == coding2_inverse)
+				{
+				return inverse_genotype(set2_val);
+				}
+			else
+				{
+				coding_error(snp_in_set1,
+									coding1_val, coding2_val,
+									snp_error_counter,
+			 						snp_position_error,
+								 	snp_set2_codding_error,
+								 	snp_set1_codding_error,
+									found_error_amount_snp,
+									error_amount_);
+				return 0; 	
+				}	
+			}
+		}
+	else
+		{
+		goto NOFORCESTRAND; //a komu seichas legko?
+		}
+
+	}
+else
+	{
+	if(two_nucl_is_complement)
+		{
+		if(strand1!=0 && strand2!=0)
+			{
+			goto FORCESTRAND;
+			}
+		else
+			{
+			coding_error(snp_in_set1,
+									coding1_val, coding2_val,
+									snp_error_counter,
+			 						snp_position_error,
+								 	snp_set2_codding_error,
+								 	snp_set1_codding_error,
+									found_error_amount_snp,
+									error_amount_);
+			return 0;
+			}
+		}
+	else
+		{
+//		std::cout<<"NOFORCESTRAND\n";
+		NOFORCESTRAND:
+		if(coding1 == coding2)
+			{
+//			std::cout<<"coding1 == coding2\n";
+			return set2_val;
+			}
+		else
+			{
+			if(coding1 == coding2_inverse)
+				{
+//				std::cout<<"coding1 == coding2_inverse\n";
+				return inverse_genotype(set2_val);
+				}	
+			else
+				{
+				if(coding1 == coding2_fliped)
+					{
+//					std::cout<<"coding1 == coding2_fliped\n";
+					return set2_val;
+					}
+				else
+					{
+					if(coding1 == coding2_fliped_inverse)
+						{
+//						std::cout<<"coding1 == coding2_fliped_inverse\n";
+						return inverse_genotype(set2_val);
+						}
+					else
+						{
+//						std::cout<<"error\n";
+					coding_error(snp_in_set1,
+											coding1_val, coding2_val,
+											snp_error_counter,
+											snp_position_error,
+											snp_set2_codding_error,
+											snp_set1_codding_error,
+											found_error_amount_snp,
+											error_amount_);
+						return 0;
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+
+
+//}
+
+
+
+
+//}
+
+
+
+
+//}
+
+
+
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+/*
 
 
 //recode in coding in accordance with strand
@@ -278,7 +491,7 @@ if(coding_set1 != coding_set2)
 		}
 	}
 return char(set1_val);
-
+*/
 }
 //------------------------------------------------------------
 
@@ -306,8 +519,11 @@ void fast_merge_C_(char *set1, int *num_ids1_, int *num_snps1_,
 									 bool *user_want_to_look_at_strand_,
 									 char *set_mereged)
 {
+
+		
 bool user_want_to_look_at_strand = *user_want_to_look_at_strand_;
 bool replace_na = *replace_na_;
+
 
 
 

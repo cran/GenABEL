@@ -57,7 +57,8 @@ void linreg_gwaa(double *Y, double *X, char *gtdata, int *Nids, int *NXcol, int 
 	int gtmode = (*GTMode);
 	int igt[nids];
 	int nbytes;
-	if ((nsnps % 4) == 0) nbytes = nids/4; else nbytes = int(ceil(1.*double(nids)/4.));
+//	if ((nsnps % 4) == 0) nbytes = nids/4; else nbytes = int(ceil(1.*double(nids)/4.));
+	nbytes = int(ceil(1.*double(nids)/4.));
 	for (int snp=0;snp<nsnps;snp++)
 	{
 		getgtvec(gtdata,igt,nids,nbytes,snp);
@@ -87,7 +88,8 @@ void logreg_gwaa(double *Y, double *X, char *gtdata, int *Nids, int *NXcol, int 
 	int gtmode = (*GTMode);
 	int igt[nids];
 	int nbytes;
-	if ((nsnps % 4) == 0) nbytes = nids/4; else nbytes = int(ceil(1.*double(nids)/4.));
+//	if ((nsnps % 4) == 0) nbytes = nids/4; else nbytes = int(ceil(1.*double(nids)/4.));
+	nbytes = int(ceil(1.*double(nids)/4.));
 	for (int snp=0;snp<nsnps;snp++)
 	{
 		getgtvec(gtdata,igt,nids,nbytes,snp);
@@ -117,7 +119,8 @@ void coxph_gwaa(double *Y, double *X, char *gtdata, int *Nids, int *NXcol, int *
 	int gtmode = (*GTMode);
 	int igt[nids];
 	int nbytes;
-	if ((nsnps % 4) == 0) nbytes = nids/4; else nbytes = int(ceil(1.*double(nids)/4.));
+//	if ((nsnps % 4) == 0) nbytes = nids/4; else nbytes = int(ceil(1.*double(nids)/4.));
+	nbytes = int(ceil(1.*double(nids)/4.));
 	for (int snp=0;snp<nsnps;snp++)
 	{
 		getgtvec(gtdata,igt,nids,nbytes,snp);

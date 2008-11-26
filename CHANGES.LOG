@@ -1,3 +1,25 @@
+***** v. 1.4-1 (2008.11.26)
+
+merge.gwaa.data, merge.snp.data well tested and 
+recommended for wider use
+
+Modifications of some functions for better parallelizability. 
+[user-invisible] changes to: ibs, hom, r2fast, perid.summary
+
+Resolved R 2.8.0 issues with load.gwaa.data.
+
+Partly resolving incompatibility between the way GenABEL
+computes the diagonal elemnts of the "covariance matrix" 
+for use in egscore() and the original EIGENSTRAT matrix 
+(many thanks to Guiseppe Palermo)
+
+***** v 1.4-0e (2008.09.18)
+
+Small changes in mlreg for consistency to formetascore required input
+
+Bug fix in mlreg (would produce meaningful results when no. snps is 
+dividable by 4)
+
 ***** v 1.4-0d (2008.08.21)
 
 bug fix in merge.snp.data() -- many thanks to Arne Schillert and Michael Preuss

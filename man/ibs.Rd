@@ -6,15 +6,21 @@
 	people 
 }
 \usage{
-ibs(data, snpsubset, idsubset, weight="no")
+ibs(data, snpsubset, idsubset, cross.idsubset, weight="no", snpfreq)
 }
 \arguments{
   \item{data}{object of \code{\link{snp.data-class}}}
   \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
 		If missing, all SNPs from \code{data} are used for analysis.}
-  \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
+  \item{idsubset}{IDs of people to be analysed. 
 		If missing, all people from \code{data} are used for analysis.}
+  \item{cross.idsubset}{Parameter allowing parallel implementation. Not to be used normally.
+		If supplied together with idsubset, the ibs/kinship for all pairs between 
+		idsubset and cross.idsubset computed. 
+		}
   \item{weight}{"no" for direct IBS computations, "freq" to weight by allelic frequency}
+  \item{snpfreq}{when option weight="freq" used, you can provide 
+		fixed allele frequencies}
 }
 \details{
 	This function facilitates quality control of genomic data. 

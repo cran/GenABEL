@@ -861,14 +861,14 @@ void grammar(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 	}
 }
 
-void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Option, double *out) {
+void homold(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Option, double *out) {
 	unsigned int i,j,m,idx;
 	unsigned int nids = (*Nids);
 	unsigned int nsnps = (*Nsnps);
 	unsigned int option = (*Option);
 	unsigned int gt[nids];
 	unsigned int count[4],sumgt=0.;
-	double homweight[4] = {0.,1.,0.,1.},p0=0.;
+	double homweight[4] = {0.,1.,0.,1.},p0=0.,q0=0.,maf=0.;
 	char str;
 	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
@@ -888,17 +888,78 @@ void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Op
 			for (i=0;i<nids;i++) count[gt[i]]++;
 			sumgt = count[1]+count[2]+count[3];
 			p0 = (count[1]*2.+count[2]*1.)/(2.*sumgt);
+			q0 = 1. - p0;
 		}
+		if (p0>q0) maf=q0; else maf=p0;
 		for (i=0;i<nids;i++) {
 			if (option == 0 && gt[i]!=0) {
 				out[i]+=1.;
 				out[nids+i] += homweight[gt[i]];
 			} 
-			if (option > 0 && gt[i]!=0 && p0 > 0. && sumgt > 1) {
+			if (option > 0 && gt[i]!=0 && !(maf<1.e-16) && sumgt > 1) {
 				out[i]+=1.;
 				out[nids+i] += homweight[gt[i]];
 				out[2*nids+i] += 1. - 2.*p0*(1.-p0)*(1.*sumgt)/(1.*sumgt-1.);
 			}
+		}
+	}
+}
+
+void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, double *nfreq, unsigned int *Option, unsigned int *UseFreq, double *out) {
+	unsigned int i,j,m,idx;
+	unsigned int nids = (*Nids);
+	unsigned int nsnps = (*Nsnps);
+	unsigned int option = (*Option);
+	unsigned int useFreq = (*UseFreq);
+	unsigned int gt[nids];
+	unsigned int count[4],sumgt=0.;
+	double homweight[4] = {0.,1.,0.,1.},p0=0.,q0=0.,maf=0.;
+	char str;
+	unsigned int nbytes;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+	for (i=0;i<(nids*(2+option));i++) out[i]=0.;
+	for (m=0;m<nsnps;m++) {
+// extract genotypes
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			str = indata[m*nbytes + i];
+			for (j=0;j<4;j++) {
+				gt[idx] = str & msk[j]; 
+				gt[idx++] >>= ofs[j];
+				if (idx>=nids) {idx=0;break;}
+			}
+		}
+// extract counts
+		count[0]=count[1]=count[2]=count[3]=sumgt=0;
+		for (i=0;i<nids;i++) count[gt[i]]++;
+		sumgt = count[1]+count[2]+count[3];
+// extract AFs
+		if (option!=0) { 
+			if (useFreq==0) {
+				p0 = (count[1]*2.+count[2]*1.)/(2.*sumgt);
+				q0 = 1.-p0;
+			} else {
+				q0 = freqs[m];
+				p0 = 1.-q0;
+			}
+			if (p0>q0) maf=q0; else maf=p0;
+		}
+		for (i=0;i<nids;i++)
+		if (gt[i]!=0)
+		if (option==0) {
+// compute raw Hom
+			out[i]+=1.;
+			out[nids+i] += homweight[gt[i]];
+		} else if (maf>1.e-16) {
+			out[i]+=1.;
+			out[nids+i] += homweight[gt[i]];
+// compute weighted Hom
+			if (useFreq==0) {
+				if (sumgt>1) out[2*nids+i] += 1. - 2.*p0*q0*(1.*sumgt)/(1.*sumgt-1.);
+			} else {
+				if (nfreq[m]>1.) out[2*nids+i] += 1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.);
+			}
+//			Rprintf("%d %d %e %e %e %d %e %e %e\n",m,i,p0,q0,maf,sumgt,nfreq[m],out[2*nids+i],1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.));
 		}
 	}
 }
@@ -957,6 +1018,122 @@ void ibs(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Op
 			out[j*nids+i]=out[j*nids+i]/(1.*out[i*nids+j]);
 		else
 			out[j*nids+i]=-1.;
+	}
+}
+
+
+void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, unsigned int *Option, double *out) {
+	unsigned int i,j,m,idx;
+	unsigned int nids = (*Nids);
+	unsigned int nsnps = (*Nsnps);
+	unsigned int option = (*Option);
+	unsigned int gt[nids],noninf=0;
+//	unsigned int count[4],sumgt;
+	double p,q,den,centgt[4];
+	double ibssum[4][4] = {{0.,0.,0.,0.},{0.,1.,.5,.0},{0.,.5,1.,.5},{0.,0.,.5,1.}};
+	char str;
+	unsigned int nbytes;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+	for (m=0;m<nsnps;m++) {
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			str = indata[m*nbytes + i];
+			for (j=0;j<4;j++) {
+				gt[idx] = str & msk[j]; 
+				gt[idx++] >>= ofs[j];
+				if (idx>=nids) {idx=0;break;}
+			}
+		}
+		noninf=0;
+		if (option > 0) {
+//			count[0]=count[1]=count[2]=count[3]=sumgt=0;
+//			for (i=0;i<nids;i++) count[gt[i]]++;
+//			sumgt = count[1]+count[2]+count[3];
+//			p = (count[3]*2.+1.*count[2])/(2.*sumgt);
+			p = freqs[m];
+			q = 1.-p;
+//			Rprintf("%d %d ",p,q);
+//			if (p*2*sumgt < (1.-(1e-16)) || q*2*sumgt < (1.-(1e-16))) {
+			if (p < 1.e-16 || q < 1.e-16) {
+				noninf=1;
+			} else {
+				den = 1./(p*q);
+				centgt[0] = 0.;
+				centgt[1] = 0.-p;
+				centgt[2] = .5-p;
+				centgt[3] = 1.-p;
+				for (i=0;i<4;i++) for (j=0;j<4;j++) ibssum[i][j] = centgt[i]*centgt[j]*den; 
+			}
+		}
+		for (i=0;i<(nids-1);i++)
+		for (j=(i+1);j<nids;j++) {
+		if (gt[i]!=0 && gt[j]!=0 && !noninf) {
+			out[i*nids+j]+=1.;
+			out[j*nids+i]+=ibssum[gt[i]][gt[j]];
+		}
+		}
+	}
+	for (i=0;i<(nids-1);i++)
+	for (j=(i+1);j<nids;j++) {
+		if (out[i*nids+j]>0) 
+			out[j*nids+i]=out[j*nids+i]/(1.*out[i*nids+j]);
+		else
+			out[j*nids+i]=-1.;
+	}
+}
+
+void ibspar(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Nids1, unsigned int *ids1, unsigned int * Nids2, unsigned int *ids2, double *freqs, unsigned int *Option, double *out) {
+	unsigned int i,j,m,idx;
+	unsigned int nids = (*Nids);
+	unsigned int nsnps = (*Nsnps);
+	unsigned int nids1 = (*Nids1);
+	unsigned int nids2 = (*Nids2);
+	unsigned int option = (*Option);
+	unsigned int gt[nids],noninf=0;
+	double p,q,den,centgt[4];
+	double ibssum[4][4] = {{0.,0.,0.,0.},{0.,1.,.5,.0},{0.,.5,1.,.5},{0.,0.,.5,1.}};
+	char str;
+	unsigned int nbytes;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+	for (m=0;m<nsnps;m++) {
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			str = indata[m*nbytes + i];
+			for (j=0;j<4;j++) {
+				gt[idx] = str & msk[j]; 
+				gt[idx++] >>= ofs[j];
+				if (idx>=nids) {idx=0;break;}
+			}
+		}
+		noninf=0;
+		if (option > 0) {
+			p = freqs[m];
+			q = 1.-p;
+			if (p < 1.e-16 || q < 1.e-16) {
+				noninf=1;
+			} else {
+				den = 1./(p*q);
+				centgt[0] = 0.;
+				centgt[1] = 0.-p;
+				centgt[2] = .5-p;
+				centgt[3] = 1.-p;
+				for (i=0;i<4;i++) for (j=0;j<4;j++) ibssum[i][j] = centgt[i]*centgt[j]*den; 
+			}
+		}
+		for (i=0;i<nids1;i++)
+		for (j=0;j<nids2;j++) {
+		if (gt[ids1[i]]!=0 && gt[ids2[j]]!=0 && !noninf) {
+			out[i*nids2+j]+=ibssum[gt[ids1[i]]][gt[ids2[j]]];
+			out[nids1*nids2+j*nids1+i]+=1.;
+		}
+		}
+	}
+	for (i=0;i<nids1;i++)
+	for (j=0;j<nids2;j++) {
+		if (out[nids1*nids2+j*nids1+i]>0) 
+			out[i*nids2+j]=out[i*nids2+j]/(1.*out[nids1*nids2+j*nids1+i]);
+		else
+			out[nids1*nids2+j*nids1+1]=-1.;
 	}
 }
 
@@ -1085,6 +1262,54 @@ double SNPHWE(int obs_hets, int obs_hom1, int obs_hom2)
 
    return p_hwe;
    }
+
+void r2new(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Nsnps1, unsigned int *snps1, unsigned int *Nsnps2, unsigned int *snps2, double *out) {
+	unsigned int i,j,m1,m2,idx;
+	unsigned int nids = (*Nids);
+	unsigned int nsnps = (*Nsnps);
+	unsigned int nsnps1 = (*Nsnps1);
+	unsigned int nsnps2 = (*Nsnps2);
+	unsigned int gt[2][nids],cgt[4][4],nAA,nAB,nBA,nBB,nDH;
+	unsigned int csp = 0;
+	char str;
+	unsigned int nbytes;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+	for (m1=0;m1<nsnps1;m1++)
+	for (m2=0;m2<nsnps2;m2++) {
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			str = indata[snps1[m1]*nbytes + i];
+			for (j=0;j<4;j++) {
+				gt[0][idx] = str & msk[j]; 
+				gt[0][idx++] >>= ofs[j];
+				if (idx>=nids) {idx=0;break;}
+			}
+		}
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			str = indata[snps2[m2]*nbytes + i];
+			for (j=0;j<4;j++) {
+				gt[1][idx] = str & msk[j]; 
+				gt[1][idx++] >>= ofs[j];
+				if (idx>=nids) {idx=0;break;}
+			}
+		}
+		for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
+		for (i=0;i<nids;i++)
+			cgt[gt[0][i]][gt[1][i]]++;
+		nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
+		nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
+		nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
+		nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
+		nDH = 2*cgt[2][2];
+		out[m2*nsnps1+m1] = (nAA+nAB+nBA+nBB+nDH)/2;
+		if (out[m2*nsnps1+m1])
+			out[nsnps1*nsnps2+m1*nsnps2+m2] = CalculateRS(nAA,nAB,nBA,nBB,nDH);
+		else
+			out[nsnps1*nsnps2+m1*nsnps2+m2] = 0.;
+		csp++;
+	}
+}
 
 void r2(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) {
 	unsigned int i,j,m0,m1,idx;

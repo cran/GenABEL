@@ -1,5 +1,6 @@
 "mlreg" <- 
-function(formula,data,snpsubset,idsubset,gtmode="additive",trait.type="guess",propPs=1.0)
+function(formula,data,gtmode="additive",trait.type="guess",propPs=1.0)
+#function(formula,data,snpsubset,idsubset,gtmode="additive",trait.type="guess",propPs=1.0)
 {
 	if (missing(data)) 
 		stop("data argument can not be missing in lm.gwaa")
@@ -8,17 +9,18 @@ function(formula,data,snpsubset,idsubset,gtmode="additive",trait.type="guess",pr
 	checkphengen(data)
 	gtdata <- data@gtdata
 	data <- data@phdata
-	if (!missing(snpsubset)) gtdata <- gtdata[,snpsubset]
-	if (!missing(idsubset)) {
-		gtdata <- gtdata[idsubset,]
-		data <- data[idsubset,]
-	}
+#	if (!missing(snpsubset)) gtdata <- gtdata[,snpsubset]
+#	if (!missing(idsubset)) {
+#		gtdata <- gtdata[idsubset,]
+#		data <- data[idsubset,]
+#	}
 	gc()
 	
 # from lm
 	cl <- match.call()
 	mf <- match.call(expand.dots = FALSE)
-	m <- match(c("formula", "data", "snpsubset", "idsubset"), names(mf), 0L)
+#	m <- match(c("formula", "data", "snpsubset", "idsubset"), names(mf), 0L)
+	m <- match(c("formula", "data"), names(mf), 0L)
 	mf <- mf[c(1L, m)]
 	mf$drop.unused.levels <- TRUE
 	mf[[1L]] <- as.name("model.frame")
@@ -96,10 +98,10 @@ function(formula,data,snpsubset,idsubset,gtmode="additive",trait.type="guess",pr
 	out$effBB <- rep(NA,dim(chi2)[1])
 	out$P2df <- rep(NA,dim(chi2)[1])
 	out$se.effB <- chi2$sebeta
-	out$chi2 <- (chi2$beta/chi2$sebeta)^2
-	out$lambda <- estlambda(out$chi2,plot=F,prop=propPs)
-	out$P1df <- pchisq(out$chi2,1,lower=F)
-	out$Pc1df <- pchisq(out$chi2/out$lambda$est,1,lower=F)
+	out$chi2.1df <- (chi2$beta/chi2$sebeta)^2
+	out$lambda <- estlambda(out$chi2.1df,plot=F,prop=propPs)
+	out$P1df <- pchisq(out$chi2.1df,1,lower=F)
+	out$Pc1df <- pchisq(out$chi2.1df/out$lambda$est,1,lower=F)
 	out$call <- match.call()
 	out$trait.type <- posttypes[ttype]
 	class(out) <- "scan.gwaa"
