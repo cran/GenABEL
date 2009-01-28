@@ -23,24 +23,28 @@ people, across multiple markers. Can be used for Quality Control
 		number of people used to estimate allele frequencies}
 }
 \details{
-	Without "freq" option, homozygosity is measured as proportion of 
+	With the default weight="no" option, homozygosity is measured as proportion of 
 	homozygous genotypes observed in a person.
 
-	With "freq" option, for person $i$ inbreeding is estimated with 
+	With weight="freq" option, for person \eqn{i} inbreeding is estimated with 
 
-	$$
+	\deqn{
 	f_i = \frac{(O_i - E_i)}{(L_i - E_i)}
-	$$
+	}{
+	f_i = ((O_i - E_i))/((L_i - E_i))
+	}
 
-	where $O_i$ is observed homozygosity, $L_i$ is the number of SNPs 
-	measured in individual $i$ and 
+	where \eqn{O_i} is observed homozygosity, \eqn{L_i} is the number of SNPs 
+	measured in individual \eqn{i} and 
 
-	$$
+	\deqn{
 	E_i = \Sigma_{j=1}^{L_i} (1 - 2 p_j (1 - p_j) \frac{T_{Aj}}{T_{Aj}-1})
-	$$
+	}{
+	E_i = Sigma_(j=1)^(L_i) (1 - 2 p_j (1 - p_j) (T_(Aj))/(T_(Aj)-1))
+	}
 
-	where $T_{Aj}$ is the numer of measured genotypes at locus $j$; 
-	$T_{Aj}$ is either estimated from data or provided by "n.snpfreq" 
+	where \eqn{T_{Aj}} is the numer of measured genotypes at locus \eqn{j}; 
+	\eqn{T_{Aj}} is either estimated from data or provided by "n.snpfreq" 
 	parameter (vector). Alleleic frequencies are either estimated from 
 	data or provided by the "snpfreq" vector.
 

@@ -44,6 +44,7 @@ function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt
 		y <- formula
 		if (length(y) != dim(kinship.matrix)[1]) stop("dimension of outcome and kinship.matrix do not match")
 		mids <- (!is.na(y))
+		phids <- data$id[mids]
 		y <- y[mids]
 		relmat <- kinship.matrix[mids,mids]*2.0
 		sdy <- sd(y)
@@ -136,13 +137,18 @@ function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt
 #	es <- 1./diag(t(ervec) %*% (sigma) %*% ervec)
 #	ginvsig <- ervec %*% diag(es,ncol=length(y)) %*% t(ervec)
 	out$InvSigma <- ginv(sigma) #ginvsig
+	rownames(out$InvSigma) <- phids
+	colnames(out$InvSigma) <- phids
 	pgres <- as.vector((1.-h2) * tvar * (out$InvSigma %*% out$residualY))
 	out$measuredIDs <- mids
+	names(out$measuredIDs) <- phids
 	out$pgresidualY <- rep(NA,length(mids))
 	out$pgresidualY[mids] <- pgres
+	names(out$pgresidualY) <- phids
 	resY <- out$residualY
 	out$residualY <- rep(NA,length(mids))
 	out$residualY[mids] <- resY
+	names(out$residualY) <- phids
 	out$call <- match.call()
 	class(out) <- "polygenic"
 	out

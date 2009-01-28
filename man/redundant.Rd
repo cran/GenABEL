@@ -27,7 +27,7 @@ redundant(data, pairs = "bychrom", minconcordance = 2.0)
  genotypic distribution as values: 
   \item{"refSNP1"}{SNP11, SNP12, ...}
   \item{"refSNP2"}{SNP21, SNP22, ...}
-  \item{\dots}
+  \item{\dots}{etc.}
   \item{"refSNPlast"}{SNPlast1, SNPlast2, ...}
   \item{"all"}{list of all redundant SNPs, which can be dropped from consideration}
 }

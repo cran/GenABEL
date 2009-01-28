@@ -13,7 +13,9 @@ mmscore(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
 	routine. The sub-objects used are measuredIDs, residualY, and InvSigma. One can supply 
 	mmscore with a fake h2object, containing these list elements. 
 	}
-  \item{data}{An object of \code{\link{gwaa.data-class}}}
+  \item{data}{An object of \code{\link{gwaa.data-class}}. 
+		ALWAYS PASS THE SAME OBJECT WHICH WAS USED FOR i\code{\link{polygenic}} ANALYSIS,
+		NO SUB-SETTING IN IDs (USE IDSUBSET ARGUMENT FOR SUB-SETTING)!!!}
   \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
 		If missing, all SNPs from \code{data} are used for analysis.}
   \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
@@ -38,13 +40,13 @@ mmscore(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
 \details{
 	Score test is performed using the formula
 
-	$$
+	\deqn{
 	\frac{((G-E[G]) V^{-1} residualY)^2}{(G-E[G]) V^{-1} (G-E[G])}
-	$$
+	}
 
-	where $G$ is the vector of genotypes (coded 0, 1, 2) and $E[G]$ is 
-	a vector of (strata-specific) mean genotypic values; $V^{-1}$ is the 
-	InvSigma and $residualY$ are residuals from the trait analysis 
+	where \eqn{G} is the vector of genotypes (coded 0, 1, 2) and \eqn{E[G]} is 
+	a vector of (strata-specific) mean genotypic values; \eqn{V^{-1}} is the 
+	InvSigma and \eqn{residualY} are residuals from the trait analysis 
 	with \code{\link{polygenic}} procedure.
 
 	This test is similar to that implemented by Abecasis et al. (see reference). 

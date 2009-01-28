@@ -46,7 +46,7 @@ polygenic(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",op
 }
 \details{
 	This function maximises the likelihood of the data under polygenic 
-	model with covariates an reports the maximum likelihood estimates 
+	model with covariates an reports twice negative maximum likelihood estimates 
 	and the inverse of variance-covariance matrix at the point of ML. 
 
 	One of the major use of this function is to estimate residuals of the 
@@ -66,14 +66,14 @@ polygenic(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",op
 	by covariates and by the polygene). Polygenic residuals are estimated 
 	as
 
-	$$
+	\deqn{
 	\sigma^2  V^{-1} (Y - (\hat{\mu} + \hat{\beta} C_1 + ...))
-	$$
+	}
 
-	where $sigma^2$ is the residual variance, $V^{-1}$ is the 
+	where \eqn{sigma^2} is the residual variance, \eqn{V^{-1}} is the 
 	InvSigma (inverse of the var-cov matrix at the maximum of 
 	polygenic model) and 
-	$(Y - (\hat{\mu} + \hat{\beta} C_1 + ...))$ is the trait 
+	\eqn{(Y - (\hat{\mu} + \hat{\beta} C_1 + ...))} is the trait 
 	values adjusted for covariates (also at at the maximum of 
 	polygenic model likelihood). 
 
@@ -81,7 +81,7 @@ polygenic(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",op
 	If you want to test significance of heritability, 
 	estimate the model and write down 
 	the function minimum reported at "h2an" element of the output 
-	(this is -2*MaxLikleihood). Then do next round of 
+	(this is negative MaxLikleihood). Then do next round of 
 	estimation, but set fixh2=0. The difference between you function minima 
 	gives you one-sided test distribued as chi-squared with 1 d.f.
 
@@ -96,7 +96,9 @@ polygenic(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",op
   \item{h2an}{A list supplied by the \code{\link{nlm}} minimisation routine. 
 	Of particular interest are elements "estimate" containing parameter 
 	maximal likelihood estimates (MLEs) (order: mean, betas for covariates, 
-	heritability, (polygenic + residual variance))}
+	heritability, (polygenic + residual variance)). The value of 
+	twice negative maximum log-likelihood
+	is returned as h2an\$minimum.}
   \item{residualY}{Residuals from analysis, based on covariate effects only; 
 	NOTE: these are NOT grammar "environmental residuals"!}
   \item{esth2}{Estimate (or fixed value) of heritability}
@@ -144,9 +146,9 @@ h2ht <- polygenic(height ~ sex + age,kin=gkin,ge03d2ex.clean)
 h2ht$esth2
 # other parameters
 h2ht$h2an
-# minimum negative log-likelihood
+# the minimum twice negative log-likelihood
 h2ht$h2an$minimum
-# maximum log-likelihood
+# twice maximum log-likelihood
 -h2ht$h2an$minimum
 
 #for binary trait (experimental)

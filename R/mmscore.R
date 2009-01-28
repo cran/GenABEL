@@ -39,11 +39,11 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cl
 	out <- list()
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) resid <- sample(resid,replace=FALSE)
-		chi2 <- .C("mmscore",as.raw(data@gtps),as.double(resid),as.double(h2object$InvSigma),as.integer(data@nids),as.integer(data@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(7*data@nsnps), PACKAGE="GenABEL")$chi2
+		chi2 <- .C("mmscore_20090127",as.raw(data@gtps),as.double(resid),as.double(h2object$InvSigma),as.integer(data@nids),as.integer(data@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(7*data@nsnps), PACKAGE="GenABEL")$chi2
 		if (any(data@chromosome=="X")) {
 		  ogX <- data[,data@chromosome=="X"]
 		  sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
-		  chi2X <- .C("mmscore",as.raw(ogX@gtps),as.double(resid),as.double(h2object$InvSigma),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(7*ogX@nsnps), PACKAGE="GenABEL")$chi2
+		  chi2X <- .C("mmscore_20090127",as.raw(ogX@gtps),as.double(resid),as.double(h2object$InvSigma),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(7*ogX@nsnps), PACKAGE="GenABEL")$chi2
 		  revec <- (data@chromosome=="X")
 		  revec <- rep(revec,6)
 		  chi2 <- replace(chi2,revec,chi2X)
@@ -118,7 +118,7 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cl
 		out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
 	}
 	out$lambda <- lambda
-	out$effB <- effB*var(h2object$residualY,na.rm=T)
+	out$effB <- effB #*var(h2object$residualY,na.rm=T)
 #	out$effAB <- effAB
 #	out$effBB <- effBB
 	out$snpnames <- data@snpnames

@@ -43,13 +43,17 @@ grammar(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cla
 \details{
 	Approximate score test is performed using the formula
 
-	$$
+	\deqn{
 	\sigma^4 \frac{((G-E[G]) V^{-1} residualY)^2}{(G-E[G]) (G-E[G])}
-	$$
+	}{
+	sigma^4 (((G-E[G]) V^(-1) residualY)^2)/((G-E[G]) (G-E[G]))
+	}
 
 	where $sigma^4$ is the square of the residual 
 	variance, $G$ is the vector of genotypes (coded 0, 1, 2) and $E[G]$ is 
-	a vector of (strata-specific) mean genotypic values; $V^{-1}$ is the 
+	a vector of (strata-specific) mean genotypic values; 
+	\eqn{V^{-1}}{V^(-1)} 
+	is the 
 	InvSigma and $residualY$ are residuals from the trait analysis 
 	with \code{\link{polygenic}} procedure.
 

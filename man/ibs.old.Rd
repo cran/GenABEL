@@ -24,13 +24,13 @@ ibs.old(data, snpsubset, idsubset, weight="no")
 
 	When weight "freq" is used, IBS for a pair of people i and j is computed as
 
-	$$
+	\deqn{
 	f_{i,j} = \Sigma_k \frac{(x_{i,k} - p_k) * (x_{j,k} - p_k)}{(p_k * (1 - p_k))}
-	$$
+	}
 
-	where k changes from 1 to N = number of SNPs GW, $x_{i,k}$ is 
+	where k changes from 1 to N = number of SNPs GW, \eqn{x_{i,k}} is 
 	a genotype of ith person at the kth SNP, coded as 0, 1/2, 1 and 
-	$p_k$ is the frequency 
+	\eqn{p_k} is the frequency 
 	of the "+" allele. This apparently provides an unbiased estimate of the 
 	kinship coefficient.
 

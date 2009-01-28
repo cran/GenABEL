@@ -1,12 +1,23 @@
+***** v. 1.4-2 (2009.01.28)
+
+Changes in polygenic()/mmscore() to allow for sub-setting on 
+IDs
+
+Bug fix in mmscore(). The bug concernes estimates of beta, the 
+P-values reported by mmscore() were not affected.  
+
 ***** v. 1.4-1 (2008.11.26)
 
 merge.gwaa.data, merge.snp.data well tested and 
-recommended for wider use
+recommended for wider use (special thanks to Arne 
+Schillert and Michael Preuss)
 
 Modifications of some functions for better parallelizability. 
 [user-invisible] changes to: ibs, hom, r2fast, perid.summary
+(thanks to Surakameth Mahasirimongkol and Unitsa Sangket)
 
 Resolved R 2.8.0 issues with load.gwaa.data.
+(thanks to many people reporting the problem)
 
 Partly resolving incompatibility between the way GenABEL
 computes the diagonal elemnts of the "covariance matrix" 

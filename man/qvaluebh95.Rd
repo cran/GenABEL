@@ -16,11 +16,9 @@ qvaluebh95(p, fdrate=0.1)
 %\details{
 %}
 \value{
-	List
-	\section{Names}{
+	A list containing
 	\item{pass}{Is true if this P-value passed specified FDR}
 	\item{qvalue}{qvalue}
-	} 
 }
 %\references{}
 \author{Yurii Aulchenko}

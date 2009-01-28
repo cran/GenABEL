@@ -19,20 +19,20 @@ people, across multiple markers. Can be used for Quality Control
 		}
 }
 \details{
-	With "freq" option, for person $i$ inbreeding is estimated with 
+	With "freq" option, for person \eqn{i} inbreeding is estimated with 
 
-	$$
+	\deqn{
 	f_i = \frac{O_i - E_i)}{(L_i - E_i)}
-	$$
+	}
 
-	where $O_i$ is observed homozygosity, $L_i$ is the number of SNPs 
-	measured in individual $i$ and 
+	where \eqn{O_i} is observed homozygosity, \eqn{L_i} is the number of SNPs 
+	measured in individual \eqn{i} and 
 
-	$$
+	\deqn{
 	E_i = \Sigma_{j=1}^{L_i} (1 - 2 p_j (1 - p_j) \frac{T_{Aj}}{T_{Aj}-1})
-	$$
+	}
 
-	where $T_{Aj}$ is the numer of measured genotypes at locus $j$.
+	where \eqn{T_{Aj}} is the numer of measured genotypes at locus \eqn{j}.
 
 	Only polymorphic loci with number of measured henotypes >1 are used
 	with this option.

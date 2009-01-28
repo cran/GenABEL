@@ -721,6 +721,10 @@ void egscore(char *gdata, double *pheno, int *Naxes, double *axes, int *Nids, in
 	}
 }
 
+//
+//old MMSCORE
+//
+
 void mmscore(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2) 
 {
 	int nsnps = (*Nsnps);
@@ -733,10 +737,11 @@ void mmscore(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 	double Tsg, sg[nstra];
 	double u, v;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
-//	char chgt[nbytes];
+//	Rprintf("nstra=%d nsnps=%d nids=%d nbytes=%d\n",nstra,nsnps,nids,nbytes);
 
 	for (igt=0;igt<nsnps;igt++) {
 		get_snps_many(gdata+nbytes*igt,Nids,&i1,gt);
+//		for (i=0;i<nids;i++) Rprintf("%d ",gt[i]-1);Rprintf("\n");
 		for (j=0;j<nstra;j++) {
 			totg[j] = 0.;
 			sg[j] = 0.;
@@ -755,12 +760,101 @@ void mmscore(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 		for (j=0;j<nstra;j++) {
 			eG[j] = sg[j]/totg[j];
 		}
-		for (i=0;i<nids;i++)
+		for (i=0;i<nids;i++) {
+		    gtctr[i] = 0.;
 		    if (gt[i] != 0) {
 			cstr = stra[i];
 			dgt = 1.*gt[i] - 1.0;
 			gtctr[i] = dgt - eG[cstr];
+//			Rprintf("i=%d gt[i]=%d gtctr[i]=%f\n",i,gt[i],gtctr[i]);
 		    }
+		}
+		for (i=0;i<nids;i++) {
+			svec[i] = 0.;
+			for (j=0;j<nids;j++) {
+				svec[i] += gtctr[j]*invS[nids*i+j];
+//				Rprintf("%d ",nids*i+j);
+			}
+		}
+//		Rprintf("\nTtotg=%f\n",Ttotg);
+		if (Ttotg == 0) {
+			chi2[igt] = 0.;
+			chi2[igt+nsnps] = 0.;
+			chi2[igt+2*nsnps] = 0.0001;
+			chi2[igt+3*nsnps] = 0.;
+			chi2[igt+4*nsnps] = 0.;
+			chi2[igt+5*nsnps] = 0.;
+		} else {
+			u = v = 0.;
+			for (i=0;i<nids;i++) {
+//				Rprintf("i=%d svec[i]=%f pheno[i]=%f gtctr[i]=%f\n",i,svec[i],pheno[i],gtctr[i]);
+				if (gt[i] != 0) {
+					u += svec[i]*pheno[i];
+					v += svec[i]*gtctr[i];
+				}
+			}
+			if (v<1.e-16) {
+			  chi2[igt]=0.;
+			  chi2[igt+3*nsnps]=0.;
+			} else {
+			  chi2[igt]=u*u/v;
+			  chi2[igt+3*nsnps]=u/Tsg;
+			}
+//			Rprintf("u = %f, v= %f\n",u,v);
+		}
+	}
+}
+
+//
+//new MMSCORE (2009.01.27)
+//
+
+void mmscore_20090127(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2) 
+{
+	int nsnps = (*Nsnps);
+	int nstra = (*Nstra);
+	int nids = (*Nids);
+	int gt[nids];
+	int i, j, cstr, igt, i1=1;
+	int nbytes;
+	double Ttotg,dgt,totg[nstra],eG[nstra],ePH[nstra],svec[nids],gtctr[nids],phctr[nids];
+	double Tsg, sg[nstra],sph[nstra];
+	double u, v;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+
+	for (igt=0;igt<nsnps;igt++) {
+		get_snps_many(gdata+nbytes*igt,Nids,&i1,gt);
+		for (j=0;j<nstra;j++) {
+			totg[j] = 0.;
+			sg[j] = 0.;
+			sph[j] = 0.;
+		}
+		Ttotg=Tsg=0.; 
+		for (i=0;i<nids;i++)
+		    if (gt[i] != 0) {
+			cstr = stra[i];
+			dgt = 1.*gt[i] - 1.0;
+			totg[cstr]+=1.0;
+			Ttotg += 1.0;
+			sg[cstr] += dgt;
+			sph[cstr] += pheno[i];
+			Tsg += dgt;
+		    }
+		chi2[igt+6*nsnps]=Ttotg;
+		for (j=0;j<nstra;j++) {
+			eG[j] = sg[j]/totg[j];
+			ePH[j] = sph[j]/totg[j];
+		}
+		for (i=0;i<nids;i++) {
+		    gtctr[i] = 0.;
+		    phctr[i] = 0.;
+		    if (gt[i] != 0) {
+			cstr = stra[i];
+			dgt = 1.*gt[i] - 1.0;
+			gtctr[i] = dgt - eG[cstr];
+			phctr[i] = pheno[i] - ePH[cstr];
+		    }
+		}
 		for (i=0;i<nids;i++) {
 			svec[i] = 0.;
 			for (j=0;j<nids;j++) svec[i] += gtctr[j]*invS[nids*i+j];
@@ -776,7 +870,7 @@ void mmscore(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 			u = v = 0.;
 			for (i=0;i<nids;i++) {
 				if (gt[i] != 0) {
-					u += svec[i]*pheno[i];
+					u += svec[i]*phctr[i];
 					v += svec[i]*gtctr[i];
 				}
 			}
@@ -785,7 +879,7 @@ void mmscore(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 			  chi2[igt+3*nsnps]=0.;
 			} else {
 			  chi2[igt]=u*u/v;
-			  chi2[igt+3*nsnps]=u/Tsg;
+			  chi2[igt+3*nsnps]=u/v;
 			}
 		}
 	}
@@ -1689,6 +1783,7 @@ void allld(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) {
 		csp++;
 	}
 }
+
 
 void qtscore_glob(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2) 
 {
