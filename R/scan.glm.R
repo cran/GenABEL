@@ -1,6 +1,6 @@
 "scan.glm" <- 
 function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=50) {
-  if (class(data)!="gwaa.data") {
+  if (!is(data,"gwaa.data")) {
 	stop("wrong data class: should be gwaa.data")
   }
   if (!is.character(formula)) stop("formula must be character object (apply \"s)")

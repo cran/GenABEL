@@ -1,6 +1,6 @@
 "scan.haplo.2D" <- 
 function(formula,data,snpsubset,idsubset,bcast=10,simulate=FALSE,trait.type,...) {
-	if (class(data) != "gwaa.data") stop("wrong type of data argument, must be gwaa.data")
+	if (!is(data,"gwaa.data")) stop("wrong type of data argument, must be gwaa.data")
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
 

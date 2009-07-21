@@ -1,7 +1,7 @@
 "redundant" <-
 function(data,pairs = "bychrom", minconcordance = 2.0) {
 #data is snp.data
-	if (class(data) != "snp.data") stop("Wrong class of data (should be snp.data)");
+	if (!is(data,"snp.data")) stop("Wrong class of data (should be snp.data)");
 	lst <- new.env()
 	if (pairs == "all") {
 		lst[["all"]] <- c(1:data@nsnps)

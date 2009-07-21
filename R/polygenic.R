@@ -1,11 +1,11 @@
 "polygenic" <-
 function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt.method="nlm",scaleh2=1000,quiet=FALSE,...) {
-	if (!missing(data)) if (class(data) == "gwaa.data") 
+	if (!missing(data)) if (is(data,"gwaa.data")) 
 	{
 		checkphengen(data)
 		data <- data@phdata
 	}
-	if (!missing(data)) if (class(data) != "data.frame") stop("data should be of gwaa.data or data.frame class")
+	if (!missing(data)) if (!is(data,"data.frame")) stop("data should be of gwaa.data or data.frame class")
 	if (starth2<0 || starth2>1) stop("Starting value of h2 (starth2) must be between 0 and 1")
 	ttargs <- c("gaussian","binomial")
 	if (!(match(trait.type,ttargs,nomatch=0)>0)) {
@@ -21,7 +21,7 @@ function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",opt
 	}
 	
 	if (!missing(data)) attach(data,pos=2,warn.conflicts=FALSE)
-	if (class(formula) == "formula") {
+	if (is(formula,"formula")) {
 		clafo <- "formula"
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 		y <- model.response(mf)

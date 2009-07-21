@@ -1,6 +1,6 @@
 "egscore" <-
 function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0) {
-  	if (class(data)!="gwaa.data") {
+  	if (!is(data,"gwaa.data")) {
 		stop("wrong data class: should be gwaa.data")
   	}
 	checkphengen(data)
@@ -13,14 +13,14 @@ function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,q
 	if (any(is.na(strata))) stop("Strata variable contains NAs")
 
 	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
-	if (class(formula) == "formula") {
+	if (is(formula,"formula")) {
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 		y <- model.response(mf)
 		desmat <- model.matrix(formula,mf)
 		lmf <- glm.fit(desmat,y)
 		mids <- rownames(data@phdata) %in% rownames(mf)
 		resid <- lmf$resid
-	} else if (class(formula) == "numeric" || class(formula) == "integer" || class(formula) == "double") {
+	} else if (is(formula,"numeric") || is(formula,"integer") || is(formula,"double")) {
 		y <- formula
 		mids <- (!is.na(y))
 		y <- y[mids]
@@ -54,9 +54,6 @@ function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,q
 	if (tmp[1] == tmp[2]) {
 		tmp <- t(kinship.matrix)
 		kinship.matrix[upper.tri(kinship.matrix)] <- tmp[upper.tri(tmp)]
-# temporary solution: should be covariance!
-		diag(kinship.matrix) <- .5
-####################
 		ev <- eigen(kinship.matrix,symmetric=TRUE)$vectors
 		rownames(ev) <- rownames(kinship.matrix)
 		ev <- ev[data@phdata$id,1:naxes]

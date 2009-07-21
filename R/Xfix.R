@@ -1,14 +1,14 @@
 "Xfix" <-
 function(data) {
-	if (class(data) == "gwaa.data") data@gtdata <- Xfix.internal(data@gtdata)
-	else if (class(data) == "snp.data") data <- Xfix.internal(data)
+	if (is(data,"gwaa.data")) data@gtdata <- Xfix.internal(data@gtdata)
+	else if (is(data,"snp.data")) data <- Xfix.internal(data)
 	else stop("data argument must be of gwaa.data-class or snp.data-class")
 	data
 }
 
 "Xfix.internal" <-
 function(data) {
-	if (class(data) != "snp.data") stop("data argument must be of snp.data-class")
+	if (!is(data,"snp.data")) stop("data argument must be of snp.data-class")
 	if (!any(data@chromosome == "X") & !any(data@chromosome == "Y") & !any(data@chromosome == "mt")) stop("No X-, Y- or mtDNA-linked markers")
 #	mlst <- data@male==1
 #	xmrk <- data@chromosome=="X"

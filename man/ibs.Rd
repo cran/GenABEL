@@ -62,10 +62,9 @@ ibs(data, snpsubset, idsubset, cross.idsubset, weight="no", snpfreq)
 }
 \examples{
 data(ge03d2c)
-a <- ibs(data=ge03d2c,ids=c(1:10),snps=c(1:1000))
-a
 # compute IBS based on a random sample of 1000 autosomal marker
-a <- ibs(ge03d2c,snps=sample(ge03d2c@gtdata@snpnames[ge03d2c@gtdata@chromosome!="X"],1000,replace=FALSE),weight="freq")
+a <- ibs(ge03d2c,snps=sample(autosomal(ge03d2c),1000,replace=FALSE))
+a[1:5,1:5]
 mds <- cmdscale(as.dist(1-a))
 plot(mds)
 # identify smaller cluster of outliers
@@ -76,5 +75,11 @@ if (length(cl1) > length(cl2)) cl1 <- cl2;
 cl1
 # PAINT THE OUTLIERS IN RED
 points(mds[cl1,],pch=19,col="red")
+# compute genomic kinship matrix to be used with e.g. polygenic, mmscore, etc
+a <- ibs(ge03d2c,snps=sample(autosomal(ge03d2c),1000,replace=FALSE),weight="freq")
+a[1:5,1:5]
+# now replace diagonal with EIGENSTRAT-type of diaganal to be used for egscore
+diag(a) <- hom(ge03d2c[,autosomal(ge03d2c)])$Var
+a[1:5,1:5]
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

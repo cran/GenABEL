@@ -1,0 +1,20 @@
+1c1
+< "ibs" <- 
+---
+> "ibs.new" <- 
+15,19d14
+< 	if (weight=="no") {
+< 		homodiag <- hom(data,weight="no")[,"Hom"]
+< 	} else {
+< 		homodiag <- 0.5+hom(data,weight="freq",snpfreq=snpfreq)[,"F"]
+< 	}
+30d24
+< 		homodiag <- homodiag[match(idsorder,data@idnames)]
+38d31
+< 		homodiag <- homodiag[match(idsorder,data@idnames)]
+69c62
+< 		out <- .C("ibsnew", as.raw(data@gtps), as.integer(data@nids), as.integer(data@nsnps), as.double(snpfreq), as.integer(option), sout = double(data@nids*data@nids), PACKAGE="GenABEL")$sout
+---
+> 		out <- .C("ibsnew2", as.raw(data@gtps), as.integer(data@nids), as.integer(data@nsnps), as.double(snpfreq), as.integer(option), sout = double(data@nids*data@nids), PACKAGE="GenABEL")$sout
+72d64
+< 		diag(out) <- homodiag

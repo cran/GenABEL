@@ -1,7 +1,7 @@
 "save.snp.data" <-
 function(data, genofile = "geno.raw",human=FALSE) {
-	if (class(data) == "gwaa.data") data <- data@gtdata
-	if (class(data) != "snp.data") stop("data argument must be of snp.data-class or gwaa.data-class!")
+	if (is(data,"gwaa.data")) data <- data@gtdata
+	if (!is(data,"snp.data")) stop("data argument must be of snp.data-class or gwaa.data-class!")
 	if (human==TRUE && missing(genofile)) genofile="geno.dat"
 	ofile <- file(genofile,"w")
 	if (human) 

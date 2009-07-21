@@ -1,8 +1,8 @@
 "descriptives.trait" <-
 function (data,subset,file,by.var=NULL,digits=3) {
 	if (missing(data)) stop("data argument must be provided")
-	if (class(data) == "gwaa.data") data <- data@phdata
-	if (class(data) != "data.frame") stop("data argument must be of gwaa.data or data.frame-class")
+	if (is(data,"gwaa.data")) data <- data@phdata
+	if (!is(data,"data.frame")) stop("data argument must be of gwaa.data or data.frame-class")
 	len <- dim(data)[1]
 	ntra <- dim(data)[2]
 	if (!missing(subset)) data <- data[subset,]

@@ -19,7 +19,9 @@ egscore(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,qu
 		If missing, all SNPs from \code{data} are used for analysis.}
   \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
 		If missing, all people from \code{data/cc} are used for analysis.}
-  \item{kinship.matrix}{kinship matrix, as returned by \code{\link{ibs}}, (use weight="freq"!)}
+  \item{kinship.matrix}{kinship matrix, as returned by \code{\link{ibs}}, 
+			Use weight="freq" with \code{\link{ibs}} and do not forget to repalce 
+			the diagonal with Var returned by \code{\link{hom}}, as shown in example!}
   \item{naxes}{Number of axes of variation to be used in adjustment (should be much smaller 
 		than number of subjects)}
   \item{strata}{Stratification variable. If provieded, scores are computed within strata and 
@@ -40,7 +42,11 @@ egscore(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,qu
 \details{
 The idea of this test is to use genomic kinship matrix to first, 
 derive axes of genetic variation (principal components), and, second, 
-adjust both trait and genotypes onto these axes. 
+adjust both trait and genotypes onto these axes. Note that 
+the diagonal of the kinship matrix should be replaced 
+(default it is .5+F, and for EIGENSTRAT one needs variance). 
+These variances are porduced by \code{\link{hom}} function (see
+example).
 
 The traits is first analysed using LM and with covariates as specified with 
 formula and also with axes of variation as predictors. Corrected genotypes are 
@@ -52,12 +58,12 @@ axes.
 
 This test is defined only for 1 d.f.
 }
-\note{
-Original method of Price et al. uses covariance for both diagonal and off-diagonal
-elements of the matrix on which PC are computed. Kinship matrix returned by GenABEL
-contains 0.5+F (!= covariance) on the diagonal. As a temporary solution we now 
-replace diagonal elements with 0.5
-}
+%% \note{
+%% Original method of Price et al. uses covariance for both diagonal and off-diagonal
+%% elements of the matrix on which PC are computed. Kinship matrix returned by GenABEL
+%% contains 0.5+F (!= covariance) on the diagonal. As a temporary solution we now 
+%% replace diagonal elements with 0.5
+%% }
 \value{
   Object of class \code{\link{scan.gwaa-class}}
 }
@@ -75,10 +81,12 @@ replace diagonal elements with 0.5
 \code{\link{scan.gwaa-class}}
 }
 \examples{
-data(ge03d2ex)
+data(ge03d2c)
 #egscore with stratification
-gkin <- ibs(ge03d2ex,w="freq")
-a <- egscore(dm2~sex+age,data=ge03d2ex,kin=gkin)
+gkin <- ibs(ge03d2c[,autosomal(ge03d2c)],w="freq")
+#replace the diagonal with right elements
+diag(gkin) <- hom(ge03d2c[,autosomal(ge03d2c)])$Var
+a <- egscore(dm2~sex+age,data=ge03d2c,kin=gkin)
 plot(a,df="Pc1df")
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

@@ -1,6 +1,6 @@
 "plot.check.marker" <- 
 function(x, y, ...) {
-	if (class(x) != "check.marker") stop("wrong class of x (should be produced by check.marker()")
+	if (!is(x,"check.marker")) stop("wrong class of x (should be produced by check.marker()")
 	xx <- c()
 	y <- c()
 	g <- c()

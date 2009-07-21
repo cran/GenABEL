@@ -1,16 +1,16 @@
 "ztransform" <- 
 function(formula,data,family=gaussian) {
 	if (missing(data)) {
-		if(class(formula) == "formula") 
+		if(is(formula,"formula")) 
 			data <- environment(formula)
 		else  
 			data <- environment()
 		wasdata <- 0
 	} else {
-		if (class(data) == "gwaa.data") {
+		if (is(data,"gwaa.data")) {
 			data <- data@phdata
 		} 
-		else if (class(data) != "data.frame") {
+		else if (!is(data,"data.frame")) {
 			stop("data argument should be of gwaa.data or data.frame class")
 		}
 		attach(data,pos=2,warn.conflicts=FALSE)
@@ -25,7 +25,7 @@ function(formula,data,family=gaussian) {
            print(family)
            stop("'family' not recognized")
 	}
-	if (class(formula) == "formula") {
+	if (is(formula,"formula")) {
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 		y <- model.response(mf)
 		desmat <- model.matrix(formula,mf)
@@ -36,7 +36,7 @@ function(formula,data,family=gaussian) {
 			mids <- (!is.na(get(as.character(formula[2]))))
 		resid <- lmf$resid
 #		print(formula)
-	} else if (class(formula) == "numeric" || class(formula) == "integer" || class(formula) == "double") {
+	} else if (is(formula,"numeric") || is(formula,"integer") || is(formula,"double")) {
 		y <- formula
 		mids <- (!is.na(y))
 		y <- y[mids]

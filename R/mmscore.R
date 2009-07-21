@@ -1,11 +1,11 @@
 "mmscore" <-
 function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0) {
-  	if (class(data)=="gwaa.data") 
+  	if (is(data,"gwaa.data")) 
 	{
 		checkphengen(data)
 		data <- data@gtdata
 	}
-  	if (class(data)!="snp.data") {
+  	if (!is(data,"snp.data")) {
 		stop("wrong data class: should be gwaa.data or snp.data")
   	}
 	if (class(h2object) != "polygenic") stop("h2object must be of polygenic-class")

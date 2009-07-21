@@ -1,6 +1,6 @@
 "Xcheck" <-
 function(data,Pgte=0.01,Pssw=0.01,Pmsw=0.01,odds=1000,tabonly=F) {
-	if (class(data) != "snp.data") stop("data argument should be of snp.data-class")
+	if (!is(data,"snp.data")) stop("data argument should be of snp.data-class")
 	if (any(data@chromosome != "X")) stop("All markers should be X-linked")
 	male <- (data@male==1)
 	out <- list()

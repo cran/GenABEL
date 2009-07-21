@@ -1,10 +1,10 @@
 "descriptives.marker" <- 
 function(data,snpsubset,idsubset,file,mafc,hwec,snpc,idcc,digits = 3) {
-	if (class(data) == "gwaa.data") {
+	if (is(data,"gwaa.data")) {
 		if (!missing(snpsubset)) data <- data@gtdata[,snpsubset]
 		if (!missing(idsubset)) data <- data@gtdata[idsubset,]
 		if (missing(idsubset) & missing(snpsubset)) data <- data@gtdata
-	} else if (class(data) == "snp.data") {
+	} else if (is(data,"snp.data")) {
 		if (!missing(snpsubset)) data <- data[,snpsubset]
 		if (!missing(idsubset)) data <- data[idsubset,]
 	} else {

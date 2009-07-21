@@ -43,7 +43,7 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 			of markers with concordance > "minconcordance" are considered redundant.
 			see \code{\link{redundant}} for details. Note that if "minconcordance" < 1
 			the program will take much longer time to run}
-  \item{qoption}{if "bh95", BH95 FDR used; if "storey", qvalue package is used}
+  \item{qoption}{if "bh95", BH95 FDR used; if "storey", qvalue package (if installed) is used}
   \item{imphetasmissing}{If "impossible heterozygotes" (e.g. heterozygous 
 			mtDNA, and male Y- and X-chromsome markers) should 
 			be treated as missing genotypes in the QC procedure}

@@ -4,7 +4,7 @@ function(formula,data,gtmode="additive",trait.type="guess",propPs=1.0)
 {
 	if (missing(data)) 
 		stop("data argument can not be missing in lm.gwaa")
-	if (class(data) != "gwaa.data") 
+	if (!is(data,"gwaa.data")) 
 		stop("data argument should have gwaa.data class")
 	checkphengen(data)
 	gtdata <- data@gtdata
@@ -32,10 +32,10 @@ function(formula,data,gtmode="additive",trait.type="guess",propPs=1.0)
 	posttypes <- c("gaussian","binomial","survival")
 	y <- model.extract(mf,"response")
 	if (trait.type=="guess") {
-		if (class(y) == "numeric" || class(y) == "integer") {
+		if (is(y,"numeric") || is(y,"integer")) {
 			if (isbinomial(y)) ttype <- 2
 			else ttype <- 1
-		} else if (class(y) == "GASurv") {
+		} else if (is(y,"GASurv")) {
 			ttype <- 3
 		} else {
 			stop("cannot guess trait type: not numeric, not GASurv!")

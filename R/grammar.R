@@ -3,14 +3,14 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,cl
 	warning("Depricated. Using qtscore on environmental residuals (qtscore(h2object$pgres,...))")
 	out <- qtscore(h2object$pgres,data=data,snpsubset=snpsubset,idsubset=idsubset,strata=strata,times=times,quiet=quiet,bcast=bcast,clambda=clambda,propPs=propPs)
 	return(out)
-  	if (class(data)=="gwaa.data") 
+  	if (is(data,"gwaa.data")) 
 	{
 		checkphengen(data)
 		data <- data@gtdata
 	}
 	if (class(h2object) != "polygenic")
 		stop("wrong class of h2object (should be polygenic)")
-  	if (class(data)!="snp.data") {
+  	if (!is(data,"snp.data")) {
 		stop("wrong data class: should be gwaa.data or snp.data")
   	}
 	if (!missing(snpsubset)) data <- data[,snpsubset]

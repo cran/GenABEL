@@ -85,12 +85,12 @@ if(forcestranduse !=T & forcestranduse != F)
 
 
 #check whether x and y have required data class
-if (class(x)!="snp.data")
+if (!is(x,"snp.data"))
 	{
 	stop("Wrong data class: the first argument should be snp.data")
 	}																	    
 
-if (class(x)!="snp.data")
+if (!is(x,"snp.data"))
 	{
 	stop("Wrong data class: the second argument should be snp.data")
 	}																	    

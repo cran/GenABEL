@@ -999,19 +999,19 @@ void homold(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int 
 	}
 }
 
-void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, double *nfreq, unsigned int *Option, unsigned int *UseFreq, double *out) {
+void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, double *nfreq, unsigned int *UseFreq, double *out) {
 	unsigned int i,j,m,idx;
 	unsigned int nids = (*Nids);
 	unsigned int nsnps = (*Nsnps);
-	unsigned int option = (*Option);
 	unsigned int useFreq = (*UseFreq);
 	unsigned int gt[nids];
 	unsigned int count[4],sumgt=0.;
-	double homweight[4] = {0.,1.,0.,1.},p0=0.,q0=0.,maf=0.;
+	double varhomweight[4] = {0.,1.,1.,1.}, centgt[4], homweight[4] = {0.,1.,0.,1.},p0=0.,q0=0.,maf=0.;
+	double den, fel;
 	char str;
 	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
-	for (i=0;i<(nids*(2+option));i++) out[i]=0.;
+	for (i=0;i<(nids*4);i++) out[i]=0.;
 	for (m=0;m<nsnps;m++) {
 // extract genotypes
 		idx = 0;
@@ -1028,32 +1028,31 @@ void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, d
 		for (i=0;i<nids;i++) count[gt[i]]++;
 		sumgt = count[1]+count[2]+count[3];
 // extract AFs
-		if (option!=0) { 
-			if (useFreq==0) {
-				p0 = (count[1]*2.+count[2]*1.)/(2.*sumgt);
-				q0 = 1.-p0;
-			} else {
-				q0 = freqs[m];
-				p0 = 1.-q0;
-			}
-			if (p0>q0) maf=q0; else maf=p0;
+		if (useFreq==0) {
+			p0 = (count[1]*2.+count[2]*1.)/(2.*sumgt);
+			q0 = 1.-p0;
+		} else {
+			q0 = freqs[m];
+			p0 = 1.-q0;
 		}
-		for (i=0;i<nids;i++)
-		if (gt[i]!=0)
-		if (option==0) {
+		if (p0>q0) maf=q0; else maf=p0;
+
+		if (maf>1.e-16) { 
+			den=1./(p0*q0);centgt[0]=0.;centgt[1]=0.-q0;centgt[2]=.5-q0;centgt[3]=1.-q0;
+			if (sumgt>1) fel =  1. - 2.*p0*q0*(1.*sumgt)/(1.*sumgt-1.);
+			   else if (nfreq[m]>1.) fel = 1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.);
+			for (i=0;i<nids;i++)
+			if (gt[i]!=0)
+			{
+				out[i]+=1.;
 // compute raw Hom
-			out[i]+=1.;
-			out[nids+i] += homweight[gt[i]];
-		} else if (maf>1.e-16) {
-			out[i]+=1.;
-			out[nids+i] += homweight[gt[i]];
+				out[nids+i] += homweight[gt[i]];
 // compute weighted Hom
-			if (useFreq==0) {
-				if (sumgt>1) out[2*nids+i] += 1. - 2.*p0*q0*(1.*sumgt)/(1.*sumgt-1.);
-			} else {
-				if (nfreq[m]>1.) out[2*nids+i] += 1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.);
-			}
+				out[2*nids+i] += fel;
+// compute Var
+				out[3*nids+i] += centgt[gt[i]]*centgt[gt[i]]*den;
 //			Rprintf("%d %d %e %e %e %d %e %e %e\n",m,i,p0,q0,maf,sumgt,nfreq[m],out[2*nids+i],1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.));
+			}
 		}
 	}
 }

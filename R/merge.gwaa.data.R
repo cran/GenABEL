@@ -1,13 +1,13 @@
 "merge.gwaa.data" <-
 function(x, y, ... ) {
-	if (class(x) != "gwaa.data" || class(y) != "gwaa.data")
+	if (!is(x,"gwaa.data") || !is(y,"gwaa.data"))
 		stop("x and y should have gwaa.data-class")
 	snpdata <- try(merge(x@gtdata,y@gtdata, ... ))
-	if (class(snpdata) == "try-error")
+	if (is(snpdata,"try-error"))
 		stop("error occured in merging gtdata slots of x and y")
 	snpdata <- snpdata$data
-#	phdata <- merge(x@phdata,y@phdata,by="id",all=T)
-	phdata <- merge(x@phdata,y@phdata,all=T)
+	phdata <- merge(x@phdata,y@phdata,by="id",all=T)
+#	phdata <- merge(x@phdata,y@phdata,all=T)
 	if (any(!(snpdata@idnames %in% phdata$id)))
 		stop("some ids present in gtdata are missing from phdata")
 	if (length(phdata$id) != length(unique(phdata$id)))

@@ -1,15 +1,13 @@
 "ibs.old" <- 
 function (data,snpsubset,idsubset,weight="no") {
-	if (class(data)=="gwaa.data") data <- data@gtdata
-	if (class(data)!="snp.data") stop("The data argument must be of snp.data-class or gwaa.data-class")
+	if (is(data,"gwaa.data")) data <- data@gtdata
+	if (!is(data,"snp.data")) stop("The data argument must be of snp.data-class or gwaa.data-class")
 	if (!missing(snpsubset)) data <- data[,snpsubset]
+	homodiag <- hom(data)
+	if (!missing(idsubset)) homodiag <- homodiag[idsubset,]
 	if (weight=="no") {
-		homodiag <- hom(data,weight="no")
-		if (!missing(idsubset)) homodiag <- homodiag[idsubset,]
 		homodiag <- homodiag[,"Hom"]
 	} else {
-		homodiag <- hom(data,weight="freq")
-		if (!missing(idsubset)) homodiag <- homodiag[idsubset,]
 		homodiag <- 0.5+homodiag[,"F"]
 	}
 	if (!missing(idsubset)) data <- data[idsubset,]

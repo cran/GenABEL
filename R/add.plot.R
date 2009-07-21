@@ -7,7 +7,7 @@ function (x, ..., df=1, col=c("lightgreen","lightblue"), sort=TRUE, delta = 1) {
 #	    col <- carg
 #    }
     if (!(any(c("1","2","Pc1df","Pc2df")==df))) stop ("df parameter must be 1, 2, \"Pc1df\", or \"Pc2df\"")
-    if (class(x) != "scan.gwaa" && class(x) != "scan.gwaa.2D") stop("Plot must be done on an object of class scan.gwaa or scan.gwaa.2D")
+    if (!is(x,"scan.gwaa") && class(x) != "scan.gwaa.2D") stop("Plot must be done on an object of class scan.gwaa or scan.gwaa.2D")
     if (length(x$map) != length(x$P1df)) stop("length of map and scan points not equal!")
 
     Pv <- x$P1df
@@ -26,7 +26,7 @@ function (x, ..., df=1, col=c("lightgreen","lightblue"), sort=TRUE, delta = 1) {
 		gc()
 	}
 
-    if (class(x) == "scan.gwaa") {
+    if (is(x,"scan.gwaa")) {
 		if (dim(table(x$chromosome))>1) {
 			chind <- chrom.char2num(x$chromosome) %% length(col)
 			idxCH <- which(chind==0)

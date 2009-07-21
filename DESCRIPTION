@@ -1,13 +1,16 @@
 Package: GenABEL
 Type: Package
 Title: genome-wide SNP association analysis
-Version: 1.4-2
-Date: 2009-01-28
+Version: 1.4-3
+Date: 2009-07-21
 Author: Yurii Aulchenko, Maksim Struchalin
 Maintainer: Yurii Aulchenko <i.aoultchenko@erasmusmc.nl>
-Depends: R (>= 2.4.0), methods, genetics, haplo.stats, qvalue, MASS
-Description: a package for genome-wide association analysis between 
-             quantitative or binary traits and single-nucleiotide
-             polymorphisms (SNPs). 
+Depends: R (>= 2.4.0), methods, genetics, haplo.stats, MASS
+Suggests: qvalue
+Description: a package for genome-wide association analysis between
+        quantitative or binary traits and single-nucleiotide
+        polymorphisms (SNPs).
 License: GPL (>= 2)
-Packaged: Thu Jan 29 17:47:28 2009; yuriiaulchenko
+Packaged: 2009-07-23 00:52:51 UTC; yuriiaulchenko
+Repository: CRAN
+Date/Publication: 2009-07-23 05:29:12

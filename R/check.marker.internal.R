@@ -7,11 +7,11 @@ function(data, snpsubset, idsubset,
 			qoption="bh95", imphetasmissing = TRUE) {
 
 # qoption = "bh95" (Benjamini & Hochberg 1995) or "storey" (Storey 2003, requires qvalue library)
-	if (class(data) == "gwaa.data") {
+	if (is(data,"gwaa.data")) {
 		if (!missing(snpsubset)) data <- data@gtdata[,snpsubset]
 		if (!missing(idsubset)) data <- data@gtdata[idsubset,]
 		if (missing(idsubset) & missing(snpsubset)) data <- data@gtdata
-	} else if (class(data) == "snp.data") {
+	} else if (is(data,"snp.data")) {
 		if (!missing(snpsubset)) data <- data[,snpsubset]
 		if (!missing(idsubset)) data <- data[idsubset,]
 	} else {
@@ -64,8 +64,12 @@ function(data, snpsubset, idsubset,
 	rm(s);gc(verbose=FALSE)
 	if (p.level < 0) {
 		if (qoption == "storey") {
-			qobj <- qvalue(Pexact,fdr.level=fdrate)
-			hweok <- !(qobj$significant)
+			if (require(qvalue)) {
+				hweok <- !(qvalue(Pexact,fdr.level=fdrate)$significant)
+			} else {
+				warning("qvalue library not installed; using GenABEL's qvaluebh95() instead")
+				hweok <- !(qvaluebh95(Pexact,fdrate)$significant)
+			}
 		} else {
 			hweok <- !(qvaluebh95(Pexact,fdrate)$significant)
 		}

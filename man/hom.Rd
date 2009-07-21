@@ -7,26 +7,23 @@ people, across multiple markers. Can be used for Quality Control
 (e.g. contamination checks)
 }
 \usage{
-	hom(data, snpsubset, idsubset, weight="no", snpfreq, n.snpfreq = 1000)
+	hom(data, snpsubset, idsubset, snpfreq, n.snpfreq = 1000)
 }
 \arguments{
   \item{data}{Object of \link{gwaa.data-class} or \link{snp.data-class}}
   \item{snpsubset}{Subset of SNPs to be used}
   \item{idsubset}{People for whom average homozygosity is to be computed}
-  \item{weight}{When "no", homozygosity is computed as a proportion of 
-		homozygous genotypes. When "freq", an estimate of 
-		inbreeding coefficint is computed (see details).
-		}
   \item{snpfreq}{when option weight="freq" used, you can provide 
 		fixed allele frequencies}
   \item{n.snpfreq}{when option weight="freq" used, you can provide 
-		number of people used to estimate allele frequencies}
+		a vector supplying the number of people used to estimate allele 
+		frequencies at the particular marker, or a fixed number}
 }
 \details{
-	With the default weight="no" option, homozygosity is measured as proportion of 
+	Homozygosity is measured as proportion of 
 	homozygous genotypes observed in a person.
 
-	With weight="freq" option, for person \eqn{i} inbreeding is estimated with 
+	Inbreeding for person \eqn{i} is estimated with 
 
 	\deqn{
 	f_i = \frac{(O_i - E_i)}{(L_i - E_i)}
@@ -52,23 +49,36 @@ people, across multiple markers. Can be used for Quality Control
 	with this option.
 
 	This measure is the same as used by PLINK (see reference).
+
+	The variance (Var) is estimated as
 	
+	\deqn{
+	V_{i} = \frac(1)(N) \Sigma_k \frac{(x_{i,k} - p_k)^2}{(p_k * (1 - p_k))}
+	}
+
+	where k changes from 1 to N = number of SNPs, \eqn{x_{i,k}} is 
+	a genotype of ith person at the kth SNP, coded as 0, 1/2, 1 and 
+	\eqn{p_k} is the frequency 
+	of the "+" allele.
+
+	This variance is used as diagonal of the genomic 
+	kinship matrix when using EIGENSTRAT method. 
+
 	You should use as many people and markers as possible when estimating 
-	inbreeding from marker data.
+	inbreeding/variance from marker data.
 }
 \value{
-	With option weight="no": A matrix with rows corresponding to the ID names and colums
+	A matrix with rows corresponding to the ID names and colums
 	showing the number of genotypes measured (NoMeasured) and 
-	homozygosity (Hom).
-
-	With option weight="freq": the same as above + expected homozygosity (E(Hom)) and
+	homozygosity (Hom),
+	expected homozygosity (E(Hom)), variance, and
 	the estimate of inbreeding, F. 
 }
 \references{
 	Purcell S. et al, (2007) PLINK: a toolset for whole genome association and population-based 
 	linkage analyses. Am. J. Hum. Genet.
 }
-\author{Yurii Aulchenko}
+\author{Yurii Aulchenko, partly based on code by John Barnard}
 %\note{
 %}
 \seealso{
@@ -79,10 +89,11 @@ people, across multiple markers. Can be used for Quality Control
 \examples{
 data(ge03d2)
 h <- hom(ge03d2[,c(1:100)])
+h[1:5,]
 homsem <- h[,"Hom"]*(1-h[,"Hom"])/h[,"NoMeasured"]
 plot(h[,"Hom"],homsem)
 # wrong analysis: one should use all people (for right frequency) and markers (for right F) available!
-h <- hom(ge03d2[,c(1:10)],weight="freq")
+h <- hom(ge03d2[,c(1:10)])
 h
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

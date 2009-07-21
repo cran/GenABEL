@@ -1,9 +1,9 @@
 "snp.names" <- 
 function(data,begin,end,chromosome) {
-	if (class(data) == "gwaa.data" || class(data) == "snp.data") {
+	if (is(data,"gwaa.data") || is(data,"snp.data")) {
 		out <- snp.names.gwaa.data(data,begin,end,chromosome)
 		return(out)
-	} else if (class(data) == "scan.gwaa") {
+	} else if (is(data,"scan.gwaa")) {
 		if (missing(chromosome)) {
 			if (missing(begin)) begin <- min(data$map)
 			if (missing(end))   end <- max(data$map)
@@ -19,7 +19,7 @@ function(data,begin,end,chromosome) {
 			out <- data$snpname[data$map>=begin & data$map<=end & data$chromosome == chromosome]
 			return(out)
 		}
-	} else if (class(data) == "check.marker") {
+	} else if (is(data,"check.marker")) {
 		if (missing(chromosome)) {
 			if (missing(begin)) begin <- min(data$call$map)
 			if (missing(end))   begin <- min(data$call$map)
@@ -42,9 +42,9 @@ function(data,begin,end,chromosome) {
 
 "snp.names.gwaa.data" <- 
 function(data,begin,end,chromosome) {
-	if (class(data) == "gwaa.data") 
+	if (is(data,"gwaa.data")) 
 		data <- data@gtdata
-	else if (class(data) != "snp.data") stop("data should have class gwaa.data-class or snp.data-class")
+	else if (!is(data,"snp.data")) stop("data should have class gwaa.data-class or snp.data-class")
 	if (missing(begin) && missing(end)) {begin <- min(data@map); end <- max(data@map)}
 	if (!missing(begin) && missing(end)) end <- max(data@map)
 	if (missing(begin) && !missing(end)) begin <- min(data@map)

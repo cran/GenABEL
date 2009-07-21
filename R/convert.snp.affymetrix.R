@@ -19,19 +19,19 @@
 "convert.snp.affymetrix" <-
 function(dir, map, outfile, skipaffym) {
 
-if (class(dir)!="character")
+if (!is(dir,"character"))
 	{
 	stop("Wrong data class: the first argument should be character")
 	}
 
 
-if (class(map)!="character")
+if (!is(map,"character"))
 	{
 	stop("Wrong data class: the second argument should be character")
 	}
 
 
-if (class(outfile)!="character")
+if (!is(outfile,"character"))
 	{
 	stop("Wrong data class: the third argument should be character")
 	}

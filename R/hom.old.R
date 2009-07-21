@@ -1,9 +1,9 @@
 "hom.old" <- 
 function(data,snpsubset,idsubset,weight="no") {
-  if (class(data) == "gwaa.data") {
+  if (is(data,"gwaa.data")) {
     data <- data@gtdata
   }
-  if (class(data) != "snp.data") {
+  if (!is(data,"snp.data")) {
     stop("data argument should have gwaa.data-class or snp.data-class")
   }
   wargs <- c("no","freq")

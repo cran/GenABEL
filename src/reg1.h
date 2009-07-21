@@ -163,7 +163,8 @@ public:
 		sebeta.reinit(cdata.X.nrow,1);
 		mematrix<double> u(cdata.X.nrow,1);
 		mematrix<double> imat(cdata.X.nrow,cdata.X.nrow);
-		double work[cdata.X.ncol*2+2*(cdata.X.nrow)*(cdata.X.nrow)+3*(cdata.X.nrow)];
+		double * work = new (nothrow) double[cdata.X.ncol*2+2*(cdata.X.nrow)*(cdata.X.nrow)+3*(cdata.X.nrow)];
+		if (!work) {perror("can not allocate work matrix");exit(1);}
 		double loglik[2];
 		int flag;
 		double sctest=1.0;
@@ -175,6 +176,7 @@ public:
 			imat.data,loglik,&flag,
 			work,&eps,&tol_chol,
 			&sctest);
+		delete [] work;
 		for (int i=0;i<cdata.X.nrow;i++) sebeta[i]=sqrt(imat.get(i,i));
 	}
 	~coxph_reg()

@@ -1,7 +1,7 @@
 "r2fast" <- 
 function(data,snpsubset,cross.snpsubset,idsubset) {
-	if (class(data) == "gwaa.data") data <- data@gtdata;
-	if (class(data) != "snp.data") stop("The data argument must have snp.data-class");
+	if (is(data,"gwaa.data")) data <- data@gtdata;
+	if (!is(data,"snp.data")) stop("The data argument must have snp.data-class");
 	if (any(data@chromosome=="X") & dim(table(data@male))>1) {
 		data <- data[,data@chromosome!="X"]
 		warning("X-chromosome data dropped")

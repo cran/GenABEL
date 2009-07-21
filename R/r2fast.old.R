@@ -1,7 +1,7 @@
 "r2fast.old" <- 
 function(data,snpsubset,idsubset) {
-	if (class(data) == "gwaa.data") data <- data@gtdata;
-	if (class(data) != "snp.data") stop("The data argument must have snp.data-class");
+	if (is(data,"gwaa.data")) data <- data@gtdata;
+	if (!is(data,"snp.data")) stop("The data argument must have snp.data-class");
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
 	if (any(data@chromosome=="X") & dim(table(data@male))>1) {

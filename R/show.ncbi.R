@@ -7,5 +7,5 @@ function(region) {
   }
   url <- paste("http://www.ncbi.nlm.nih.gov/mapview/map_search.cgi?taxid=9606&query=",qry,"&qchr=&strain=All&advsrch=off",sep="");
   a <- try(browseURL(url));
-  if (class(a) == "try-error") stop("can not invoke browser")
+  if (is(a,"try-error")) stop("can not invoke browser")
 }

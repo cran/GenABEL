@@ -1,7 +1,7 @@
 "check.trait" <-
 function (trait,data,fdrate=0.05,graph=TRUE,binshow=FALSE,qoption="bh95") {
   if (!is.data.frame(data)) {
-    if (class(data) == "gwaa.data") data <- data@phdata else stop("data should be a data frame or gwaa.data")
+    if (is(data,"gwaa.data")) data <- data@phdata else stop("data should be a data frame or gwaa.data")
   } 
   attach(data,warn.conflicts=FALSE)
   rmvec <- rep(TRUE,length(trait))

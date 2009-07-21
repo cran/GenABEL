@@ -1,3 +1,23 @@
+***** v. 1.4-3 (2009.07.21)
+
+qvalue moved to "suggests"; no strict dependency on availability of that anymore
+(thanks to Beate Glaser for noting that tcltk is not so obvious component 
+of all systems)
+
+changes to C++ LM code to improve portability (Solaris 10)
+
+hom() function updated, now producing variances (to be used as diagonal 
+elements of the genomic kinshp matrix when doing EIGENSTRAT analysis).
+Many thanks to John Barnard for contributing the code!
+
+all class checks changed to ensure compatibility with S4 
+(thanks to Maxime Rotival)
+
+
+***** v. 1.4-2b (2009.02.20)
+
+small fix in merge.gwaa.data (by="id")
+
 ***** v. 1.4-2 (2009.01.28)
 
 Changes in polygenic()/mmscore() to allow for sub-setting on 

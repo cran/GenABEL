@@ -3,7 +3,7 @@ function (x, y, ..., df=1, ystart=0, col=c("blue","green"), sort=TRUE, ylim, del
    df <- as.character(df)
    dfpars <- c("1","2","Pc1df","Pc2df")
    if (!(any(dfpars==df))) stop ("df parameter must be 1, 2, \"Pc1df\", or \"Pc2df\"")
-   if (class(x) != "scan.gwaa") stop("Plot must be done on an object of scan.gwaa-class")
+   if (!is(x,"scan.gwaa")) stop("Plot must be done on an object of scan.gwaa-class")
    if (length(x$map) != length(x$P1df)) stop("length of map and scan points not equal!")
    if (any(names(x) == "Pgw1df")) if (!is.null(x$Pgw1df)) {x$P1df <- x$Pgw1df; x$P2df <- x$Pgw2df}
 

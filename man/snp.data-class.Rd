@@ -19,7 +19,7 @@
     \item{\code{male}:}{male code}
     \item{\code{idnames}:}{ID names}
     \item{\code{nsnps}:}{number of SNPs}
-    \item{\code{nsnpnames}:}{list of SNP names}
+    \item{\code{snpnames}:}{list of SNP names}
     \item{\code{chromosome}:}{list chromosomes corresponding to SNPs}
     \item{\code{coding}:}{list of nucleotide coding for the SNPs}
     \item{\code{strand}:}{strands of the SNPs}

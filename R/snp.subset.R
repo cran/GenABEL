@@ -3,9 +3,9 @@ snp.subset <- function(data,snpsubset) {
 		warning("snpsubset missing")
 		return(data)
 	}
-	if (class(data) == "scan.gwaa") {
+	if (is(data,"scan.gwaa")) {
 		out <- snp.subset.scan.gwaa(data,snpsubset)
-	} else if (class(data) == "check.marker") {
+	} else if (is(data,"check.marker")) {
 		out <- snp.subset.check.marker(data,snpsubset)
 	} else {stop("data should be of type check.marker-class or scan.gwaa-class")}
 	out

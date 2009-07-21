@@ -1,11 +1,11 @@
 "autosomal" <-
 function (data) {
-	if (class(data) == "gwaa.data") 
+	if (is(data,"gwaa.data")) 
 		out <- data@gtdata@snpnames[data@gtdata@chromosome != "X" & 
 						data@gtdata@chromosome != "XY" &
 						data@gtdata@chromosome != "Y" &
 						data@gtdata@chromosome != "mt"]
-	else if (class(data) == "snp.data") 
+	else if (is(data,"snp.data")) 
 		out <- data@snpnames[data@chromosome != "X" & 
 						data@chromosome != "XY" &
 						data@chromosome != "Y" &

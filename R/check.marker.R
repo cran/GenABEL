@@ -6,8 +6,8 @@ function(data, snpsubset, idsubset,
 			fdrate = 0.2, odds = 1000, hweidsubset, redundant="no", minconcordance = 2.0, 
 			qoption="bh95",imphetasmissing=TRUE,XXY.call=0.8) {
 
-	if (class(data) == "gwaa.data") data <- data@gtdata
-	if (class(data) != "snp.data") stop("data argument should be of type gwaa.data or snp.data");
+	if (is(data,"gwaa.data")) data <- data@gtdata
+	if (!is(data,"snp.data")) stop("data argument should be of type gwaa.data or snp.data");
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
 	if (!missing(hweidsubset)) {

@@ -1,6 +1,6 @@
 "qtscore" <-
 function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
-  	if (class(data)!="gwaa.data") {
+  	if (!is(data,"gwaa.data")) {
 		stop("wrong data class: should be gwaa.data")
   	}
 	checkphengen(data)
@@ -14,11 +14,11 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 	}
 	if (trait.type=="guess") {
 		if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
-		if (class(formula) == "formula") {
+		if (is(formula,"formula")) {
 			mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 			y <- model.response(mf)
 			if (isbinomial(y)) trait.type <- "binomial" else trait.type <- "gaussian"
-		} else if (class(formula) == "numeric" || class(formula) == "integer" || class(formula) == "double") {
+		} else if (is(formula,"numeric") || is(formula,"integer") || is(formula,"double")) {
 			y <- formula
 			if (isbinomial(y)) trait.type <- "binomial" else trait.type <- "gaussian"
 		} else {
@@ -31,7 +31,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 	if (trait.type=="binomial") fam <- binomial()
 
 	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
-	if (class(formula) == "formula") {
+	if (is(formula,"formula")) {
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 		y <- model.response(mf)
 		test.type(y,trait.type)
@@ -44,7 +44,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		} else {
 			resid <- lmf$resid
 		}
-	} else if (class(formula) == "numeric" || class(formula) == "integer" || class(formula) == "double") {
+	} else if (is(formula,"numeric") || is(formula,"integer") || is(formula,"double")) {
 		y <- formula
 		test.type(y,trait.type)
 		mids <- (!is.na(y))
@@ -77,7 +77,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		data <- data[tmeas,]
 	}
 
-#	if (trait.type=="binomial" & class(formula) != "formula") bin<-1 else bin <- 0
+#	if (trait.type=="binomial" & !is(formula,"formula")) bin<-1 else bin <- 0
 	if (trait.type=="binomial") bin<-1 else bin<-0
 	lenn <- data@gtdata@nsnps;
 	out <- list()
@@ -178,7 +178,8 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 			pr.c1df <- pr.c1df + 1*(chi2.c1df < th1)
 			pr.c2df <- pr.c2df + 1*(chi2.c2df < th1)
 			if (!quiet && ((j-1)/bcast == round((j-1)/bcast))) {
-				cat("\b\b\b\b\b\b",round((100*(j-1)/times),digits=2),"%",sep="")
+#				cat("\b\b\b\b\b\b",round((100*(j-1)/times),digits=2),"%",sep="")
+				cat(" ",round((100*(j-1)/times),digits=2),"%",sep="")
 				flush.console()
 			}
 		}
@@ -221,7 +222,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 
 "qtscore.old" <-
 function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
-  	if (class(data)!="gwaa.data") {
+  	if (!is(data,"gwaa.data")) {
 		stop("wrong data class: should be gwaa.data")
   	}
 	if (!missing(snpsubset)) data <- data[,snpsubset]
@@ -236,7 +237,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 	if (trait.type=="binomial") fam <- binomial()
 
 	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
-	if (class(formula) == "formula") {
+	if (is(formula,"formula")) {
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 		y <- model.response(mf)
 #		sdy <- sd(y)
@@ -252,7 +253,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 			bin <- 0
 		}
 		resid <- lmf$resid
-	} else if (class(formula) == "numeric" || class(formula) == "integer" || class(formula) == "double") {
+	} else if (is(formula,"numeric") || is(formula,"integer") || is(formula,"double")) {
 		y <- formula
 		mids <- (!is.na(y))
 		y <- y[mids]

@@ -117,8 +117,8 @@ public:
 			strata[i] = 0;
 		}
 // sort by time
-		double tmptime[nids];
-		int passed_sorted[nids];
+		double * tmptime = new (nothrow) double [nids];
+		int * passed_sorted = new (nothrow) int [nids];
 		for (int i=0;i<nids;i++) {tmptime[i] = stime[i];passed_sorted[i]=0;}
 		qsort(tmptime,nids,sizeof(double),cmpfun);
 		for (int i=0;i<nids;i++) 
@@ -139,6 +139,9 @@ public:
 				exit(1);
 			}
 		}
+		delete [] tmptime;
+		delete [] passed_sorted;
+
 		stime = reorder(stime,order);
 		sstat = reorder(sstat,order);
 		weights = reorder(weights,order);

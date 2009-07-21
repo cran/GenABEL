@@ -3,7 +3,7 @@
 
 "as.double.gwaa.data" <- 
 function(x, ...) {
-	if (class(x) != "gwaa.data") stop("data argument should be gwaa.data-class")
+	if (!is(x,"gwaa.data")) stop("data argument should be gwaa.data-class")
 	x <- x@gtdata
 	to <- as.double(x)
 	to
@@ -11,7 +11,7 @@ function(x, ...) {
 
 "as.double.snp.data" <- 
 function(x, ...) {
-	if (class(x) != "snp.data") stop("data argument should be snp.data-class")
+	if (!is(x,"snp.data")) stop("data argument should be snp.data-class")
 	tnids <- x@nids
 	tnsnps <- x@nsnps
 	to <- .C("get_snps_many",as.raw(x@gtps), as.integer(tnids), as.integer(tnsnps), idata = integer(tnids*tnsnps), PACKAGE="GenABEL")$idata
@@ -25,7 +25,7 @@ function(x, ...) {
 
 "as.character.gwaa.data" <- 
 function(x, ...) {
-	if (class(x) != "gwaa.data") stop("data argument should be gwaa.data-class")
+	if (!is(x,"gwaa.data")) stop("data argument should be gwaa.data-class")
 	x <- x@gtdata
 	to <- as.character(x)
 	to
@@ -34,7 +34,7 @@ function(x, ...) {
 ## old function
 #"as.character.snp.data" <- 
 #function(x, ...) {
-#	if (class(x) != "snp.data") stop("data argument should be snp.data-class")
+#	if (!is(x,"snp.data")) stop("data argument should be snp.data-class")
 #	a <- as.double(x)
 #	dm <- dim(a)
 #	to <- ifelse(is.na(a),NA,c("1/1","1/2","2/2")[a+1])
@@ -44,7 +44,7 @@ function(x, ...) {
 #	to
 #}
 as.character.snp.data <- function(x,...) {
-	if (class(x) != "snp.data") stop("data argument should be snp.data-class")
+	if (!is(x,"snp.data")) stop("data argument should be snp.data-class")
 	rw2ch <- alleleID.raw2char.matrix()
 #
 #	Very bulky fix -- now as.char.snp.coding returns true coding, used to be raw...
@@ -71,7 +71,7 @@ function(x, ...) UseMethod("as.genotype")
 
 "as.genotype.gwaa.data" <- 
 function(x, ...) {
-	if (class(x) != "gwaa.data") stop("data argument should be gwaa.data-class")
+	if (!is(x,"gwaa.data")) stop("data argument should be gwaa.data-class")
 	x <- x@gtdata
 	to <- as.genotype.snp.data(x)
 	to
@@ -79,7 +79,7 @@ function(x, ...) {
 
 "as.genotype.snp.data" <- 
 function(x, ...) {
-	if (class(x) != "snp.data") stop("data argument should be snp.data-class")
+	if (!is(x,"snp.data")) stop("data argument should be snp.data-class")
 	gdta <- data.frame(genotype(as.character(x[,1])))
 	if (x@nsnps>1) for (i in 2:x@nsnps) {
 		gdta <- cbind(gdta,genotype(as.character(x[,i])))
@@ -95,7 +95,7 @@ function(x, ...) UseMethod("as.hsgeno")
 
 "as.hsgeno.gwaa.data" <-
 function(x, ...) {
-	if (class(x) != "gwaa.data") stop("data argument should be gwaa.data-class")
+	if (!is(x,"gwaa.data")) stop("data argument should be gwaa.data-class")
 	x <- x@gtdata
 	to <- as.hsgeno(x)
 	to
@@ -103,7 +103,7 @@ function(x, ...) {
 
 "as.hsgeno.snp.data" <-
 function(x, ...) {
-	if (class(x) != "snp.data") stop("data argument should be snp.data-class")
+	if (!is(x,"snp.data")) stop("data argument should be snp.data-class")
 	g1 <- as.double(x[,1])
 	a1 <- rep(NA,length(g1))
 	a2 <- rep(NA,length(g1))
@@ -133,14 +133,14 @@ function(x, ...) {
 
 "as.raw.snp.data" <- 
 function (x) {
-	if (class(x) != "snp.data") stop("data argument should be of snp.data-class")
+	if (!is(x,"snp.data")) stop("data argument should be of snp.data-class")
 	to <- as.raw(x@gtps)
 	to
 }
 
 "as.raw.snp.mx" <-
 function(x) {
-	if (class(x) != "snp.mx") stop("data argument should be of snp.mx-class")
+	if (!is(x,"snp.mx")) stop("data argument should be of snp.mx-class")
 	to <- unclass(x)
 	to <- as.raw(to)
 	to

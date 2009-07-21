@@ -1,14 +1,14 @@
 "formetascore" <-
 function(formula,data,stat=qtscore,transform=ztransform,build="unknown",verbosity=1, ...) {
-	if (class(data) != "gwaa.data") stop("data argument must have gwaa.data-class")
+	if (!is(data,"gwaa.data")) stop("data argument must have gwaa.data-class")
 	checkphengen(data)
 	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
-	if (class(formula)=="polygenic") {
+	if (is(formula,"polygenic")) {
 		pm <- pmatch("stat",names(match.call()))
 		pm <- (pm[!is.na(pm)])[1]
 		a <- match.call()[[pm]]
 		if (a != "mmscore" && a != "mmscore()") stop("stat should be mmscore when polygenic object is analysed")
-		if (class(transform) != "character") stop("transform should be \"no\" when polygenic object is analysed")
+		if (!is(transform,"character")) stop("transform should be \"no\" when polygenic object is analysed")
 		if (transform != "no") stop("transform should be \"no\" when polygenic object is analysed")
 	}
 	if (is.character(transform)) {
@@ -16,10 +16,10 @@ function(formula,data,stat=qtscore,transform=ztransform,build="unknown",verbosit
 	} else {
 		formula <- transform(formula=formula,data=data)
 	}
-	if (class(formula) == "formula") {
+	if (is(formula,"formula")) {
 		mf <- model.frame(formula,data@phdata,na.action=na.omit,drop.unused.levels=TRUE)
 		mids <- rownames(data@phdata) %in% rownames(mf)
-	} else if (class(formula) == "polygenic") {
+	} else if (is(formula,"polygenic")) {
 		mids <- which(!is.na(formula$residualY))
 	} else {
 		mids <- which(!is.na(formula))

@@ -1,6 +1,6 @@
 "summary.snp.data" <-
 	function(object,...) {
-		if (class(object) != "snp.data") stop("wrong object class, should be snp.data")
+		if (!is(object,"snp.data")) stop("wrong object class, should be snp.data")
 		res <- .C("snp_summary_exhwe",as.raw(object@gtps),as.integer(object@nids),as.integer(object@nsnps), out = double(object@nsnps*9), PACKAGE="GenABEL")$out
 		dim(res) <- c(object@nsnps,9)
 		res <- as.data.frame(res)

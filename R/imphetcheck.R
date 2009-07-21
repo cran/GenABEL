@@ -1,6 +1,6 @@
 "imphetcheck" <-
 function(data) {
-	if (class(data) != "snp.data") stop("data argument should be of snp.data-class")
+	if (!is(data,"snp.data")) stop("data argument should be of snp.data-class")
 	if (!any(data@chromosome == "X") & !any(data@chromosome == "Y") & !any(data@chromosome == "mt")) stop("No X-, Y- or mtDNA-linked markers")
 	male <- (data@male==1)
 	out <- list()

@@ -1,10 +1,10 @@
 "HWE.show" <-
 function(data,idsubset=c(1:data@gtdata@nids),snpsubset =c(1:data@gtdata@nsnps)) {
-	if (class(data) == "gwaa.data") {
+	if (is(data,"gwaa.data")) {
         	if (missing(idsubset))  idsubset  <- c(1:data@gtdata@nids)
         	if (missing(snpsubset)) snpsubset <- c(1:data@gtdata@nsnps)
 		n1data <- data@gtdata[idsubset,snpsubset]
-	} else if (class(data) == "snp.data") {
+	} else if (is(data,"snp.data")) {
         	if (missing(idsubset))  idsubset  <- c(1:data@nids)
         	if (missing(snpsubset)) snpsubset <- c(1:data@nsnps)
 		n1data <- data

@@ -1,7 +1,7 @@
 "catable" <-
 function(data,categories = c(quantile(data,c(0.01,0.1,0.5,0.9,0.99),na.rm=TRUE)), cumulative = FALSE, na.rm=TRUE, digits=3) {
-	if (class(data)!="numeric") stop("data should be numeric vector")
-	if (class(categories)!="numeric") stop("categories should be numeric vector")
+	if (!is(data,"numeric")) stop("data should be numeric vector")
+	if (!is(categories,"numeric")) stop("categories should be numeric vector")
 	ouv <- rep(NA,length(data))
 
 	categories <- sort(categories)

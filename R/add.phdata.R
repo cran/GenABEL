@@ -1,7 +1,7 @@
 "add.phdata" <- 
 function(data,phdata) {
-	if (class(data)!="gwaa.data") stop("data argument must be of gwaa.data-class")
-	if (class(phdata)!="data.frame") stop("phdata argument must be of data.frame-class")
+	if (!is(data,"gwaa.data")) stop("data argument must be of gwaa.data-class")
+	if (!is(phdata,"data.frame")) stop("phdata argument must be of data.frame-class")
 	nidcols <- sum(names(phdata) %in% "id")
 	if (nidcols==0) stop("can not find \"id\" column in phdata")
 	if (nidcols>1) stop("more than one \"id\" column in phdata")

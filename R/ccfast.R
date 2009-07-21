@@ -1,6 +1,6 @@
 "ccfast" <-
 function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0) {
-	if (class(data) != "gwaa.data") stop("wrong type of data argument, must be gwaa.data")
+	if (!is(data,"gwaa.data")) stop("wrong type of data argument, must be gwaa.data")
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
 	if (any(data@gtdata@chromosome=="X") & dim(table(data@gtdata@male))>1) {
