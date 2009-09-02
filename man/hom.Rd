@@ -40,13 +40,10 @@ people, across multiple markers. Can be used for Quality Control
 	E_i = Sigma_(j=1)^(L_i) (1 - 2 p_j (1 - p_j) (T_(Aj))/(T_(Aj)-1))
 	}
 
-	where \eqn{T_{Aj}} is the numer of measured genotypes at locus \eqn{j}; 
+	where \eqn{T_{Aj}} is the number of measured genotypes at locus \eqn{j}; 
 	\eqn{T_{Aj}} is either estimated from data or provided by "n.snpfreq" 
-	parameter (vector). Alleleic frequencies are either estimated from 
+	parameter (vector). Allelic frequencies are either estimated from 
 	data or provided by the "snpfreq" vector.
-
-	Only polymorphic loci with number of measured genotypes >1 are used
-	with this option.
 
 	This measure is the same as used by PLINK (see reference).
 
@@ -61,6 +58,9 @@ people, across multiple markers. Can be used for Quality Control
 	\eqn{p_k} is the frequency 
 	of the "+" allele.
 
+	Only polymorphic loci with number of measured genotypes >1 are used
+	with this option.
+
 	This variance is used as diagonal of the genomic 
 	kinship matrix when using EIGENSTRAT method. 
 
@@ -68,8 +68,9 @@ people, across multiple markers. Can be used for Quality Control
 	inbreeding/variance from marker data.
 }
 \value{
-	A matrix with rows corresponding to the ID names and colums
-	showing the number of genotypes measured (NoMeasured) and 
+	A matrix with rows corresponding to the ID names and columns
+	showing the number of SNPs measured in this person (NoMeasured), 
+	the number of measured polymorphic SNPs (NoPoly),  
 	homozygosity (Hom),
 	expected homozygosity (E(Hom)), variance, and
 	the estimate of inbreeding, F. 

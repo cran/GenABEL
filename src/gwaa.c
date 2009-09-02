@@ -1011,7 +1011,7 @@ void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, d
 	char str;
 	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
-	for (i=0;i<(nids*4);i++) out[i]=0.;
+	for (i=0;i<(nids*5);i++) out[i]=0.;
 	for (m=0;m<nsnps;m++) {
 // extract genotypes
 		idx = 0;
@@ -1029,31 +1029,52 @@ void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, d
 		sumgt = count[1]+count[2]+count[3];
 // extract AFs
 		if (useFreq==0) {
-			p0 = (count[1]*2.+count[2]*1.)/(2.*sumgt);
-			q0 = 1.-p0;
+			if (sumgt>=1) {
+				p0 = (count[1]*2.+count[2]*1.)/(2.*sumgt);
+				q0 = 1.-p0;
+			} else {
+				p0=0.;q0=1.;
+			}
 		} else {
 			q0 = freqs[m];
 			p0 = 1.-q0;
 		}
+
 		if (p0>q0) maf=q0; else maf=p0;
 
-		if (maf>1.e-16) { 
-			den=1./(p0*q0);centgt[0]=0.;centgt[1]=0.-q0;centgt[2]=.5-q0;centgt[3]=1.-q0;
-			if (sumgt>1) fel =  1. - 2.*p0*q0*(1.*sumgt)/(1.*sumgt-1.);
-			   else if (nfreq[m]>1.) fel = 1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.);
-			for (i=0;i<nids;i++)
-			if (gt[i]!=0)
-			{
-				out[i]+=1.;
-// compute raw Hom
-				out[nids+i] += homweight[gt[i]];
-// compute weighted Hom
-				out[2*nids+i] += fel;
-// compute Var
-				out[3*nids+i] += centgt[gt[i]]*centgt[gt[i]]*den;
-//			Rprintf("%d %d %e %e %e %d %e %e %e\n",m,i,p0,q0,maf,sumgt,nfreq[m],out[2*nids+i],1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.));
-			}
+		if (maf>1.e-16) den=1./(p0*q0);
+			else den=0;
+
+		if (useFreq==0) {
+			if (sumgt>1)
+				fel =  1. - 2.*p0*q0*(1.*sumgt)/(1.*sumgt-1.);
+			else
+				fel = 1. - 2.*p0*q0;
+		} else {
+			if (nfreq[m]>1)
+				fel = 1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.);
+			else
+				fel = 1. - 2.*p0*q0;
 		}
+
+		centgt[0]=0.;centgt[1]=0.-q0;centgt[2]=.5-q0;centgt[3]=1.-q0;
+
+		for (i=0;i<nids;i++)
+		if (gt[i]!=0)
+		{
+// compute no measured snps
+			out[i]+=1.;
+// compute no measured poly snps
+			if (maf>1e-16) out[nids+i]+=1.;
+// compute raw Hom
+			out[2*nids+i] += homweight[gt[i]];
+// compute weighted Hom
+			out[3*nids+i] += fel;
+// compute Var
+			out[4*nids+i] += centgt[gt[i]]*centgt[gt[i]]*den;
+//			Rprintf("%d %d %e %e %e %d %e %e %e\n",m,i,p0,q0,maf,sumgt,nfreq[m],out[2*nids+i],1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.));
+		}
+
 	}
 }
 

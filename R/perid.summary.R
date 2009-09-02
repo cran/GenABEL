@@ -5,7 +5,7 @@ function (data,snpsubset,idsubset, ...) {
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
 	out <- hom(data, ... )
-	out <- as.data.frame(out,stringsAsFactors=F)
+	out <- as.data.frame(out,stringsAsFactors=FALSE)
 	out$CallPP <- out$NoMeasured/data@nsnps
 	out$Het <- 1. - out$Hom
 	rownames(out) <- data@idnames

@@ -15,7 +15,7 @@ function(data,snpsubset,idsubset,snpfreq,n.snpfreq=1000) {
 	if (!is(snpfreq,"numeric")) stop("snpfreq argument: non-numeric class")
 	useFreq <- 1
   } else {
-	snpfreq <- rep(0.,data@nsnps)
+	snpfreq <- rep(-1.,data@nsnps)
   }
   if (!missing(idsubset)) data <- data[idsubset,]
 
@@ -27,14 +27,14 @@ function(data,snpsubset,idsubset,snpfreq,n.snpfreq=1000) {
 	} else {
 		if (length(n.snpfreq) != data@nsnps) stop("length mismatch in n.snpfreq")
 	}
-  out <- .C("hom",as.raw(data@gtps),as.integer(data@nids),as.integer(data@nsnps),as.double(snpfreq),as.double(n.snpfreq),as.integer(useFreq),sout = double(4*data@nids), PACKAGE="GenABEL")$sout
-    dim(out) <- c(data@nids,4)
-    F <- (out[,2]-out[,3])/(out[,1]-out[,3])
+  out <- .C("hom",as.raw(data@gtps),as.integer(data@nids),as.integer(data@nsnps),as.double(snpfreq),as.double(n.snpfreq),as.integer(useFreq),sout = double(5*data@nids), PACKAGE="GenABEL")$sout
+    dim(out) <- c(data@nids,5)
+    F <- (out[,3]-out[,4])/(out[,1]-out[,4])
     out <- cbind(out,F)
-    out[,2] <- out[,2]/out[,1]
     out[,3] <- out[,3]/out[,1]
     out[,4] <- out[,4]/out[,1]
-    colnames(out) <- c("NoMeasured","Hom","E(Hom)","Var","F")
+    out[,5] <- out[,5]/out[,2]
+    colnames(out) <- c("NoMeasured","NoPoly","Hom","E(Hom)","Var","F")
   out <- as.data.frame(out,stringsAsFactors=FALSE)
   rownames(out) <- data@idnames
   out

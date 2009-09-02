@@ -1,3 +1,11 @@
+***** v. 1.4-4 (2009.09.02)
+
+bug fix in hom() and perid.summary() -- only polymorphic markers were used to 
+report call rate etc. Many thanks to Patrice Godard, who has reported the bug!
+The bug only appeared in version 1.4-3 
+
+project submitted to r-forge
+
 ***** v. 1.4-3 (2009.07.21)
 
 qvalue moved to "suggests"; no strict dependency on availability of that anymore
