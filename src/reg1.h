@@ -37,7 +37,7 @@ public:
 			sigma2 += (beta.get(i,0)) * (beta.get(j,0)) * tXX.get(i,j);
 		sigma2 /= (N - double(length_beta));
 
-		if (verbose) {printf("sigma2 = %lf\n",sigma2);}
+		if (verbose) {printf("sigma2 = %Lf\n",sigma2);}
 
 		for (int i=0;i<(length_beta);i++)
 		{	

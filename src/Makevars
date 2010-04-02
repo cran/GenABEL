@@ -1,0 +1,9 @@
+PKG_CXXFLAGS=-DCOMPILE_WITH_R
+
+all: $(SHLIB) cleanNoSo
+
+cleanNoSo: 
+	rm -f ../configure.Rout ../.RData ../R/.RData *.o 
+
+clean:
+	rm -f *.o *.so *.dll Makedeps

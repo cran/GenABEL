@@ -39,10 +39,13 @@ Hao K, Di X, Cawley S. (2006) LdCompare: rapid computation of single- and multip
 data(ge03d2)
 # r2s using r2fast
 a <- r2fast(ge03d2,snps=c(1:10))
+\dontrun{
+library(genetics)
 # r2s using package genetics
 b <- LD(as.genotype(ge03d2[,1:10]))$"R^2"
 # see that the r2s are not exactly the same
 cor(a[upper.tri(a)],b[upper.tri(b)])
 plot(a[upper.tri(a)],b[upper.tri(b)])
+}
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

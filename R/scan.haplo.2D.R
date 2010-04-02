@@ -1,5 +1,9 @@
 "scan.haplo.2D" <- 
 function(formula,data,snpsubset,idsubset,bcast=10,simulate=FALSE,trait.type,...) {
+
+	if (!require(haplo.stats)) {
+		stop("this function requires 'haplo.stats' package to be installed")
+	}
 	if (!is(data,"gwaa.data")) stop("wrong type of data argument, must be gwaa.data")
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]

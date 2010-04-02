@@ -59,12 +59,14 @@ Schaid DJ, Rowland CM, Tines DE, Jacobson RM, Poland GA. (2002) Score tests for 
 \examples{
 data(srdta)
 a <- ccfast("bt",srdta,snps=(717:733),ids=(srdta@phdata$age<40))
+plot(a)
+if (require(haplo.stats)) {
 b <- scan.haplo("bt~sex+CRSNP",srdta,snps=(717:733),
 		ids=(srdta@phdata$age<40))
 c <- scan.haplo("bt~sex+CRSNP",srdta,snps=(717:733),
 		ids=(srdta@phdata$age<40),n.slide=3)
-plot(a)
 add.plot(b,col="red",type="l")
 add.plot(c,col="darkgreen",type="l")
+}
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

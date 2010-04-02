@@ -80,6 +80,7 @@ function(x, ...) {
 "as.genotype.snp.data" <- 
 function(x, ...) {
 	if (!is(x,"snp.data")) stop("data argument should be snp.data-class")
+	if (!require(genetics)) stop("this function requires 'genetics' package to be installed")
 	gdta <- data.frame(genotype(as.character(x[,1])))
 	if (x@nsnps>1) for (i in 2:x@nsnps) {
 		gdta <- cbind(gdta,genotype(as.character(x[,i])))

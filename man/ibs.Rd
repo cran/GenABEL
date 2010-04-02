@@ -49,7 +49,7 @@ ibs(data, snpsubset, idsubset, cross.idsubset, weight="no", snpfreq)
 	between a pair below the diagonal and number of SNP genotype  
 	measured for both members of the pair above the diagonal. 
 
-	On the diagonal, homozygosity (0.5+inbreeding) is provided.
+	On the diagonal, homozygosity 0.5*(1+inbreeding) is provided.
 }
 %\references{}
 \author{Yurii Aulchenko}

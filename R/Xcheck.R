@@ -1,5 +1,5 @@
 "Xcheck" <-
-function(data,Pgte=0.01,Pssw=0.01,Pmsw=0.01,odds=1000,tabonly=F) {
+function(data,Pgte=0.01,Pssw=0.01,Pmsw=0.01,odds=1000,tabonly=FALSE,Fmale=0.8,Ffemale=0.2) {
 	if (!is(data,"snp.data")) stop("data argument should be of snp.data-class")
 	if (any(data@chromosome != "X")) stop("All markers should be X-linked")
 	male <- (data@male==1)
@@ -35,8 +35,11 @@ function(data,Pgte=0.01,Pssw=0.01,Pmsw=0.01,odds=1000,tabonly=F) {
 	idprob.1 <- apply(ll.male,MARGIN=2,FUN=sum,na.rm=T)+log(Pssw)
 	idODDs <- idprob.1-idprob.0
 	out$ismale <- names(idprob.1[idODDs>log(odds)])
+# find people with strange F
+	pis <- perid.summary(data)
+	out$otherSexErr <- rownames(pis)[pis$F > Ffemale & pis$F < Fmale]
 # return object
-	out$Xidfail <- unique(c(out$ismale,out$isfemale))
+	out$Xidfail <- unique(c(out$ismale,out$isfemale,out$othersexErr))
 	out
 }
 

@@ -99,7 +99,11 @@ extern "C" {
 	else error ("Strand code not recognised at line %i !\n", mapline);
 //	coding.push_back(tmp_coding);
       } else {
-	      error ("incomplete map record in line %i !\n",mapline);
+    	  Rprintf("%s\n",tmp_chrom.c_str());
+    	  Rprintf("%s\n",tmp_snpnm.c_str());
+    	  Rprintf("%lu\n",tmp_phymap);
+    	  Rprintf("%s\n",tmp_strand.c_str());
+	      error ("incomplete map record in line %i:\n%s\n",mapline,data.c_str());
       }
     }
     } else {

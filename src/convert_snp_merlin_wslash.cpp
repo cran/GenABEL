@@ -95,7 +95,7 @@ extern "C" {
 	if (tmp_strand=="+") strand.push_back(1);
 	else if (tmp_strand=="-") strand.push_back(2);
 	else if (tmp_strand=="u") strand.push_back(0);
-	else error ("Strand code not recognised at line %i !\n", mapline);
+	else error ("Strand code not recognized at line %i !\n", mapline);
 //	coding.push_back(tmp_coding);
       } else {
 	      error ("incomplete map record in line %i !\n",mapline);

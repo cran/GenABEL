@@ -15,7 +15,7 @@ function (data,snpsubset,idsubset,cross.idsubset,weight="no",snpfreq) {
 	if (weight=="no") {
 		homodiag <- hom(data)[,"Hom"]
 	} else {
-		homodiag <- 0.5+hom(data,snpfreq=snpfreq)[,"F"]
+		homodiag <- 0.5+(hom(data,snpfreq=snpfreq)[,"F"]/2)
 	}
 	ibs.C.option <- 0
 	if (!missing(idsubset) && !(is.numeric(idsubset) || is.logical(idsubset) || is.character(idsubset))) stop("idsubset must be numeric, logical, or character")

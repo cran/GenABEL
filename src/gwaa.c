@@ -94,7 +94,8 @@ void get_snps_many(char *a, int *Nsnps, int *Nrows, int *b) {
     */
     str = a[m*nbytes + i];
     /*
-    printf("a = %c\n",str);
+    Rprintf("a = %c\n",str);
+    Rprintf("a = %u\n",(unsigned short int) str);
     */
     for (j=0;j<4;j++) {
       b[m*nsnps+idx] = str & msk[j]; 

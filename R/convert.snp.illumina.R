@@ -4,7 +4,7 @@
 
 	poss <- c("u","+","-","file")
 	intstrand <- which(poss == strand)-1
-	if (length(intstrand)!=1) {cat("strand argument must be one of",poss,"\n");stop();}
+	if (length(intstrand) != 1) {cat("strand argument must be one of",poss,"\n");stop();}
 
 # strand == 0 -> unknown ('u')
 # strand == 1 -> plus ('+')

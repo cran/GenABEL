@@ -31,7 +31,7 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
   \item{ibs.exclude}{"both" or "lower" -- whether both samples with IBS>ibs.threshold should be excluded, 
 		or the one with lower call rate.
 		}
-  \item{maf}{cut-off Minor Allele Frequency. If not specified, the default value is 5 chromosomes (5/data@nsnpa)}
+  \item{maf}{cut-off Minor Allele Frequency. If not specified, the default value is 5 chromosomes 5/(2*nids(data))}
   \item{p.level}{cut-off p-value in check for Hardy-Weinberg Equilibrium. If negative, FDR is applied}
   \item{fdrate}{cut-off FDR level in check for Hardy-Weinberg Equilibrium}
   \item{odds}{cut-off odds to decide whether marker/person should be excluded based on sex/X-linked marker data inconsistency}

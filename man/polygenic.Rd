@@ -81,9 +81,9 @@ polygenic(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",op
 	If you want to test significance of heritability, 
 	estimate the model and write down 
 	the function minimum reported at "h2an" element of the output 
-	(this is negative MaxLikleihood). Then do next round of 
+	(this is twice negative MaxLikleihood). Then do next round of 
 	estimation, but set fixh2=0. The difference between you function minima 
-	gives you one-sided test distribued as chi-squared with 1 d.f.
+	gives a test distribued as chi-squared with 1 d.f.
 
 	The way to compute the likleihood is partly based on 
 	the paper of Thompson (see refs), namely instead of 

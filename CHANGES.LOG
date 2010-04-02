@@ -1,3 +1,52 @@
+***** v. 1.5-1 (2010.03.17)
+
+further improvement and bug fixes in databel-facilitated functions
+
+***** v. 1.5-0 (2010.03.17)
+
+update of ABEL-tutorial (also few details on NCBI2R added)
+
+general clean-up, submission to CRAN
+
+extended add.phdata()
+
+added del.phdata(), shortcut to @male slot (function male())
+
+added checks for F in sex checks, ...$otherSexErr lists individuals with 0.2 > F > 0.8
+
+multiple changes to xxx2xxx (mach, impute, databel)
+
+***** v. 1.4-9 (2010.02.06)
+
+added arrange_probabel_phe(), also shortcuts to 
+slots of gwaa.data-class: chromosome, coding, 
+gtdata, idnames, map, nids, nsnps, phdata, snpnames, strand
+
+***** v. 1.4-8 (2010.01.24)
+
+added export.impute(), patch_strand(), mach2databel(), impute2databel(),
+impute2mach, extract.annotation.impute(), extract.annotation.mach()
+functions
+
+***** v. 1.4-7 (2009.12.03)
+
+cleaned help for polygenic()
+
+Diagonal elements returned by ibs(...,w="freq") changed from (0.5+F) to 
+0.5*(1+F) (thanks to Chris Haley for pointing this problem out!) 
+
+***** v. 1.4-6 (2009.11.06)
+
+Default formetascore's argument transform set to "no"
+
+***** v. 1.4-5 (2009.09.09)
+
+New function "var.meta" added. 
+Function is intended for pooling (meta-analysing) trait means for 
+different genotypes separately.Input files have to be like in example 
+below (plink generate this kind of files). At the end you have one file 
+in same format but with pooled MEANs and SDs
+
 ***** v. 1.4-4 (2009.09.02)
 
 bug fix in hom() and perid.summary() -- only polymorphic markers were used to 

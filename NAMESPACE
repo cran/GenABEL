@@ -1,12 +1,13 @@
 useDynLib(GenABEL)
 
-import(methods)
-import(genetics)
-importClasses(genetics)
+#import(methods)
+#import(genetics)
+#importClasses(genetics)
 
 export(
 	add.plot,
 	add.phdata,
+	arrange_probabel_phe,
 	as.character.gwaa.data,
 	as.character.snp.coding,
 	as.character.snp.data,
@@ -25,6 +26,8 @@ export(
 	ccfast,
 	check.marker,
 	check.trait,
+	chromosome,
+	coding,
 	convert.snp.affymetrix,
 	convert.snp.illumina,
 	convert.snp.mach,
@@ -32,6 +35,7 @@ export(
 	convert.snp.tped,
 	convert.snp.text,
 	crnames,
+	del.phdata,
 	descriptives.marker,
 	descriptives.scan,
 	descriptives.trait,
@@ -42,22 +46,36 @@ export(
 	emp.qtscore,
 	estlambda,
 	export.merlin,
+	export.impute,
+	extract.annotation.impute,
+	extract.annotation.mach,
 	formetascore,
 	GASurv,
 	grammar,
+	gtdata,
 	HWE.show,
 	hom,
 	hom.old,
 	ibs,
 	ibs.old,
+	idnames,
+	impute2databel,
+	impute2mach,
 	load.gwaa.data,
+	mach2databel,
+	male,
+	map,
 	merge.gwaa.data,
 	merge.snp.data,
 	mlreg,
 	mlreg.p,
 	mmscore,
 	npsubtreated,
+	nsnps,
+	nids,
+	patch_strand,
 	perid.summary,
+	phdata,
 	plot.check.marker,
 	plot.scan.gwaa,
 	plot.scan.gwaa.2D,
@@ -78,14 +96,19 @@ export(
 	scan.haplo.2D,
 	show.ncbi,
 	snp.data,
+	snpnames,
 	snp.names,
 	snp.subset,
 	sset,
+	strand,
 	summary.check.marker,
 	summary.gwaa.data,
 	summary.snp.data,
 	Xfix,
-	ztransform
+	ztransform #,
+	#var.meta,
+	#var.test.homogeneity
+	#var.test.homogeneity.bartlett
        )
 
 exportClasses(

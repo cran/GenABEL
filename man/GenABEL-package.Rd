@@ -1,50 +1,63 @@
 \name{GenABEL-package}
-\alias{GenABEL-package}
-\alias{GenABEL}
-\docType{package}
-\title{
-GenABEL: an R package for Genome Wide Association Analysis
-}
-\description{
+\title{GenABEL: an R package for Genome Wide Association Analysis...}
+\description{GenABEL: an R package for Genome Wide Association Analysis}
+\details{Genome-wide association (GWA) analysis is a tool of choice 
+for identification of genes for complex traits. Effective 
+storage, handling and analysis of GWA data represent a 
+challenge to modern computational genetics. GWA studies 
+generate large amount of data: hundreds of thousands of 
+single nucleotide polymorphisms (SNPs) are genotyped in 
+hundreds or thousands of patients and controls. Data on 
+each SNP undergoes several types of analysis: 
+characterization of frequency distribution, testing of 
+Hardy-Weinberg equilibrium, analysis of association between 
+single SNPs and haplotypes and different traits, and so on. 
+Because SNP genotypes in dense marker sets are correlated, 
+significance testing in GWA analysis is preferably performed 
+using computationally intensive permutation test procedures, 
+further increasing the computational burden.
 
-Genome-wide association (GWA) analysis is a tool of choice for identification of genes for complex traits. Effective storage, handling and analysis of GWA data represent a challenge to modern computa-tional genetics. GWA studies generate large amount of data: hun-dreds of thousands of single nucleotide polymorphisms (SNPs) are genotyped in hundreds or thousands of patients and controls. Data on each SNP undergoes several types of analysis: characterization of frequency distribution, testing of Hardy-Weinberg equilibrium, analysis of association between single SNPs and haplotypes and different traits, and so on. Because SNP genotypes in dense marker sets are correlated, significance testing in GWA analysis is pref-erably performed using computationally intensive permutation test procedures, further increasing the com-putational burden.
+To make GWA analysis possible on standard desktop computers 
+we developed GenABEL library which addresses the following
+objectives: 
 
-To make GWA analysis possible on standard desktop computers we developed GenABEL library which addresses the following objectives: 
+(1) Minimization of the amount of rapid access memory (RAM) used 
+and the time required for data transactions. For this, we developed 
+an effective data storage and manipulation model.
 
-(1) Minimisation of the amount of rapid access memory (RAM) used and the time required for data transactions. For this, we developed an effective data storage and manipulation model.
+(2) Maximization of the throughput of GWA analysis. For this, 
+we designed optimal fast procedures for specific genetic tests. 
 
-(2) Maximisation of the throughput of GWA analysis. For this, we designed optimal fast procedures for specific genetic tests. 
-
-Imbedding GenABEL into R environment allows for easy data characterisation, exploration and presentation of the results and gives access to a wide range of standard and special statistical analysis functions available in base R and specific R packages, such as "haplo.stats", "genetics", etc.
-}
-\details{
-\tabular{ll}{
-Package: \tab GenABEL\cr
-Type: \tab Package\cr
-Version: \tab 1.4-3\cr
-Date: \tab 2009-07-21\cr
-License: \tab GPL (>= 2)\cr
-}
+Embedding GenABEL into R environment allows for easy data 
+characterization, exploration and presentation of the results 
+and gives access to a wide range of standard and special 
+statistical analysis functions available in base R and specific 
+R packages, such as "haplo.stats", "genetics", etc.
 
 To see (more or less complete) functionality of GenABEL, try running
 
 demo(ge03d2).
 
 Other demo of interest could be run with demo(srdta). 
-Depending on your user priveleges in Windows, it may well not run. In this
-case, try demo(srdtawin).
+Depending on your user priveleges in Windows, it may well not run. 
+In this case, try demo(srdtawin).
 
 The most important functions and classes are:
 
 For converting data from other formats, see
+
 \code{\link{convert.snp.illumina}} (Illumina/Affymetrix-like format). This is 
 our preferred converting function, very extensively tested. Other conversion 
-functions include:  
+functions include: 
 \code{\link{convert.snp.text}} (conversion from human-readable GenABEL format),
 \code{\link{convert.snp.ped}} (Linkage, Merlin, Mach, and similar files),
 \code{\link{convert.snp.mach}} (Mach-format),
 \code{\link{convert.snp.tped}} (from PLINK TPED format),
 \code{\link{convert.snp.affymetrix}} (BRML-style files).
+
+For converting of GenABEL's data to other formats, see
+\code{\link{export.merlin}} (MERLIN and MACH formats), 
+\code{\link{export.impute}} (IMPUTE, SNPTEST and CHIAMO formats). 
 
 To load the data, see \code{\link{load.gwaa.data}}.
 
@@ -55,8 +68,6 @@ For data managment and manipulations see
 \code{\link{snp.data-class}},
 \code{\link{snp.names}},
 \code{\link{snp.subset}}.
-
-%For merging objects of \code{\link{gwaa.data-class}}, see \code{\link{merge.gwaa.data}}.
 
 For merging extra data to the phenotypic part of \code{\link{gwaa.data-class}} object, 
 see \code{\link{add.phdata}}.
@@ -118,16 +129,11 @@ also for 2D scans, see
 
 For graphical facilities, see
 \code{\link{plot.scan.gwaa}},
-\code{\link{plot.check.marker}}.
-
-}
-\author{
-Yurii Aulchenko
-
-Maintainer: Yurii Aulchenko <i.aoultchenko@erasmusmc.nl>
-}
-\references{
-If you use GenABEL package in your analysis, please cite the following work:
+\code{\link{plot.check.marker}}.}
+\alias{GenABEL-package}
+\alias{GenABEL}
+\author{Yurii Aulchenko}
+\references{If you use GenABEL package in your analysis, please cite the following work:
 
 Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. GenABEL: an R package 
 for genome-wide association analysis. Bioinformatics. 2007 23(10):1294-6.
@@ -174,18 +180,11 @@ If you used \code{\link{npsubtreated}}, please cite
 Levy D, DeStefano AL, Larson MG, O'Donnell CJ, Lifton RP, Gavras H, Cupples LA, 
 Myers RH. Evidence for a gene influencing blood pressure on chromosome 17. 
 Genome scan linkage results for longitudinal blood pressure phenotypes in 
-subjects from the framingham heart study. Hypertension. 2000 Oct;36(4):477-83.
-}
+subjects from the framingham heart study. Hypertension. 2000 Oct;36(4):477-83.}
 \keyword{package}
-\seealso{
-Packages \code{genetics},
-\code{haplo.stats},
-\code{qvalue},
-}
-\examples{
-	\dontrun{
-	demo(ge03d2)
-	demo(srdta)
-	demo(srdtawin)
-	}
-}
+\seealso{\code{DatABEL}, \code{genetics}, \code{haplo.stats}, \code{qvalue}}
+\examples{\dontrun{
+demo(ge03d2)
+demo(srdta)
+demo(srdtawin)
+}}

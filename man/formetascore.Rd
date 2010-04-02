@@ -6,7 +6,7 @@ Function to run GWA analysis -- using all functions available
 in GenABEL -- and produce output oriented for future meta-analysis
 }
 \usage{
-formetascore(formula, data, stat = qtscore, transform = ztransform, 
+formetascore(formula, data, stat = qtscore, transform = "no", 
 		build = "unknown", verbosity = 1, ...)
 }
 \arguments{
@@ -21,8 +21,8 @@ formetascore(formula, data, stat = qtscore, transform = ztransform,
 	}
   \item{transform}{Which trait transform to apply, could be
 	 \code{\link{ztransform}} or 
-	 \code{\link{rntransform}}. It can also be equal to 
-	"no" if no transformation is required.
+	 \code{\link{rntransform}}. Default value is 
+	"no" -- no transformation.
 	}
   \item{build}{if you need that in output, specify genomic build here (e.g. "35")}
   \item{verbosity}{how much output is produced? Possible values are 0, 1, and 2}
@@ -59,7 +59,7 @@ formetascore(formula, data, stat = qtscore, transform = ztransform,
 	data(ge03d2c)
 	x <- formetascore(bmi ~ sex+age,ge03d2c)
 	x[1:10,]
-	x <- formetascore(bmi ~ sex+age,ge03d2c,trans=rntransform)
+	x <- formetascore(bmi ~ sex+age,ge03d2c,trans=ztransform)
 	x[1:10,]
 	x <- formetascore(bmi ~ sex+age,ge03d2c,trans=rntransform,verbosity=2)
 	x[1:10,]

@@ -1,0 +1,25 @@
+RUNIT TEST PROTOCOL -- Sat Apr  3 03:50:35 2010 
+*********************************************** 
+Number of test functions: 2 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+GenABEL unit testing - 2 test functions, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: GenABEL unit testing 
+Test function regexp: ^test.+ 
+Test file regexp: ^runit.+\.[rR]$ 
+Involved directory: 
+/Users/yuriiaulchenko/eclipse_workspace/GenABEL/tests/../inst/unitTests 
+--------------------------- 
+Test file: /Users/yuriiaulchenko/eclipse_workspace/GenABEL/tests/../inst/unitTests/runit.impute2xxx.R 
+test.impute2databel: (14 checks) ... OK (0.59 seconds)
+--------------------------- 
+Test file: /Users/yuriiaulchenko/eclipse_workspace/GenABEL/tests/../inst/unitTests/runit.mach2databel.R 
+test.mach2databel: (6 checks) ... OK (0.39 seconds)

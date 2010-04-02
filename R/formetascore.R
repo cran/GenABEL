@@ -1,5 +1,5 @@
 "formetascore" <-
-function(formula,data,stat=qtscore,transform=ztransform,build="unknown",verbosity=1, ...) {
+function(formula,data,stat=qtscore,transform="no",build="unknown",verbosity=1, ...) {
 	if (!is(data,"gwaa.data")) stop("data argument must have gwaa.data-class")
 	checkphengen(data)
 	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
