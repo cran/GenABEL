@@ -15,7 +15,7 @@
 #' \link{gwaa.data-class} object)
 #' 
 #' @param gendata genetic data to be used with ProbABEL,
-#' either databel_base/filtered_R object or name of the 
+#' either databel-class object or name of the 
 #' (index/data) file containing filevector data for 
 #' ProbABEL
 #' 
@@ -48,12 +48,12 @@ arrange_probabel_phe <- function(modelterms,phedata,gendata,file="probabel.PHE")
 	
 	if (is.character(gendata)) { 
 		if (require(DatABEL)) 
-			gendata <- databel_filtered_R(gendata)
+			gendata <- databel(gendata)
 		else 
 			stop ("this function requires DatABEL package to be installed")
-	} else if (class(gendata) == "databel_base_R") gendata <- databel_filtered_R(gendata)
-	else if (class(gendata) == "databel_filtered_R") {}
-	else stop("gendata should be 'databel_base/filtered_R' or name of file")
+	} else if (class(gendata) == "databel") gendata <- databel(gendata)
+	else if (class(gendata) == "databel") {}
+	else stop("gendata should be 'databel-class' object or name of *.FV? file")
 	
 	dosephe <- data.frame(id=dimnames(gendata)[[1]],stringsAsFactors=F)
 	phe <- merge(dosephe,phedata,by="id",all.x=T,all.y=F)

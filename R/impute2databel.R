@@ -4,7 +4,7 @@
 #' this function converts IMPUTE-imputed files to DatABEL (filevector) format
 #' containing estimated dosages. 
 #' After conversion, two files (outfile.fvi and outfile.fvd), corresponding 
-#' to single filevector object, will appear on the disk; databel_filtered_R 
+#' to single filevector object, will appear on the disk; 'databel-class' 
 #' object connected to these files will be returned to R.
 #' 
 #' @param genofile IMPUTE genotype file name
@@ -13,7 +13,7 @@
 #' @param makeprob wheather probability-files are also to be arranged
 #' @param old for developers' use
 #' 
-#' @return databel_filtered_R-class object
+#' @return 'databel-class' object
 #' 
 #' 
 
@@ -59,12 +59,14 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 	#print(class(tmp_fv))
 	saved_names <- get_dimnames(tmp_fv)
 	varnames <- saved_names[[2]]
+	#print("original names of tmp_fv")
+	#print(saved_names)
 	#print(class(tmp_fv))
 	
-	tmplst <- list( as.character(1:dim(tmp_fv)[1]) , as.character(1:dim(tmp_fv)[2]) )
+	#tmplst <- list( as.character(1:dim(tmp_fv)[1]) , as.character(1:dim(tmp_fv)[2]) )
 	#print(class(tmp_fv))
 	#print(dimnames(tmp_fv)[[2]])
-	set_dimnames(tmp_fv) <- tmplst
+	#set_dimnames(tmp_fv) <- tmplst
 	#print(class(tmp_fv))
 	#print(dimnames(tmp_fv)[[2]])
 	
@@ -73,19 +75,22 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 	if (old) {
 		dosefile <- apply2dfo(dfodata=tmp_fv, anFUN = "makedose", 
 				MAR = 2, procFUN = "pfun",prob=SNP,
-				outclass="databel_filtered_R",
+				outclass="databel",
 				outfile=paste(outfile,".dose",sep=""),
 				type="FLOAT",transpose=FALSE)
+		if (makeprob) {
+			warning("makeprob is not possible with 'old' style")
+		}
 	} else {
 		res <- .Call("iterator", tmp_fv@data, as.integer(0), as.integer(0),
 				as.character("databel_impute_prob_2_databel_mach_dose"),
 				paste(outfile,".dose",sep=""), as.integer(2), as.integer(0))
-		dosefile <- databel_filtered_R(paste(outfile,".dose",sep=""),64)
+		dosefile <- databel(paste(outfile,".dose",sep=""),64,readonly=FALSE)
 		if (makeprob) {
 			res <- .Call("iterator", tmp_fv@data, as.integer(0), as.integer(0),
 					as.character("databel_impute_prob_2_databel_mach_prob"),
 					paste(outfile,".prob",sep=""), as.integer(2), as.integer(0))
-			probfile <- databel_filtered_R(paste(outfile,".prob",sep=""),64)
+			probfile <- databel(paste(outfile,".prob",sep=""),64,readonly=FALSE)
 		}
 #		res <- .Call("databel_impute_prob_2_databel_mach_dose",
 #				tmp_fv@data, paste(outfile,".dose",sep=""), as.integer(64))
@@ -101,9 +106,11 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 #			#print(get_dimnames(probfile))
 #		}
 	}
-	#print("after apply2dfo")
+	#!print("after iterator")
 	set_dimnames(dosefile) <- list(get_dimnames(dosefile)[[1]],varnames)
-	#print("dimnames [[2]]")
+	#print("dimnames dose:")
+	#print(get_dimnames(dosefile))
+	
 	
 	if (!missing(samplefile))
 	{
@@ -111,7 +118,12 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 		samnames <- scan(samplefile,what="character",skip=2)
 		samnames <- samnames[c(F,T,rep(F,(length(temp)-2)))]
 		if (length(samnames) == dim(dosefile)[1]) { 
-			set_dimnames(dosefile) <- list(samnames,get_dimnames(dosefile)[[2]])
+			#!print("before dose-file")
+			#print(samnames)
+			#print(varnames)
+			set_dimnames(dosefile) <- list(samnames,varnames)
+			#!print("after dose-file")
+			#print(get_dimnames(dosefile))
 		} else {
 			warning("number of IDs specified in sample file does not match to geno-dimension; dropping ID names")
 		}
@@ -119,17 +131,30 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 				dpnames <- rep(0,length(varnames)*2)
 				dpnames[c(T,F)] <- paste(varnames,"_11",sep="")
 				dpnames[c(F,T)] <- paste(varnames,"_01",sep="")
+				#!print("before prob-file")
+				#print(samnames)
+				#print(dpnames)
 				set_dimnames(probfile) <- list(samnames,dpnames) #get_dimnames(probfile)[[2]])
+				#!print("after prob-file")
+				#print(get_dimnames(probfile))
 			} else {
 				warning("number of IDs/SNPs specified in sample file does not match to geno-dimension; dropping IDs/SNPs names")
 			}
 	} else 
 		warning("sample file not specified, you will not be able to use ID names (only index)")
 	
-	rm(tmp_fv);gc();unlink(paste(tmpname,"*",sep=""))
+	rm(tmp_fv);gc();
+	#unlink(paste(tmpname,"*",sep=""))
 	
 	#disconnect(dosefile)
 	#connect(dosefile)
-	if (makeprob) disconnect(probfile)
+	#!print("at exit dosefile:")
+	#print(get_dimnames(dosefile))
+	if (makeprob) {
+		#print("at exit probfile:")
+		#print(get_dimnames(probfile))
+		disconnect(probfile)
+	}
+	#!print("at return")
 	return(dosefile)
 }

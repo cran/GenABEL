@@ -3,7 +3,7 @@
 #' 
 #' This function converts mach-imputed files to \code{DatABEL} (filevector) format.
 #' After conversion, two files (outfile.fvi and outfile.fvd), corresponding 
-#' to single filevector object, will appear on the disk; databel_filtered_R 
+#' to single filevector object, will appear on the disk; 'databel-class' 
 #' object connected to these files will be returned to R
 #' 
 #' @param imputedgenofile MACH mldose (or mlprob) file name
@@ -12,7 +12,7 @@
 #' @param isprobfile whether imputedgenofile is a prob-file 
 #' (default is FALSE, that is dose-file assumed) 
 #' 
-#' @return databel_filtered_R-class object
+#' @return databel-class object
 #' 
 #' @author Yurii Aulchenko
 #' 
@@ -37,7 +37,7 @@ mach2databel <- function(imputedgenofile,mlinfofile,outfile,isprobfile=FALSE)
 		#print(tmp[1:10])
 		tmpname <- get_temporary_file_name()
 		if (isprobfile) {
-			tmp2 <- rep("aa",length(tmp)*2)
+			tmp2 <- rep("missing",length(tmp)*2)
 			tmp2[c(T,F)] <- paste(tmp,"_11",sep="")
 			tmp2[c(F,T)] <- paste(tmp,"_01",sep="")
 			tmp <- tmp2
@@ -52,12 +52,12 @@ mach2databel <- function(imputedgenofile,mlinfofile,outfile,isprobfile=FALSE)
 				colnames=tmpname,
 				rownames=1,skipcols=2,
 				#skiprows,
-				transpose=FALSE,R_matrix=FALSE,type="FLOAT")
+				transpose=FALSE,R_matrix=FALSE,type="FLOAT",readonly=FALSE)
 	else 
 		dfaobj <- text2filevector(infile=imputedgenofile,outfile=outfile,
 				rownames=1,skipcols=2,
 				#skiprows,
-				transpose=FALSE,R_matrix=FALSE,type="FLOAT")
+				transpose=FALSE,R_matrix=FALSE,type="FLOAT",readonly=FALSE)
 
 	dnames <- get_dimnames(dfaobj)
 	subjs <- dnames[[1]]

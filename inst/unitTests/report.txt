@@ -1,12 +1,12 @@
-RUNIT TEST PROTOCOL -- Sat Apr  3 03:50:35 2010 
+RUNIT TEST PROTOCOL -- Thu May  6 21:10:13 2010 
 *********************************************** 
-Number of test functions: 2 
+Number of test functions: 3 
 Number of errors: 0 
 Number of failures: 0 
 
  
 1 Test Suite : 
-GenABEL unit testing - 2 test functions, 0 errors, 0 failures
+GenABEL unit testing - 3 test functions, 0 errors, 0 failures
 
 
 
@@ -19,7 +19,10 @@ Involved directory:
 /Users/yuriiaulchenko/eclipse_workspace/GenABEL/tests/../inst/unitTests 
 --------------------------- 
 Test file: /Users/yuriiaulchenko/eclipse_workspace/GenABEL/tests/../inst/unitTests/runit.impute2xxx.R 
-test.impute2databel: (14 checks) ... OK (0.59 seconds)
+test.impute2databel: (20 checks) ... OK (0.39 seconds)
+--------------------------- 
+Test file: /Users/yuriiaulchenko/eclipse_workspace/GenABEL/tests/../inst/unitTests/runit.impute2xxx_large.R 
+test.impute2xxx_large: (5 checks) ... OK (309.14 seconds)
 --------------------------- 
 Test file: /Users/yuriiaulchenko/eclipse_workspace/GenABEL/tests/../inst/unitTests/runit.mach2databel.R 
-test.mach2databel: (6 checks) ... OK (0.39 seconds)
+test.mach2databel: (8 checks) ... OK (0.17 seconds)

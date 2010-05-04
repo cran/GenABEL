@@ -21,7 +21,7 @@
 #' 
 #' 
 
-impute2mach <- function(genofile,infofile,samplefile,machbasename, maketextdosefile = TRUE    , ... )
+impute2mach <- function(genofile,infofile,samplefile,machbasename, maketextdosefile = TRUE, ... )
 {
     if (!require(DatABEL))
         stop("this function requires DatABEL package to be installed")

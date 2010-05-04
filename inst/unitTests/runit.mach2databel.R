@@ -20,6 +20,9 @@ source(paste(path,"/shared_functions.R",sep=""))
 test.mach2databel <- function()
 {
     
+    library("RUnit")
+    library("GenABEL")
+
     unlink("test*.fv?")
 
     mli <- read.table("test.mlinfo",head=TRUE,strings=FALSE)
@@ -45,26 +48,20 @@ test.mach2databel <- function()
     rownames(txtprob) <- idnames
     colnames(txtprob) <- snpnames2
     txtprob <- as.matrix(txtprob)
-	
+    
     
     fvdose <- mach2databel(imputedg="test.mldose",mlinfo="test.mlinfo",out="test.dose")
-    print(dim(fvdose))
+    checkIdentical(dim(txtdose),dim(fvdose))
     print(fvdose)
     print(dim(txtdose))
     print(txtdose[1:5,])
-    tmpm <- as(fvdose,"matrix")
-    print(dim(tmpm))
-    print(tmpm[1:5,])
     
     
     fvprob <- mach2databel(imputedg="test.mlprob",mlinfo="test.mlinfo",out="test.prob",isprob=TRUE)
-    print(dim(fvprob))
-    print(fvprob)
+	checkIdentical(dim(txtprob),dim(fvprob))
+	print(fvprob)
     print(dim(txtprob))
     print(txtprob[1:5,])
-    tmpm <- as(fvprob,"matrix")
-    print(dim(tmpm))
-    print(tmpm[1:5,])
     
     checkNumEq(txtdose,fvdose)
     checkNumEq(txtprob,fvprob)
