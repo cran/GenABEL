@@ -19,7 +19,7 @@ provide the same ID codes as these in gendata}
 \item{phedata}{phenotypic data (matrix, data.frame, or 
 \link{gwaa.data-class} object)}
 \item{gendata}{genetic data to be used with ProbABEL,
-either databel_base/filtered_R object or name of the 
+either databel-class object or name of the 
 (index/data) file containing filevector data for 
 ProbABEL}
 \item{file}{name of the ProbABEL phenotype file}}

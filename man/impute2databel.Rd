@@ -6,9 +6,9 @@
 \details{this function converts IMPUTE-imputed files to DatABEL (filevector) format
 containing estimated dosages. 
 After conversion, two files (outfile.fvi and outfile.fvd), corresponding 
-to single filevector object, will appear on the disk; databel_filtered_R 
+to single filevector object, will appear on the disk; 'databel-class' 
 object connected to these files will be returned to R.}
-\value{databel_filtered_R-class object}
+\value{'databel-class' object}
 \arguments{\item{genofile}{IMPUTE genotype file name}
 \item{samplefile}{IMPUTE sample file name}
 \item{outfile}{output file name}

@@ -45,6 +45,8 @@ test.impute2xxx_large <- function()
 	prD2 <- (dim(fvprob)[2])/2
 	checkEqualsNumeric(prD2,dim(fvdose)[2])
 	
+	rm(fvdose,fvprob);gc()
+	
 	unlink("*.fv?")
 	unlink("tmp*")
 	

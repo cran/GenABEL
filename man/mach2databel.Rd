@@ -5,9 +5,9 @@
 \description{converts MACH-imputed files to DatABEL (filevector) format}
 \details{This function converts mach-imputed files to \code{DatABEL} (filevector) format.
 After conversion, two files (outfile.fvi and outfile.fvd), corresponding 
-to single filevector object, will appear on the disk; databel_filtered_R 
+to single filevector object, will appear on the disk; 'databel-class' 
 object connected to these files will be returned to R}
-\value{databel_filtered_R-class object}
+\value{databel-class object}
 \author{Yurii Aulchenko}
 \keyword{IO}
 \keyword{manip}
