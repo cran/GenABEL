@@ -66,7 +66,7 @@ test.mach2databel <- function()
     checkNumEq(txtdose,fvdose)
     checkNumEq(txtprob,fvprob)
 	
-	rm(fvdose,fvprob);gc()
+	rm(list=ls());gc()
     
     unlink("test*.fv?")    
     

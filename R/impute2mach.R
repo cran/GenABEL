@@ -33,7 +33,7 @@ impute2mach <- function(genofile,infofile,samplefile,machbasename, maketextdosef
 		machinfo <- paste(machbasename,".machinfo",sep="")
         machlegend <- paste(machbasename,".machlegend",sep="")
     } else if (length(machbasename) == 4) {
-        if (length(unique(machbasename)) != 3) stop("names must be unique")
+        if (anyDuplicated(machbasename)) stop("names must be unique")
         machdose <- machbasename[1]
 		machprob <- machbasename[2]
 		machinfo <- machbasename[3]

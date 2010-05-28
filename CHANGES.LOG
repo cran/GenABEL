@@ -1,3 +1,9 @@
+***** v. 1.5-6 (2010.05.28)
+
+fixes in filevector
+
+Many thanks to Pau Navarro for help in identification of the bug!
+
 ***** v. 1.5-4 (2010.05.09)
 
 changes in filevector related to DatABEL not passing checks on Windows 

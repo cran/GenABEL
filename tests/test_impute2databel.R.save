@@ -1,27 +1,8 @@
-### --- Test setup ---
+	library("RUnit")
+	library("GenABEL")
+	data_prefix = "big_data/KOM"
 
-if(FALSE) {
-    ## Not really needed, but can be handy when writing tests
-    library("RUnit")
-    library("GenABEL")
-}
 
-### do not run
-#stop("SKIP THIS TEST")
-###
-
-### ---- common functions and data -----
-
-#source(paste("../inst/unitTests/shared_functions.R"))
-source(paste(path,"/shared_functions.R",sep=""))
-
-### --- Test functions ---
-
-test.impute2databel <- function()
-{
-    
-    #library(GenABEL)
-    #library("RUnit")
     unlink("tmp*.fv?")
     
     makedose <- function(prob) {
@@ -101,10 +82,38 @@ test.impute2databel <- function()
     snps2[c(T,F)] <- paste(snps,"_11",sep="")
     snps2[c(F,T)] <- paste(snps,"_01",sep="")
     checkIdentical(get_dimnames(tmp3),list(smpl,snps2))
-
-	rm(list=ls());gc()
+	
 
 	unlink("tmp*.fv?")    
     
-}
+########
 
+	unlink("*.fv?")
+	unlink("tmp*")
+	
+	geno <- paste(data_prefix,".geno",sep="")
+	info <- paste(data_prefix,".info",sep="")
+	samp <- paste(data_prefix,".sample",sep="")
+	
+	if (!(file.exists(geno) && file.exists(info) && file.exists(samp))) {
+		warning(paste("big files are missing; stopping tests"))
+		return(NULL)
+	}
+	
+	out <- "KOM_test_out.geno"
+	fvdose <- impute2databel(geno=geno,
+			sample=samp,
+			out=out,
+			makeprob=TRUE,
+			old=FALSE)
+	checkIdentical("databel",class(fvdose)[1])
+	fvprob <- databel(paste(out,".prob",sep=""))
+	checkIdentical("databel",class(fvprob)[1])
+	checkIdentical(get_dimnames(fvdose)[[1]],get_dimnames(fvprob)[[1]])
+	checkIdentical(dim(fvdose)[1],dim(fvprob)[1])
+	prD2 <- (dim(fvprob)[2])/2
+	checkEqualsNumeric(prD2,dim(fvdose)[2])
+	
+	unlink("*.fv?")
+	unlink("tmp*")
+	

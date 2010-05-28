@@ -7,7 +7,7 @@
 #include "bartlett_test.h"
 
 
-
+using namespace std;
 
 extern "C" {
 

@@ -144,7 +144,7 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 		warning("sample file not specified, you will not be able to use ID names (only index)")
 	
 	rm(tmp_fv);gc();
-	#unlink(paste(tmpname,"*",sep=""))
+	unlink(paste(tmpname,"*",sep=""))
 	
 	#disconnect(dosefile)
 	#connect(dosefile)

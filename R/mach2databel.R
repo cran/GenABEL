@@ -69,7 +69,9 @@ mach2databel <- function(imputedgenofile,mlinfofile,outfile,isprobfile=FALSE)
 	dimnames(dfaobj) <- list(subjs,dnames[[2]])
 	#print(dimnames(dfaobj)[[1]][1:5])
 	
-	if (tmpname != "") unlink(paste(tmpname,"*",sep=""))
+	if (tmpname != "") {
+		unlink(paste(tmpname,"*",sep=""))
+	}
 	
 	#disconnect(dfaobj)
 	#connect(dfaobj)
