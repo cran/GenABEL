@@ -1,3 +1,12 @@
+***** v. 1.5-8 (2010.06.10)
+
+multiple changes in polygenic default parameters 
+and extra criteria now allowing better 
+convergence. Many thanks to Nicola Pirastu for spotting 
+poor convergence when multiple parameters were estimated!
+
+added methods "dim" and "dimnames" to snp.data-class
+
 ***** v. 1.5-6 (2010.05.28)
 
 fixes in filevector

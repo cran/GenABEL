@@ -6,6 +6,8 @@
 \alias{coerce,snp.data,character-method}
 \alias{coerce,snp.data,genotype-method}
 \alias{coerce,snp.data,hsgeno-method}
+\alias{dim,snp.data-method}
+\alias{dimnames,snp.data-method}
 \alias{show,snp.data-method}
 \alias{summary,snp.data-method}
 

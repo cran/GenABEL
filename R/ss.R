@@ -168,6 +168,25 @@ setMethod("show","snp.data",
 		show(object@gtps)
 	})
 
+setMethod(
+		f = "dim",
+		signature = "snp.data",
+		definition = function(x)
+		{
+			return(c(nids(x),nsnps(x)))
+		}
+);
+
+setMethod(
+		f = "dimnames",
+		signature = "snp.data",
+		definition = function(x)
+		{
+			return(list(idnames(x),snpnames(x)))
+		}
+);
+
+
 #setAs("snp.data","double",function(from) {to <- as.double.snp.data(from);to})
 #
 #setAs("snp.data","numeric",function(from) {to <- as.double.snp.data(from);to})
