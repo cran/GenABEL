@@ -290,7 +290,7 @@
 			#print(parsave)
 			
 			
-			if (fglschecks) {
+			if (fglschecks && missing(fixh2)) {
 				npar <- length(parsave)
 				h2 <- parsave[npar-1]*scaleh2
 				iSigma <- ginv(h2*relmat + (1-h2)*diag(x=1,ncol=length(y),nrow=length(y)))
@@ -298,9 +298,11 @@
 				betaFGLS <- as.vector(ginv(t(desmat) %*% iSigma %*% desmat) %*% 
 								(t(desmat) %*% iSigma %*% y))
 				#print(c("betaFGLS = ",betaFGLS))
-				LHest <- LHest[abs(betaFGLS)>maxdiffgls]
-				betaFGLS <- betaFGLS[abs(betaFGLS)>maxdiffgls]
-				difFGLS <- abs((betaFGLS-LHest)/betaFGLS)
+				#cnd <- (abs(betaFGLS)>maxdiffgls)
+				#cnd[1] <- TRUE
+				#LHest <- LHest[cnd]
+				#betaFGLS <- betaFGLS[cnd]
+				difFGLS <- abs(betaFGLS-LHest)
 				if (!quiet) {
 					cat("difFGLS:\n")
 					print(difFGLS)
@@ -308,6 +310,9 @@
 				diffgls <- max(difFGLS)
 				steptol <- steptol/10;
 				gradtol <- gradtol/10;
+				if ((h2<1e-4 || h2>(1-1e-4)) && nfgls > floor(maxnfgls/2)) {
+					parsave[npar-1] <- runif(1,min=0.05,max=0.95)/scaleh2
+				}
 			} else {
 				nfgls <- maxnfgls+1	
 			}

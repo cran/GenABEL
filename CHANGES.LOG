@@ -1,3 +1,15 @@
+***** v. 1.6-0 (2010.06.21)
+
+changes in DatABEL-embed functions used by impute2databel (treating of NAs); 
+added tests for that situation
+
+***** v. 1.5-9 (2010.06.18)
+
+change in DESCRIPTION anyDuplicated() is in R 2.10.0, but not in 2.4.0
+
+small changes in polygenic -- convergence checks with intercept-only model; treatment 
+for h2-boundary-stick situations (at small N)
+
 ***** v. 1.5-8 (2010.06.10)
 
 multiple changes in polygenic default parameters 
