@@ -48,13 +48,13 @@ mach2databel <- function(imputedgenofile,mlinfofile,outfile,isprobfile=FALSE)
 		warning("mlinfo file not specified, you will not be able to use snp names (only index)")
 	
 	if (tmpname != "")
-		dfaobj <- text2filevector(infile=imputedgenofile,outfile=outfile,
+		dfaobj <- text2databel(infile=imputedgenofile,outfile=outfile,
 				colnames=tmpname,
 				rownames=1,skipcols=2,
 				#skiprows,
 				transpose=FALSE,R_matrix=FALSE,type="FLOAT",readonly=FALSE)
 	else 
-		dfaobj <- text2filevector(infile=imputedgenofile,outfile=outfile,
+		dfaobj <- text2databel(infile=imputedgenofile,outfile=outfile,
 				rownames=1,skipcols=2,
 				#skiprows,
 				transpose=FALSE,R_matrix=FALSE,type="FLOAT",readonly=FALSE)

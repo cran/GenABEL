@@ -1,3 +1,7 @@
+***** v. 1.6-2 (2010.08.07)
+
+changes due to DatABEL functions names change
+
 ***** v. 1.6-0 (2010.06.21)
 
 changes in DatABEL-embed functions used by impute2databel (treating of NAs); 

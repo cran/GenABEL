@@ -27,14 +27,14 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 	if (missing(outfile)) outfile <- genofile
 # extract snp names (varnames)
 	#   if (tmpname != "")
-	#       text2filevector(infile=genofile,outfile=outfile,
+	#       text2databel(infile=genofile,outfile=outfile,
 	#               colnames=tmpname,
 	#               rownames=2,skipcols=5,
 	#               #skiprows,
 	#               transpose=TRUE,R_matrix=FALSE,type="FLOAT")
 	#   else 
 	tmpname <- get_temporary_file_name()
-	tmp_fv <- text2filevector(infile=genofile,outfile=tmpname,
+	tmp_fv <- text2databel(infile=genofile,outfile=tmpname,
 			rownames=2,skipcols=5,
 			#skiprows,
 			transpose=TRUE,R_matrix=FALSE,type="FLOAT")

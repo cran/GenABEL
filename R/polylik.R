@@ -1,4 +1,5 @@
-"polylik" <- function(coeffs,y,desmat,relmat,ervec,fixh2,trait.type,startlik=.Machine$double.xmax,scaleh2=1) {
+"polylik" <- function(coeffs,y,desmat,relmat,ervec,fixh2,trait.type,
+		startlik=.Machine$double.xmax-2,scaleh2=1) {
 	#print(coeffs)
 	if (!missing(fixh2)) {
 		h2 <- fixh2
@@ -9,7 +10,7 @@
 	}
 	h2 <- h2*scaleh2
 	tvar <- coeffs[(length(coeffs))] # var(y) 
-	if (h2<1e-8 || h2>(1-1e-8) || tvar<1e-8) return(startlik+100)
+	if (h2<1e-8 || h2>(1-1e-8) || tvar<1e-6) return(startlik+1)
 	nids <- length(y)
 	sigma <- h2*tvar*relmat + (1-h2)*tvar*diag(x=1,ncol=nids,nrow=nids)
 	if (trait.type=="binomial") {
