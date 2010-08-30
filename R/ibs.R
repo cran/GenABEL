@@ -17,6 +17,7 @@ function (data,snpsubset,idsubset,cross.idsubset,weight="no",snpfreq) {
 	} else {
 		homodiag <- 0.5+(hom(data,snpfreq=snpfreq)[,"F"]/2)
 	}
+	varidiag <- hom(data)[,"Var"]
 	ibs.C.option <- 0
 	if (!missing(idsubset) && !(is.numeric(idsubset) || is.logical(idsubset) || is.character(idsubset))) stop("idsubset must be numeric, logical, or character")
 	if (!missing(cross.idsubset) && !(is.numeric(cross.idsubset) || is.logical(cross.idsubset) || is.character(cross.idsubset))) stop("cross.idsubset must be numeric, logical, or character")
@@ -28,6 +29,7 @@ function (data,snpsubset,idsubset,cross.idsubset,weight="no",snpfreq) {
 		if (any(idset1 %in% idset2)) stop("idsubset and cross.idsubset should not overlap!")
 		idsorder <- c(idset1,idset2)
 		homodiag <- homodiag[match(idsorder,data@idnames)]
+		varidiag <- varidiag[match(idsorder,data@idnames)]
 		if (length(idsorder) != data@nids) data <- data[idsorder,]
 		if (any(idsorder!=data@idnames)) data <- data[idsorder,]
 		ibs.C.option <- 1
@@ -36,6 +38,7 @@ function (data,snpsubset,idsubset,cross.idsubset,weight="no",snpfreq) {
 		idset2 <- idsubset
 		idsorder <- idsubset
 		homodiag <- homodiag[match(idsorder,data@idnames)]
+		varidiag <- varidiag[match(idsorder,data@idnames)]
 		data <- data[idsorder,]
 	} else if (missing(idsubset) & missing(cross.idsubset)) {
 		idset1 <- data@idnames
@@ -75,5 +78,6 @@ function (data,snpsubset,idsubset,cross.idsubset,weight="no",snpfreq) {
 	} else {
 		stop("can not be: incorrect ibs.C.option")
 	}
+	attributes(out) <- c(attributes(out),list(Var=varidiag))
 	out
 }

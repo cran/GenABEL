@@ -10,6 +10,42 @@
 \alias{dimnames,snp.data-method}
 \alias{show,snp.data-method}
 \alias{summary,snp.data-method}
+\alias{annotation}
+\alias{annotation,snp.data-method}
+\alias{annotation,gwaa.data-method}
+\alias{idnames}
+\alias{idnames,snp.data-method}
+\alias{idnames,gwaa.data-method}
+\alias{snpnames}
+\alias{snpnames,snp.data-method}
+\alias{snpnames,gwaa.data-method}
+\alias{nids}
+\alias{nids,snp.data-method}
+\alias{nids,gwaa.data-method}
+\alias{nsnps}
+\alias{nsnps,gwaa.data-method}
+\alias{nsnps,snp.data-method}
+\alias{map}
+\alias{map,gwaa.data-method}
+\alias{map,snp.data-method}
+\alias{chromosome}
+\alias{chromosome,gwaa.data-method}
+\alias{chromosome,snp.data-method}
+\alias{strand}
+\alias{strand,gwaa.data-method}
+\alias{strand,snp.data-method}
+\alias{coding}
+\alias{coding,gwaa.data-method}
+\alias{coding,snp.data-method}
+\alias{refallele}
+\alias{refallele,gwaa.data-method}
+\alias{refallele,snp.data-method}
+\alias{effallele}
+\alias{effallele,gwaa.data-method}
+\alias{effallele,snp.data-method}
+\alias{male}
+\alias{male,gwaa.data-method}
+\alias{male,snp.data-method}
 
 \title{Class "snp.data"}
 \description{This class contains objects holding large arrays of single
@@ -49,7 +85,32 @@
     \item{summary}{\code{signature(object = "snp.data")}: calculate
       allele frequencies, genotype frequencies, and chi-square tests for
     Hardy-Weinberg equilibrium. Results are returned as a dataframe}
+	   \item{annotation}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts annotation}
+  \item{idnames}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts id names}
+  \item{snpnames}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts snp names}
+  \item{nids}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts number of ids}
+  \item{nsnps}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts number of snps}
+  \item{map}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts map}
+  \item{chromosome}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts chromosome}
+  \item{strand}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts strand}
+  \item{coding}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts coding}
+  \item{refallele}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts reference allele}
+  \item{effallele}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts effective allele}
+  \item{male}{\code{signature(object = "gwaa.data")}, 
+	   \code{signature(object = "snp.data")}: extracts male indicator}
 	 }
+	 
 }
 %\references{}
 \author{Yurii Aulchenko}
@@ -64,21 +125,21 @@ data(srdta)
 class(srdta)
 x <- srdta@gtdata
 class(x)
-x@nids
-x@nsnps
-x@idnames[1:12]
-x@male[1:12]
-x@male[c("p1","p2","p3","p4")]
-x@snpnames[1:4]
-x@chromosome[1:4]
-x@map[1:4]
+nids(x)
+nsnps(x)
+idnames(x)[1:12]
+male(x)[1:12]
+male(x)[c("p1","p2","p3","p4")]
+snpnames(x)[1:4]
+chromosome(x)[1:4]
+map(x)[1:4]
 n4 <- c("rs18","rs655")
 n4
-x@map[n4]
+map(x)[n4]
 n4 <- c("rs18","rs65")
 n4
-x@map[n4]
-x@chromosome[n4]
+map(x)[n4]
+chromosome(x)[n4]
 x[1:12,1:4]
 summary(x[,1:10])
 as.numeric(x[1:12,1:4])

@@ -38,6 +38,6 @@ data(srdta)
 pex <- summary(srdta@gtdata)[,"Pexact"]
 estlambda(pex)
 a <- ccfast("bt",srdta)
-a$lambda
+lambda(a)
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

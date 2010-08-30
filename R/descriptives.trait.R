@@ -14,16 +14,16 @@ function (data,subset,file,by.var=NULL,digits=3) {
 		for (i in (1:ntra)) {
 			ctrao <- data[,i]
 			if (!is.numeric(ctrao) | all(ctrao==svar)) {
-				ctra <- ctrao[svar == lvls[1]]
+				ctra <- ctrao[which(svar == lvls[1])]
 				out[i,1] <- length(ctra) - sum(is.na(ctra))
-				ctra <- ctrao[svar == lvls[2]]
+				ctra <- ctrao[which(svar == lvls[2])]
 				out[i,4] <- length(ctra) - sum(is.na(ctra))
 			} else {
-				ctra <- ctrao[svar == lvls[1]]
+				ctra <- ctrao[which(svar == lvls[1])]
 				out[i,1] <- length(ctra) - sum(is.na(ctra))
 				out[i,2] <- mean(ctra,na.rm=TRUE)
 				out[i,3] <- sd(ctra,na.rm=TRUE)
-				ctra <- ctrao[svar == lvls[2]]
+				ctra <- ctrao[which(svar == lvls[2])]
 				out[i,4] <- length(ctra) - sum(is.na(ctra))
 				out[i,5] <- mean(ctra,na.rm=TRUE)
 				out[i,6] <- sd(ctra,na.rm=TRUE)

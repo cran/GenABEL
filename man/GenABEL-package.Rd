@@ -57,7 +57,8 @@ functions include:
 
 For converting of GenABEL's data to other formats, see
 \code{\link{export.merlin}} (MERLIN and MACH formats), 
-\code{\link{export.impute}} (IMPUTE, SNPTEST and CHIAMO formats). 
+\code{\link{export.impute}} (IMPUTE, SNPTEST and CHIAMO formats),
+\code{\link{export.plink}} (PLINK forat, also exports phenotypic data). 
 
 To load the data, see \code{\link{load.gwaa.data}}.
 

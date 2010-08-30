@@ -50,6 +50,9 @@ ibs(data, snpsubset, idsubset, cross.idsubset, weight="no", snpfreq)
 	measured for both members of the pair above the diagonal. 
 
 	On the diagonal, homozygosity 0.5*(1+inbreeding) is provided.
+	
+	attr(computedobject,"Var") returns variance (replaing the 
+	diagonal when the object is used by \code{\link{egscore}}
 }
 %\references{}
 \author{Yurii Aulchenko}

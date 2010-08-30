@@ -1,7 +1,10 @@
 "grammar" <-
-function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,clambda=FALSE,propPs=1.0) {
-	warning("Depricated. Using qtscore on environmental residuals (qtscore(h2object$pgres,...))")
-	out <- qtscore(h2object$pgres,data=data,snpsubset=snpsubset,idsubset=idsubset,strata=strata,times=times,quiet=quiet,bcast=bcast,clambda=clambda,propPs=propPs)
+function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,
+		bcast=10,clambda=FALSE,propPs=1.0) {
+	warning("Depricated. Using qtscore on environmental residuals (qtscore(h2object$pgres,...))\nwith clam = FLASE\n")
+	out <- qtscore(h2object$pgres,data=data,snpsubset=snpsubset,
+			idsubset=idsubset,strata=strata,times=times,quiet=quiet,bcast=bcast,
+			clambda=clambda,propPs=propPs)
 	return(out)
   	if (is(data,"gwaa.data")) 
 	{

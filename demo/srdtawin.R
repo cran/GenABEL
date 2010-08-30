@@ -356,8 +356,8 @@ a<-readline("PRESS <Enter> TO CONTINUE...")
 #
 # Using gwaa data in other packages -- genetics
 #
+if (!require(genetics)) stop("you need to install library 'genetics' to see this part of demo")
 gdta <- as.genotype(srdta@gtdata[,reg])
-library(genetics)
 ld <- LD(gdta)
 plot(ld)
 a<-readline("PRESS <Enter> TO CONTINUE...")

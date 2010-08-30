@@ -6,7 +6,7 @@ Genome-wide significance for a case-control GWA scan. Analysis
 function is \code{\link{ccfast}}. 
 }
 \usage{
-emp.ccfast(y, data, snpsubset, idsubset, times = 100, quiet=FALSE,
+emp.ccfast(y, data, snpsubset, idsubset, times = 200, quiet=FALSE,
 		bcast = 10)
 }
 \arguments{
@@ -58,10 +58,10 @@ plot(a)
 b<-emp.ccfast("bt",data=srdta,snps=c(500:800),bcast=10)
 plot(b)
 # compare qvalues and empirical P
-qv<-qvaluebh95(a$P1df)$qval
+qv<-qvaluebh95(a[,"P1df"])$qval
 qv
-b$P1df
-plot(qv,b$P1df,xlim=c(0,1),ylim=c(0,1))
+b[,"P1df"]
+plot(qv,b[,"P1df"],xlim=c(0,1),ylim=c(0,1))
 abline(a=0,b=1)
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

@@ -1,3 +1,22 @@
+***** v. 1.6-4 (2010.08.30)
+
+new official release tested by ESP29-2010 participants
+
+many thanks to everybody who provided feedback!
+
+***** v. 1.6-3 (2010.08.14)
+
+changes in the code and tutorial due to preparing 
+for ESP29 course
+
+added function 'export.plink'
+
+added multiple methods to work with 'gwaa.data', 'snp.data' and 
+'scan.gwaa classes, such as 'annotation', 'coding', 'refallele', 
+'effallele', ...
+
+more annotations are delivered for summary objects
+
 ***** v. 1.6-2 (2010.08.07)
 
 changes due to DatABEL functions names change

@@ -26,8 +26,6 @@ export(
 	ccfast,
 	check.marker,
 	check.trait,
-	chromosome,
-	coding,
 	convert.snp.affymetrix,
 	convert.snp.illumina,
 	convert.snp.mach,
@@ -45,37 +43,31 @@ export(
 	emp.ccfast,
 	emp.qtscore,
 	estlambda,
-	export.merlin,
 	export.impute,
+	export.merlin,
+	export.plink,
 	extract.annotation.impute,
 	extract.annotation.mach,
 	formetascore,
 	GASurv,
 	grammar,
-	gtdata,
 	HWE.show,
 	hom,
 	hom.old,
 	ibs,
 	ibs.old,
-	idnames,
 	impute2databel,
 	impute2mach,
 	load.gwaa.data,
 	mach2databel,
-	male,
-	map,
 	merge.gwaa.data,
 	merge.snp.data,
 	mlreg,
 	mlreg.p,
 	mmscore,
 	npsubtreated,
-	nsnps,
-	nids,
 	patch_strand,
 	perid.summary,
-	phdata,
 	plot.check.marker,
 	plot.scan.gwaa,
 	plot.scan.gwaa.2D,
@@ -96,7 +88,6 @@ export(
 	scan.haplo.2D,
 	show.ncbi,
 	snp.data,
-	snpnames,
 	snp.names,
 	snp.subset,
 	sset,
@@ -104,6 +95,7 @@ export(
 	summary.check.marker,
 	summary.gwaa.data,
 	summary.snp.data,
+	summary.scan.gwaa,
 	Xfix,
 	ztransform #,
 	#var.meta,
@@ -122,11 +114,33 @@ exportClasses(
 	"snps.cell"
 	)
 
-exportMethods("show")
+exportMethods(
+	"annotation",
+	"chromosome",
+	"coding",
+	"effallele",
+	"getcall",
+	"getfamily",
+	"gtdata",
+	"lambda",
+	"male",
+	"nids",
+	"nsnps",
+	"results",
+	"show",
+	"snpnames",
+	"idnames",
+	"refallele",
+	"strand",
+	"map",
+	"phdata",
+	"phdata<-"
+)
 
 S3method(summary,check.marker)
 S3method(summary,gwaa.data)
 S3method(summary,snp.data)
+S3method(summary,scan.gwaa)
 
 S3method(plot,check.marker)
 S3method(plot,scan.gwaa)

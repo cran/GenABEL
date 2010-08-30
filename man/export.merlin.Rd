@@ -6,20 +6,21 @@
 }
 \usage{
 	export.merlin(data, pedfile = "merlin.ped", datafile = "merlin.dat", mapfile = "merlin.map", 
-	format = "merlin", fixstrand = "no", extendedmap = TRUE, traits = 1)
+	format = "merlin", fixstrand = "no", extendedmap = TRUE, traits = 1, order = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{gwaa.data object}
   \item{pedfile}{Output pedigree data file name}
-  \item{datafile}{Output data (information) file name}
+  \item{datafile}{Output data (information) file name; no output if NULL}
   \item{mapfile}{Output map file name}
-  \item{format}{Output format: reserved for future use, currently only "merlin"}
+  \item{format}{Output format, either "merlin" or "plink"}
   \item{fixstrand}{"no" -- the strand information and coding comes from the data; "+" -- change all coding 
 	to "+" strand, "-" -- change all coding to "-" strand}
   \item{extendedmap}{if TRUE extended map (+ strand, + coding) is saved with the name "mapfile.ext",
 	where "mapfile" is the parameter supplied by user}
   \item{traits}{How many fake traits to insert before first column of marker data}
+  \item{order}{Should output be ordered by chromosome and position}
 }
 \details{
 	The use is straightforward, with only the "fixstrand" option requiring some 
@@ -31,7 +32,7 @@
 	This can be achieved by running export.merlin() with fixstrand="+" parameter.
 }
 \value{
-	No value returned
+	No value returned; files saved on HDD
 }
 %\references{}
 \author{Yurii Aulchenko}

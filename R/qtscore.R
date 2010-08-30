@@ -1,8 +1,9 @@
 "qtscore" <-
-function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
-  	if (!is(data,"gwaa.data")) {
+		function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",
+				times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
+	if (!is(data,"gwaa.data")) {
 		stop("wrong data class: should be gwaa.data")
-  	}
+	}
 	checkphengen(data)
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
@@ -29,7 +30,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 	}
 	if (trait.type=="gaussian") fam <- gaussian()
 	if (trait.type=="binomial") fam <- binomial()
-
+	
 	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
 	if (is(formula,"formula")) {
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
@@ -68,41 +69,41 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		rm(tstr)
 	}
 	nstra <- length(levels(as.factor(strata)))
-
+	
 	tmeas <- as.logical(mids)
 	strata <- strata[tmeas]
-
+	
 	if (any(tmeas == FALSE)) {
 		if (!quiet) warning(paste(sum(!tmeas),"observations deleted due to missingness"))
 		data <- data[tmeas,]
 	}
-
+	
 #	if (trait.type=="binomial" & !is(formula,"formula")) bin<-1 else bin <- 0
 	if (trait.type=="binomial") bin<-1 else bin<-0
 	lenn <- data@gtdata@nsnps;
-	out <- list()
+	###out <- list()
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) resid <- sample(resid,replace=FALSE)
 		chi2 <- .C("qtscore_glob",as.raw(data@gtdata@gtps),as.double(resid),as.integer(bin),as.integer(data@gtdata@nids),as.integer(data@gtdata@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(10*data@gtdata@nsnps), PACKAGE="GenABEL")$chi2
 		if (any(data@gtdata@chromosome=="X")) {
-		  ogX <- data@gtdata[,data@gtdata@chromosome=="X"]
-		  sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
-		  chi2X <- .C("qtscore_glob",as.raw(ogX@gtps),as.double(resid),as.integer(bin),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(10*ogX@nsnps), PACKAGE="GenABEL")$chi2
-		  revec <- (data@gtdata@chromosome=="X")
-		  revec <- rep(revec,6)
-		  chi2 <- replace(chi2,revec,chi2X)
-		  rm(ogX,chi2X,revec);gc(verbose=FALSE)
+			ogX <- data@gtdata[,data@gtdata@chromosome=="X"]
+			sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
+			chi2X <- .C("qtscore_glob",as.raw(ogX@gtps),as.double(resid),as.integer(bin),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(10*ogX@nsnps), PACKAGE="GenABEL")$chi2
+			revec <- (data@gtdata@chromosome=="X")
+			revec <- rep(revec,6)
+			chi2 <- replace(chi2,revec,chi2X)
+			rm(ogX,chi2X,revec);gc(verbose=FALSE)
 		}
 		if (j == 1) {
 			chi2.1df <- chi2[1:lenn];
 			chi2.1df[abs(chi2.1df+999.99)<1.e-8] <- 0 #NA
-			out$chi2.1df <- chi2.1df
+			###out$chi2.1df <- chi2.1df
 			chi2.2df <- chi2[(lenn+1):(2*lenn)];
 			chi2.2df[abs(chi2.2df+999.99)<1.e-8] <- 0 #NA
 			actdf <- chi2[(2*lenn+1):(3*lenn)];
 			actdf[abs(actdf+999.99)<1.e-8] <- 1.e-16 #NA
 #			out$actdf <- actdf
-			out$chi2.2df <- chi2.2df
+			###out$chi2.2df <- chi2.2df
 			z0 <- chi2[(7*lenn+1):(8*lenn)];
 			z0[abs(z0+999.99)<1.e-8] <- 0 #NA
 #			out$z0 <- z0
@@ -113,7 +114,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 			rho[abs(rho+999.99)<1.e-8] <- 0 #NA
 #			rho <- abs(rho)
 #			out$rho <- rho
-
+			
 			lambda <- list()
 			if (is.logical(clambda)) {
 				if (lenn<10) {
@@ -143,7 +144,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 				}
 			}
 			chi2.c1df <- chi2.1df/lambda$estimate
-
+			
 			if (is.logical(clambda)) {
 				lambda$iz0 <- estlambda(z0*z0,plot=FALSE,prop=propPs)$estimate 
 				lambda$iz2 <- estlambda(z2*z2,plot=FALSE,prop=propPs)$estimate
@@ -185,46 +186,68 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		}
 	}
 	if (times > bcast) cat("\n")
-
+	
 	if (times>1) {
-		out$P1df <- pr.1df/times
-		out$P1df <- replace(out$P1df,(out$P1df==0),1/(1+times))
-		out$P2df <- pr.2df/times
-		out$P2df <- replace(out$P2df,(out$P2df==0),1/(1+times))
-		out$Pc1df <- pr.c1df/times
-		out$Pc1df <- replace(out$Pc1df,(out$Pc1df==0),1/(1+times))
-		out$Pc2df <- pr.c2df/times
-		out$Pc2df <- replace(out$Pc2df,(out$Pc2df==0),1/(1+times))
+		P1df <- pr.1df/times
+		P1df <- replace(P1df,(P1df==0),1/(1+times))
+		P2df <- pr.2df/times
+		P2df <- replace(P2df,(P2df==0),1/(1+times))
+		Pc1df <- pr.c1df/times
+		Pc1df <- replace(Pc1df,(Pc1df==0),1/(1+times))
+		#out$Pc2df <- pr.c2df/times
+		#out$Pc2df <- replace(out$Pc2df,(out$Pc2df==0),1/(1+times))
 	} else {
-		out$P1df <- pchisq(chi2.1df,1,lower=F)
-		out$P2df <- pchisq(chi2.2df,actdf,lower=F)
-		out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
-		out$Pc2df <- pchisq(chi2.c2df,2,lower=F)
+		P1df <- pchisq(chi2.1df,1,lower=F)
+		P2df <- pchisq(chi2.2df,actdf,lower=F)
+		Pc1df <- NULL
+		#out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
+		#out$Pc2df <- pchisq(chi2.c2df,2,lower=F)
 	}
-	out$lambda <- lambda
-	out$effB <- effB
-	out$effAB <- effAB
-	out$effBB <- effBB
-	out$N <- chi2[(6*lenn+1):(lenn*7)]
-	if (details) {
-		out$snpnames <- data@gtdata@snpnames
-		out$idnames <- data@gtdata@idnames
+	###out$lambda <- lambda
+	###out$effB <- effB
+	###out$effAB <- effAB
+	###out$effBB <- effBB
+	###out$N <- chi2[(6*lenn+1):(lenn*7)]
+	###if (details) {
+	###	out$snpnames <- data@gtdata@snpnames
+	###	out$idnames <- data@gtdata@idnames
+	###}
+	###out$map <- data@gtdata@map
+	###out$chromosome <- data@gtdata@chromosome
+	###out$formula <- match.call()
+	###out$family <- paste("score test for association with trait type",trait.type)
+	#class(out) <- "scan.gwaa"
+	if (is.null(Pc1df)) {
+		results <- data.frame(N=chi2[(6*lenn+1):(lenn*7)],
+				effB = effB, se_effB = effB/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
+				effAB=effAB, effBB=effBB, chi2.2df = chi2.2df, P2df = P2df,
+				stringsAsFactors = FALSE)
+	} else {
+		results <- data.frame(N=chi2[(6*lenn+1):(lenn*7)],
+				effB = effB, se_effB = effB/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
+				Pc1df = Pc1df, 
+				effAB=effAB, effBB=effBB, chi2.2df = chi2.2df, P2df = P2df,
+				stringsAsFactors = FALSE)
 	}
-	out$map <- data@gtdata@map
-	out$chromosome <- data@gtdata@chromosome
-	out$formula <- match.call()
-	out$family <- paste("score test for association with trait type",trait.type)
-	class(out) <- "scan.gwaa"
+	rownames(results) <- snpnames(data)
+	out <- new("scan.gwaa",
+			results=results,
+			annotation = annotation(data), 
+			lambda = lambda,
+			idnames = idnames(data), 
+			call = match.call(), 
+			family = trait.type
+	) 
 	out
 }
 
 ###### ----------------------- ##################
 
 "qtscore.old" <-
-function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
-  	if (!is(data,"gwaa.data")) {
+		function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
+	if (!is(data,"gwaa.data")) {
 		stop("wrong data class: should be gwaa.data")
-  	}
+	}
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
 	if (missing(strata)) {nstra=1; strata <- rep(0,data@gtdata@nids)}
@@ -235,7 +258,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 	}
 	if (trait.type=="gaussian") fam <- gaussian()
 	if (trait.type=="binomial") fam <- binomial()
-
+	
 	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
 	if (is(formula,"formula")) {
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
@@ -293,28 +316,28 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		rm(tstr)
 	}
 	nstra <- length(levels(as.factor(strata)))
-
+	
 	tmeas <- as.logical(mids)
 	strata <- strata[tmeas]
-
+	
 	if (any(tmeas == FALSE)) {
 		if (!quiet) warning(paste(sum(!tmeas),"people (out of",length(tmeas),") excluded because they have trait or covariate missing\n"),immediate. = TRUE)
 		data <- data[tmeas,]
 	}
-
+	
 	lenn <- data@gtdata@nsnps;
 	out <- list()
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) resid <- sample(resid,replace=FALSE)
 		chi2 <- .C("qtscore",as.raw(data@gtdata@gtps),as.double(resid),as.integer(bin),as.integer(data@gtdata@nids),as.integer(data@gtdata@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(7*data@gtdata@nsnps), PACKAGE="GenABEL")$chi2
 		if (any(data@gtdata@chromosome=="X")) {
-		  ogX <- data@gtdata[,data@gtdata@chromosome=="X"]
-		  sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
-		  chi2X <- .C("qtscore",as.raw(ogX@gtps),as.double(resid),as.integer(bin),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(7*ogX@nsnps), PACKAGE="GenABEL")$chi2
-		  revec <- (data@gtdata@chromosome=="X")
-		  revec <- rep(revec,6)
-		  chi2 <- replace(chi2,revec,chi2X)
-		  rm(ogX,chi2X,revec);gc(verbose=FALSE)
+			ogX <- data@gtdata[,data@gtdata@chromosome=="X"]
+			sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
+			chi2X <- .C("qtscore",as.raw(ogX@gtps),as.double(resid),as.integer(bin),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(7*ogX@nsnps), PACKAGE="GenABEL")$chi2
+			revec <- (data@gtdata@chromosome=="X")
+			revec <- rep(revec,6)
+			chi2 <- replace(chi2,revec,chi2X)
+			rm(ogX,chi2X,revec);gc(verbose=FALSE)
 		}
 		if (j == 1) {
 			chi2.1df <- chi2[1:lenn];
@@ -363,7 +386,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 		}
 	}
 	if (times > bcast) cat("\n")
-
+	
 	if (times>1) {
 		out$P1df <- pr.1df/times
 		out$P1df <- replace(out$P1df,(out$P1df==0),1/(1+times))
@@ -394,7 +417,7 @@ function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,qu
 }
 
 "test.type" <-
-function(resid,trait.type) {
+		function(resid,trait.type) {
 	if (ismono(resid)) stop("trait is monomorphic")
 	if (isbinomial(resid)) {
 		if (trait.type == "gaussian") warning("binomial trait is analysed as gaussian")
@@ -406,14 +429,14 @@ function(resid,trait.type) {
 }
 
 "isbinomial" <- 
-function(y) {
+		function(y) {
 	y <- y[!is.na(y)]
 	if (length(unique(y)) > 2) return(FALSE)
 	else return(TRUE) 
 }
 
 "ismono" <- 
-function(y) {
+		function(y) {
 	y <- y[!is.na(y)]
 	if (length(unique(y)) <= 1) return(TRUE)
 	else return(FALSE) 

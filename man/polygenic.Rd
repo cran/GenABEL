@@ -138,7 +138,7 @@ h2ht$h2an$minimum
 # twice maximum log-likelihood
 -h2ht$h2an$minimum
 
-##for binary trait (experimental)
-#h2dm <- polygenic(dm2 ~ sex + age,kin=gkin,ge03d2ex.clean,trait="binomial")
-## estimated parameters
-#h2dm$h2an}
+#for binary trait (experimental)
+h2dm <- polygenic(dm2 ~ sex + age,kin=gkin,ge03d2ex.clean,trait="binomial")
+# estimated parameters
+h2dm$h2an}

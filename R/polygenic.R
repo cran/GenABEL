@@ -161,7 +161,7 @@
 	if (!missing(data)) if (is(data,"gwaa.data")) 
 		{
 			checkphengen(data)
-			data <- data@phdata
+			data <- phdata(data)
 		}
 	if (!missing(data)) if (!is(data,"data.frame")) stop("data should be of gwaa.data or data.frame class")
 	if (starth2<0 || starth2>1) stop("Starting value of h2 (starth2) must be between 0 and 1")
@@ -180,6 +180,7 @@
 	
 	if (!missing(data)) attach(data,pos=2,warn.conflicts=FALSE)
 	if (is(formula,"formula")) {
+		print("b")
 		clafo <- "formula"
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 		y <- model.response(mf)
@@ -192,7 +193,10 @@
 		iniest <- sglm$coef[,1]
 		inierr <- sglm$coef[,2]
 		phids <- rownames(data)[rownames(data) %in% rownames(mf)]
+		#print("bb")
+		#print(phids)
 		relmat <- kinship.matrix[phids,phids]*2.0
+		#print("bbb")
 		mids <- (rownames(data) %in% rownames(mf))
 		if (trait.type=="binomial") {
 			tvar <- var(rglm$resid)
@@ -222,6 +226,7 @@
 			inierr <- sqrt(var(y)/length(y))
 		}
 	}
+
 	if (!missing(data)) detach(data)
 	tmp <- t(relmat)
 	relmat[upper.tri(relmat)] <- tmp[upper.tri(tmp)]
@@ -233,6 +238,7 @@
 		flush.console()
 	}
 	iniest <- iniest# + 0.001*iniest
+	
 	
 	convFGLS <- NULL;
 	

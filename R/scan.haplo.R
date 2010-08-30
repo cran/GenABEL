@@ -56,7 +56,23 @@
 		}
 	}
 	if (bcast<=(nsnps-n.slide+1)) cat("\n")
-	out <- list(P1df=Pv,snpnames=name,formula=match.call(),family=family,map=map,idnames=data@gtdata@idnames,chromosome=data@gtdata@chromosome[1:(nsnps-n.slide+1)])
-	class(out) <- "scan.gwaa"
-	out
+	#results <- P1df=Pv; snpnames=name,map=map,chromosome=data@gtdata@chromosome[1:(nsnps-n.slide+1)]
+	#out <- new("scan.gwaa",results=results,formula=match.call(),family=family,
+	#		idnames=idnames(data))
+	#class(out) <- "scan.gwaa"
+	#out
+	results <- data.frame(N=NA,
+			effB = NA, se_effB = NA, chi2.1df = NA, P1df = Pv, 
+			Pc1df = NA,
+			stringsAsFactors = FALSE)
+	rownames(results) <- snpnames(data)[1:(nsnps-n.slide+1)]
+	out <- new("scan.gwaa",
+			results=results,
+			annotation = annotation(data[,1:(nsnps-n.slide+1)]), 
+			lambda = list(0),
+			idnames = idnames(data), 
+			call = match.call(), 
+			family = family
+	) 
+	
 }

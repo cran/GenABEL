@@ -4,8 +4,10 @@
 \title{function to summary GWAA data}
 \description{
 Provides summary of an object of class \code{\link{snp.data-class}}.
-Number of observed genotypes, allelic frequency, genotypic distrbution,
-P-value of the exact test for HWE and chromosome are listed
+Chromosome, map position, allele coding, number of observed genotypes, 
+allelic frequency, genotypic distrbution,
+P-value of the exact test for HWE, Fmax (estimate of deviation from HWE, 
+allowing meta-analysis) and LRT P-value for HWE test are listed
 }
 \usage{
 summary.snp.data(object, ...)
@@ -36,7 +38,7 @@ Hardy-Weinberg Equilibrium. American Journal of Human Genetics. 76: 887-93.
 }
 \examples{
 data(srdta)
-summary(srdta@gtdata[,1:20])
+summary(gtdata(srdta[,1:20]))
 }
 \keyword{htest}% at least one, from doc/KEYWORDS
 

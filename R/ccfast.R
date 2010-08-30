@@ -27,17 +27,17 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,pro
 	rm(cc)
 
 	lenn <- data@gtdata@nsnps
-	out <- list()
+	#out <- list()
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) cc1 <- sample(cc1,replace=FALSE)
 		chi2 <- fcc(data@gtdata,cc1)
 		if (j == 1) {
 			chi2.1df <- chi2[1:lenn];
 			chi2.2df <- chi2[(lenn+1):(2*lenn)];
-			out$chi2.1df <- chi2.1df
-			out$chi2.2df <- chi2.2df
+			#out$chi2.1df <- chi2.1df
+			#out$chi2.2df <- chi2.2df
 			actdf <- chi2[(2*lenn+1):(3*lenn)];
-			out$N <- chi2[(6*lenn+1):(7*lenn)];
+			N <- chi2[(6*lenn+1):(7*lenn)];
 			if (lenn<=10 && !is.numeric(clambda)) {
 				lambda <- list()
 				lambda$estimate <- NA
@@ -76,28 +76,50 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,pro
 		}
 	}
 	if (times>1) {
-		out$P1df <- pr.1df/times
-		out$P1df <- replace(out$P1df,(out$P1df==0),1/(1+times))
-		out$P2df <- pr.2df/times
-		out$P2df <- replace(out$P2df,(out$P2df==0),1/(1+times))
-		out$Pc1df <- pr.c1df/times
-		out$Pc1df <- replace(out$Pc1df,(out$Pc1df==0),1/(1+times))
+		P1df <- pr.1df/times
+		P1df <- replace(P1df,(P1df==0),1/(1+times))
+		P2df <- pr.2df/times
+		P2df <- replace(P2df,(P2df==0),1/(1+times))
+		Pc1df <- pr.c1df/times
+		Pc1df <- replace(Pc1df,(Pc1df==0),1/(1+times))
 	} else {
-		out$P1df <- pchisq(chi2.1df,1,lower=F)
-		out$P2df <- pchisq(chi2.2df,actdf,lower=F)
-		out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
+		P1df <- pchisq(chi2.1df,1,lower=F)
+		P2df <- pchisq(chi2.2df,actdf,lower=F)
+		Pc1df <- pchisq(chi2.c1df,1,lower=F)
 	}
-	out$lambda <- lambda
-	out$effB <- effB
-	out$effAB <- effAB
-	out$effBB <- effBB
-	out$snpnames <- data@gtdata@snpnames
-	out$map <- data@gtdata@map
-	out$chromosome <- data@gtdata@chromosome
-	out$idnames <- data@gtdata@idnames
-	out$formula <- match.call()
-	out$family <- "chi2 test for association, 2x2 and 2x3 tables"
-	class(out) <- "scan.gwaa"
+	#out$lambda <- lambda
+	#out$effB <- effB
+	#out$effAB <- effAB
+	#out$effBB <- effBB
+	#out$snpnames <- data@gtdata@snpnames
+	#out$map <- data@gtdata@map
+	#out$chromosome <- data@gtdata@chromosome
+	#out$idnames <- data@gtdata@idnames
+	#out$formula <- match.call()
+	#out$family <- "chi2 test for association, 2x2 and 2x3 tables"
+	#class(out) <- "scan.gwaa"
+	#out
+	if (is.null(Pc1df)) {
+		results <- data.frame(N=N,
+				effB = effB, se_effB = effB/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
+				effAB=effAB, effBB=effBB, chi2.2df = chi2.2df, P2df = P2df,
+				stringsAsFactors = FALSE)
+	} else {
+		results <- data.frame(N=N,
+				effB = effB, se_effB = effB/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
+				Pc1df = Pc1df, 
+				effAB=effAB, effBB=effBB, chi2.2df = chi2.2df, P2df = P2df,
+				stringsAsFactors = FALSE)
+	}
+	rownames(results) <- snpnames(data)
+	out <- new("scan.gwaa",
+			results=results,
+			annotation = annotation(data), 
+			lambda = lambda,
+			idnames = idnames(data), 
+			call = match.call(), 
+			family = "chi2 test for association, 2x2 and 2x3 tables"
+	) 
 	out
 }
 

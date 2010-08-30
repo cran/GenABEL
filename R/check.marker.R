@@ -4,7 +4,8 @@ function(data, snpsubset, idsubset,
 			het.fdr=0.01, ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower",
 			maf, p.level=-1, 
 			fdrate = 0.2, odds = 1000, hweidsubset, redundant="no", minconcordance = 2.0, 
-			qoption="bh95",imphetasmissing=TRUE,XXY.call=0.8) {
+			qoption="bh95",imphetasmissing=TRUE,XXY.call=0.8, 
+			intermediateXF = c(0.2,0.8)) {
 
 	if (is(data,"gwaa.data")) data <- data@gtdata
 	if (!is(data,"snp.data")) stop("data argument should be of type gwaa.data or snp.data");
@@ -44,14 +45,54 @@ function(data, snpsubset, idsubset,
 	updat <- 0
 	if (any(data@chromosome=="X")) {
 		cat("\nRunning sex chromosome checks...\n")
-		out.nxt <- Xcheck(data[,data@chromosome=="X"],Pgte=0.001,Pssw=0.01,Pmsw=0.01,odds=odds,tabonly=F)
+		
+		#maleInd <- male(data)
+		#F <- perid.summary(data[,which(chromosome(data)=="X")])$F
+		#Nfemale <- sum(1*(maleInd==0))
+		#Nmale <- sum(maleInd)
+		#if (Nfemale < 10) {Ffemale <- 0.2}
+		#else {
+		#	mF <- mean(F[!maleInd],na.rm=T)
+		#	sdF <- sd(F[!maleInd],na.rm=T)
+		#	Ffemale <- min(1,(mF+5*sdF))
+		#	print(c(mF,sdF,Ffemale))
+		#}
+		#if (Nmale < 10) {Fmale <- 0.8}
+		#else {
+		#	mF <- mean(F[maleInd],na.rm=T)
+		#	sdF <- sd(F[maleInd],na.rm=T)
+		#	Fmale <- max(0,(mF-5*sdF))
+		#	print(c(mF,sdF,Fmale))
+		#}
+		#if (Ffemale > 1 | Ffemale < 0) {
+		#	cat("cut off Ffemale =",Ffemale,"\n")
+		#	stop("Ffemale not in [0,1]")
+		#}
+		#if (Fmale > 1 | Fmale < 0) {
+		#	cat("cut off Fmale =",Fmale,"\n")
+		#	stop("Fmale not in [0,1]")
+		#}
+	    Ffemale <- intermediateXF[1]
+		Fmale <- intermediateXF[2]
+		if (Ffemale>Fmale) stop("Ffemale>Fmale")
+		if (Ffemale > 1 | Ffemale < 0) {
+			cat("cut off Ffemale =",Ffemale,"\n")
+			stop("Ffemale not in [0,1]")
+		}
+		if (Fmale > 1 | Fmale < 0) {
+			cat("cut off Fmale =",Fmale,"\n")
+			stop("Fmale not in [0,1]")
+		}
+		
+		out.nxt <- Xcheck(data[,data@chromosome=="X"],Pgte=0.001,Pssw=0.01,
+				Pmsw=0.01,odds=odds,Ffemale=Ffemale,Fmale=Fmale,tabonly=F)
 		nxerr <- dim(out.nxt$Xerrtab)[1]
 		if (!length(nxerr)) nxerr <- 0
 		cat(nxerr,"heterozygous X-linked male genotypes found\n")
 		cat(length(out.nxt$Xmrkfail),"X-linked markers are likely to be autosomal (odds >",odds,")\n")
 		cat(length(out.nxt$isfemale),"male are likely to be female (odds >",odds,")\n")
 		cat(length(out.nxt$ismale),"female are likely to be male (odds >",odds,")\n")
-		cat(length(out.nxt$otherSexErr),"people have intermediate inbreeding (0.2 > F > 0.8)\n")
+		cat(length(out.nxt$otherSexErr)," people have intermediate inbreeding (",Ffemale," > F > ",Fmale,")\n",sep="")
 		out <- update.check.marker(out,out.nxt)
 		updat <- 1
 		out.nxt <- Xcheck(data[out$idok,out$snpok[out$snpok %in% data@snpnames[data@chromosome=="X"]]],Pgte=0.001,Pssw=0.01,Pmsw=0.01,odds=odds,tabonly=T)

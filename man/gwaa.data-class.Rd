@@ -4,6 +4,12 @@
 \alias{show,gwaa.data-method}
 \alias{[,gwaa.data,ANY,ANY,ANY-method}
 \alias{summary,gwaa.data-method}
+\alias{gtdata,gwaa.data-method}
+\alias{gtdata}
+\alias{phdata,gwaa.data-method}
+\alias{phdata}
+\alias{phdata<-,gwaa.data-method}
+\alias{phdata<-}
 
 \title{Class "gwaa.data"}
 \description{This class contains objects holding all GWAA data -- 
@@ -26,7 +32,13 @@ phenotypes, genotypes and other relevant information
     \item{summary}{\code{signature(object = "gwaa.data")}: Calls 
 	standard summary to describe phenotypic part and calls 
 	\code{\link{summary.snp.data}} to \code{\link{snp.data-class}} }
-	 }
+    \item{gtdata}{\code{signature(object = "gwaa.data")}: returns genotypic data 
+    (object of \code{\link{snp.data-class}})}
+    \item{phdata}{\code{signature(object = "gwaa.data")}: returns phenotypic data 
+    (a \code{data.frame})}
+    \item{phdata<-}{\code{signature(object = "gwaa.data")}: method do modify phenotypic data 
+    (a \code{data.frame})}
+    }
 }
 %\references{}
 \author{Yurii Aulchenko}

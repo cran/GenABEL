@@ -86,25 +86,49 @@ function(formula,data,gtmode="additive",trait.type="guess",propPs=1.0)
 	chi2 <- matrix(chi2,ncol=3)
 	chi2 <- data.frame(chi2)
 	colnames(chi2) <- c("N","beta","sebeta")
-	rownames(chi2) <- gtdata@snpnames
+	rownames(chi2) <- snpnames(gtdata)
 	chi2[abs(chi2+999.9)<1.e-6] <- NA
-	out <- list()
-	out$snpnames <- gtdata@snpnames
-	out$chromosome <- gtdata@chromosome
-	out$map <- gtdata@map
-	out$N <- chi2$N
-	out$effB <- chi2$beta
-	out$effAB <- rep(NA,dim(chi2)[1])
-	out$effBB <- rep(NA,dim(chi2)[1])
-	out$P2df <- rep(NA,dim(chi2)[1])
-	out$se.effB <- chi2$sebeta
-	out$chi2.1df <- (chi2$beta/chi2$sebeta)^2
-	out$lambda <- estlambda(out$chi2.1df,plot=F,prop=propPs)
-	out$P1df <- pchisq(out$chi2.1df,1,lower=F)
-	out$Pc1df <- pchisq(out$chi2.1df/out$lambda$est,1,lower=F)
-	out$call <- match.call()
-	out$trait.type <- posttypes[ttype]
-	class(out) <- "scan.gwaa"
+	#out <- list()
+	#out$snpnames <- gtdata@snpnames
+	#out$chromosome <- gtdata@chromosome
+	#out$map <- gtdata@map
+	N <- chi2$N
+	effB <- chi2$beta
+	effAB <- rep(NA,dim(chi2)[1])
+	effBB <- rep(NA,dim(chi2)[1])
+	chi2.2df <- rep(NA,dim(chi2)[1])
+	P2df <- rep(NA,dim(chi2)[1])
+	se.effB <- chi2$sebeta
+	chi2.1df <- (chi2$beta/chi2$sebeta)^2
+	#out$lambda <- estlambda(out$chi2.1df,plot=F,prop=propPs)
+	P1df <- pchisq(chi2.1df,1,lower=F)
+	lambda <- estlambda(chi2.1df,plot=F,prop=propPs)
+	Pc1df <- pchisq(chi2.1df/lambda$est,1,lower=F)
+	#out$call <- match.call()
+	#out$trait.type <- posttypes[ttype]
+	#class(out) <- "scan.gwaa"
+	#out
+	if (is.null(Pc1df)) {
+		results <- data.frame(N=N,
+				effB = effB, se_effB = effB/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
+				effAB=effAB, effBB=effBB, chi2.2df = chi2.2df, P2df = P2df,
+				stringsAsFactors = FALSE)
+	} else {
+		results <- data.frame(N=N,
+				effB = effB, se_effB = effB/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
+				Pc1df = Pc1df, 
+				effAB=effAB, effBB=effBB, chi2.2df = chi2.2df, P2df = P2df,
+				stringsAsFactors = FALSE)
+	}
+	rownames(results) <- snpnames(gtdata)
+	out <- new("scan.gwaa",
+			results=results,
+			annotation = annotation(gtdata), 
+			lambda = lambda,
+			idnames = idnames(gtdata), 
+			call = match.call(), 
+			family = trait.type
+	) 
 	out
 }
 

@@ -28,7 +28,7 @@ qvaluebh95(p, fdrate=0.1)
 \examples{
 data(srdta)
 a<-qtscore(qt2,data=srdta)
-qv <- qvaluebh95(a$P1df)
-plot(a$map,-log10(qv$qvalue))
+qv <- qvaluebh95(a[,"P1df"])
+plot(a[,"Position"],-log10(qv$qvalue))
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

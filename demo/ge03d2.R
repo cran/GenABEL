@@ -279,6 +279,6 @@ sreg.h2D <- scan.haplo.2D(dm2~age+sex+CRSNP,data2[,sreg],trait.type="binomial")
 print(min(sreg.h2D$P1df,na.rm=T))
 plot(sreg.h2D)
 ?"DO LD ANALYSIS AND UPDATE THE PLOT"
+if (!require(genetics)) stop("you need to install library 'genetics' to see this part of demo")
 sreg.LD <- LD(as.genotype(data2@gtdata[,sreg]))
 image(sreg.h2D$map,sreg.h2D$map,t(sreg.LD$"D'"),add=T)
-

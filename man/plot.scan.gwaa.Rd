@@ -5,7 +5,8 @@
 Plots results of GWA analysis
 }
 \usage{
-plot.scan.gwaa(x, y, ..., df=1, ystart=0, col=c("blue","green"), sort=TRUE, ylim, delta = 1)
+plot.scan.gwaa(x, y, ..., df=1, ystart=0, col=c("blue","green"), 
+	sort=TRUE, ylim, delta = 1 , main = getcall(x))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,6 +21,7 @@ plot.scan.gwaa(x, y, ..., df=1, ystart=0, col=c("blue","green"), sort=TRUE, ylim
   \item{col}{which colors to use to depict consecutive chromosomes}
   \item{sort}{whether results should be plotted after sorting by chromosome and position}
   \item{delta}{gap width between chromosomes}
+  \item{main}{title of the plot}
 }
 %\details{}
 \value{

@@ -13,15 +13,21 @@ snp.subset <- function(data,snpsubset) {
 
 "snp.subset.scan.gwaa" <- 
 function(data,snpsubset) {
-	norig <- length(data$snpnames)
+	norig <- length(snpnames(data))
 	tokeep <- rep(FALSE,norig)
 	if (is.numeric(snpsubset) || is.logical(snpsubset)) {
 		tokeep[snpsubset] <- TRUE
 	} else if (is.character(snpsubset)) {
-		tokeep <- data$snpnames %in% snpsubset
+		tokeep <- snpnames(data) %in% snpsubset
 	} else {stop("snpsubset should have type numeric, logical or character")}
-	out <- list(P1df=data$P1df[tokeep],P2df=data$P2df[tokeep],Pc1df=data$Pc1df[tokeep],chi2.1df=data$chi2.1df[tokeep],chi2.2df=data$chi2.2df[tokeep],N=data$N[tokeep], snpnames=data$snpnames[tokeep],formula=match.call(),family=data$family,map=data$map[tokeep],idnames=data$idnames,chromosome=data$chromosome[tokeep],lambda=data$lambda,effB=data$effB[tokeep],effAB=data$effAB[tokeep],effBB=data$effBB[tokeep])
-	class(out) <- "scan.gwaa"
+	out <- new("scan.gwaa",
+			results=data@results[tokeep,],
+			annotation = data@annotation[tokeep,], 
+			lambda = data@lambda,
+			idnames = data@idnames, 
+			call = match.call(), 
+			family = data@family
+	) 
 	out 
 }
 

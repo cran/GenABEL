@@ -69,10 +69,10 @@ This test is defined only for 1 d.f.
 \code{\link{scan.gwaa-class}}
 }
 \examples{
-data(ge03d2ex)
-#egscore.old with stratification
-gkin <- ibs(ge03d2ex,w="freq")
-a <- egscore.old(dm2~sex+age,data=ge03d2ex,kin=gkin)
-plot(a,df="Pc1df")
+#data(ge03d2ex)
+##egscore.old with stratification
+#gkin <- ibs(ge03d2ex,w="freq")
+#a <- egscore.old(dm2~sex+age,data=ge03d2ex,kin=gkin)
+#plot(a,df="Pc1df")
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

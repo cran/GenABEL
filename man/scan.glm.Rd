@@ -38,21 +38,21 @@ scan.glm(formula, family = gaussian(), data, snpsubset, idsubset,
 \examples{
 data(srdta)
 a <- scan.glm("bt~sex+age+CRSNP",family=binomial(),data=srdta,snps=(1:10),bcast=2)
-plot(a)
+#plot(a)
 
 osnp <- "rs4934"
 maposnp <- srdta@gtdata@map[osnp]
 maposnp
 reg <- snp.names(srdta,begin=maposnp-100000,end=maposnp+100000,chrom="1")
 a <- scan.glm("qt3~sex+age+CRSNP",data=srdta,snps=reg)
-plot(a)
-plot(a,df=1)
-add.plot(a,df=2)
+#plot(a)
+#plot(a,df=1)
+#add.plot(a,df=2)
 
 # interaction with sex
 a <- scan.glm("qt3~age+sex*CRSNP",data=srdta,snps=reg)
-plot(a,df=1)
-add.plot(a,df=2)
+#plot(a,df=1)
+#add.plot(a,df=2)
 # you can do interaction with a selected polymorphisms in the same way
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

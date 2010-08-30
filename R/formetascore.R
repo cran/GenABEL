@@ -1,5 +1,5 @@
 "formetascore" <-
-function(formula,data,stat=qtscore,transform="no",build="unknown",verbosity=1, ...) {
+		function(formula,data,stat=qtscore,transform="no",build="unknown",verbosity=1, ...) {
 	if (!is(data,"gwaa.data")) stop("data argument must have gwaa.data-class")
 	checkphengen(data)
 	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
@@ -32,38 +32,47 @@ function(formula,data,stat=qtscore,transform="no",build="unknown",verbosity=1, .
 	Phwe <- sum$Pexact
 	efff <- sum$Q.2
 	reff <- 1. - sum$Q.2
-	serr <- abs(res$effB)/sqrt(res$chi2.1df)
-	coding <- as.character(data@gtdata@coding)
+	serr <- abs(res[,"effB"])/sqrt(res[,"chi2.1df"])
+	#coding <- coding(data)
 	if (verbosity==0)
- 	out <- data.frame(name=res$snpnames,chromosome=res$chromosome,
-		position=res$map,strand=as.character(data@gtdata@strand),
-		allele1=alleleID.reference()[coding],
-		allele2=alleleID.effective()[coding],
-		effallele=alleleID.effective()[coding],
-		beta=res$effB,sebeta=serr,p=res$P1df,
-		stringsAsFactors=F)
+		out <- data.frame(
+				name=snpnames(res),chromosome=chromosome(res),
+				position=map(res),strand=strand(res),
+				allele1=refallele(res),
+				allele2=effallele(res),
+				effallele=effallele(res),
+				beta=res[,"effB"],sebeta=res[,"se_effB"],p=res[,"P1df"],
+				stringsAsFactors=FALSE
+		)
 	else if (verbosity==1)
- 	out <- data.frame(name=res$snpnames,chromosome=res$chromosome,
-		position=res$map,strand=as.character(data@gtdata@strand),
-		allele1=alleleID.reference()[coding],
-		allele2=alleleID.effective()[coding],
-		effallele=alleleID.effective()[coding],
-		effallelefreq=efff,
-		n=res$N,beta=res$effB,sebeta=serr,p=res$P1df,
-		pgc=res$Pc1df,
-		pexhwe=Phwe,call=callr,stringsAsFactors=F)
+		out <- data.frame(
+				name=snpnames(res),chromosome=chromosome(res),
+				position=map(res),strand=strand(res),
+				allele1=refallele(res),
+				allele2=effallele(res),
+				effallele=effallele(res),
+				effallelefreq=efff,
+				n=res[,"N"],
+				beta=res[,"effB"],sebeta=res[,"se_effB"],p=res[,"P1df"],
+				pgc=res[,"Pc1df"],
+				pexhwe=Phwe,call=callr,stringsAsFactors=FALSE
+		)
 	else 
- 	out <- data.frame(name=res$snpnames,chromosome=res$chromosome,
-		position=res$map,strand=as.character(data@gtdata@strand),
-		allele1=alleleID.reference()[coding],
-		allele2=alleleID.effective()[coding],
-		build=rep(build,length(coding)),
-		effallele=alleleID.effective()[coding],
-		effallelefreq=efff,
-		n=res$N,beta=res$effB,sebeta=serr,p=res$P1df,
-		pgc=res$Pc1df,lambda=rep(res$lam$est,length(coding)),
-		pexhwe=Phwe,call=callr,fmax=sum$Fmax,plrthwe=sum$Plrt,stringsAsFactors=F)
-
-	rownames(out) <- res$snpnames
+		out <- data.frame(
+				name=snpnames(res),chromosome=chromosome(res),
+				position=map(res),strand=strand(res),
+				allele1=refallele(res),
+				allele2=effallele(res),
+				build=rep(build,length(coding)),
+				effallele=effallele(res),
+				effallelefreq=efff,
+				n=res[,"N"],
+				beta=res[,"effB"],sebeta=res[,"se_effB"],p=res[,"P1df"],
+				pgc=res[,"Pc1df"],lambda=lambda(res),
+				pexhwe=Phwe,call=callr,stringsAsFactors=FALSE
+		)
+	
+	
+	rownames(out) <- snpnames(res)
 	out
 }

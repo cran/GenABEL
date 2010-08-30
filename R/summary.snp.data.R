@@ -1,5 +1,5 @@
 "summary.snp.data" <-
-	function(object,...) {
+	function(object, ... ) {
 		if (!is(object,"snp.data")) stop("wrong object class, should be snp.data")
 		res <- .C("snp_summary_exhwe",as.raw(object@gtps),as.integer(object@nids),as.integer(object@nsnps), out = double(object@nsnps*9), PACKAGE="GenABEL")$out
 		dim(res) <- c(object@nsnps,9)
@@ -37,9 +37,10 @@
 		}
 
 # report
-		res <- cbind(res,as.factor(object@chromosome))
-		rownames(res) <- object@snpnames
-		colnames(res) <- c("NoMeasured","CallRate","Q.2","P.11","P.12","P.22","Pexact","Fmax","Plrt","Chromosome")
+		rownames(res) <- snpnames(object)
+		colnames(res) <- c("NoMeasured","CallRate","Q.2",
+				"P.11","P.12","P.22","Pexact","Fmax","Plrt")
 		res$Plrt[res$Plrt==0] <- 9.99e-17;
+		res <- cbind(annotation(object),res)
 		res
 	}

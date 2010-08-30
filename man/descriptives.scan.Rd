@@ -5,14 +5,13 @@
 	Describes "top" hits in GWA scan
 }
 \usage{
-	descriptives.scan(data,file,top=10,sortby="P1df",digits = 10, sep ="\t")
+	descriptives.scan(data,file,top=10,sortby="P1df", sep ="\t")
 }
 \arguments{
   \item{data}{an object of \code{\link{snp.data-class}} or \code{\link{gwaa.data-class}}}
   \item{file}{A string specifying the name of a file to write the tables to (default is no file output).}
   \item{top}{How many "top" hits to describe}
   \item{sortby}{How to pick up "top" hits ("P1df","P2df","Pgw1df","Pgw2df")}
-  \item{digits}{number of digits to be printed}
   \item{sep}{field separator (takes effect only if file argument provided)}
 }
 %\details{

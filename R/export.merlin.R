@@ -1,6 +1,9 @@
-"export.merlin" <- function(data,pedfile="merlin.ped",datafile="merlin.dat",mapfile="merlin.map",format="merlin",fixstrand="no",extendedmap=TRUE,traits=1) {
+"export.merlin" <- 
+function(data,pedfile="merlin.ped",datafile="merlin.dat",
+		mapfile="merlin.map",format="merlin",fixstrand="no",
+		extendedmap=TRUE,traits=1, order = TRUE) {
 	if (!is(data,"gwaa.data")) stop("Data argumet should be of gwaa.data-class")
-	formats <- c("merlin")
+	formats <- c("merlin","plink")
 	if (!(match(format,formats,nomatch=0)>0)) {
 		out <- paste("fromat argument should be one of",formats,"\n")
 		stop(out)
@@ -9,6 +12,10 @@
 	if (!(match(fixstrand,fixes,nomatch=0)>0)) {
 		out <- paste("fixstrand argument should be one of",fixes,"\n")
 		stop(out)
+	}
+	if (order) {
+		ord <- sortmap.internal(chromosome(data),map(data))
+		data <- data[,ord$ix]
 	}
 	if (fixstrand != "no") {
 ###### as.raw(1) == "+"
@@ -35,12 +42,14 @@
 	if (data@gtdata@nids>(bstp*1.5)) {
 		steps <- seq(from=0,to=data@gtdata@nids,by=bstp)
 		if (data@gtdata@nids != steps[length(steps)]) steps[length(steps)+1] <- data@gtdata@nids
-		dump.piece(data=data,from=1,to=steps[2],traits=traits,pedfile=pedfile,append=F)
+		dump.piece(data=data,from=1,to=steps[2],traits=traits,
+				pedfile=pedfile,append=F,format=format)
 		for (jjj in c(2:(length(steps)-1))) {
 			dump.piece(data=data,from=(steps[jjj]+1),to=(steps[jjj+1]),traits=traits,pedfile=pedfile,append=T)
 		}
 	} else {
-		dump.piece(data=data,from=1,to=data@gtdata@nids,traits=traits,pedfile=pedfile,append=F)
+		dump.piece(data=data,from=1,to=data@gtdata@nids,traits=traits,
+				pedfile=pedfile,append=F,format=format)
 	}
 	snps <- data@gtdata@snpnames
 	inf <- data.frame(a=rep("M",length(snps)),b=snps)
@@ -49,20 +58,33 @@
 		inf0 <- data.frame(a=rep("T",traits),b=tran)
 		inf <- rbind(inf0,inf)
 	}
-	write.table(inf,file=datafile,col.n=FALSE,row.n=FALSE,quote=FALSE)
-	map <- data.frame(chromosome=as.character(data@gtdata@chromosome),markername=data@gtdata@snpnames,position=data@gtdata@map)
-	write.table(map,file=mapfile,col.n=TRUE,row.n=FALSE,quote=FALSE)
+	if (!is.null(datafile)) {
+		write.table(inf,file=datafile,col.n=FALSE,row.n=FALSE,quote=FALSE)
+	}
+	if (format=="merlin") {
+		map <- data.frame(chromosome=as.character(data@gtdata@chromosome),markername=data@gtdata@snpnames,position=data@gtdata@map)
+		write.table(map,file=mapfile,col.n=TRUE,row.n=FALSE,quote=FALSE)
+	} else if (format=="plink") {
+		map <- data.frame(chromosome=as.character(chromosome(data)),
+				markername=snpnames(data),gpos=0,position=map(data))
+		write.table(map,file=mapfile,col.n=FALSE,row.n=FALSE,quote=FALSE)
+	} else {
+		stop("non-formalized format")
+	}
 	if (extendedmap) {
 		map <- data.frame(chromosome=as.character(data@gtdata@chromosome),markername=data@gtdata@snpnames,position=data@gtdata@map,strand=as.character(data@gtdata@strand),coding=as.character(data@gtdata@coding))
 		write.table(map,file=paste(mapfile,".ext",sep=""),col.n=TRUE,row.n=FALSE,quote=FALSE)
 	}
 }
 
-dump.piece <- function(data,fromid,toid,traits,pedfile,append) {
+dump.piece <- function(data,fromid,toid,traits,pedfile,append,format="merlin") {
 	if (toid < fromid) stop("toid<fromid")
 	x <- as.character(data@gtdata[c(fromid:toid),])
 	x <- replace(x,(x==""),"0/0")
 	x <- replace(x,is.na(x),"0/0")
+	if (format=="plink") {
+		x <- sub("/"," ",x)
+	}
 	ids <- rownames(x)
 	nids <- length(ids)
 	sx <- data@phdata$sex[c(fromid:toid)]
@@ -73,5 +95,5 @@ dump.piece <- function(data,fromid,toid,traits,pedfile,append) {
 	} else {
 		x <- data.frame(seq(fromid,toid),ids,rep(0,nids),rep(0,nids),sx,x)
 	}
-	write.table(x,file=pedfile,col.n=FALSE,row.n=FALSE,quote=FALSE,append=append)
+	write.table(x,file=pedfile,col.n=FALSE,row.n=FALSE,quote=FALSE,append=append,sep=" ")
 }

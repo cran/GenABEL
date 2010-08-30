@@ -80,7 +80,7 @@ data(srdta)
 #qtscore with stratification
 a <- qtscore(qt3~sex,data=srdta)
 plot(a)
-b <- qtscore(qt3,strata=srdta@phdata$sex,data=srdta)
+b <- qtscore(qt3,strata=phdata(srdta)$sex,data=srdta)
 add.plot(b,col="green",cex=2)
 # qtscore with extra adjustment
 a <- qtscore(qt3~sex+age,data=srdta)
@@ -93,6 +93,6 @@ plot(a1,ylim=c(0,2))
 add.plot(a2,col="red",cex=1.5)
 # the good thing about score test is that we can do adjustment...
 a2 <- qtscore(bt~age+sex,data=srdta,snps=c(1:100),trait.type="binomial")
-points(a2$map,-log10(a2$P1df),col="green")
+points(a2[,"Position"],-log10(a2[,"P1df"]),col="green")
 }
 \keyword{htest}% at least one, from doc/KEYWORDS
