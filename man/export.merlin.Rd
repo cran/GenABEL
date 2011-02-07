@@ -6,7 +6,7 @@
 }
 \usage{
 	export.merlin(data, pedfile = "merlin.ped", datafile = "merlin.dat", mapfile = "merlin.map", 
-	format = "merlin", fixstrand = "no", extendedmap = TRUE, traits = 1, order = TRUE)
+	format = "merlin", fixstrand = "no", extendedmap = TRUE, traits = 1, order = TRUE, stepids = 100)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,6 +21,7 @@
 	where "mapfile" is the parameter supplied by user}
   \item{traits}{How many fake traits to insert before first column of marker data}
   \item{order}{Should output be ordered by chromosome and position}
+  \item{stepids}{make this larger for faster processing and smaller for lower RAM use}
 }
 \details{
 	The use is straightforward, with only the "fixstrand" option requiring some 

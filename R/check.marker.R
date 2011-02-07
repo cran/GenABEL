@@ -5,7 +5,7 @@ function(data, snpsubset, idsubset,
 			maf, p.level=-1, 
 			fdrate = 0.2, odds = 1000, hweidsubset, redundant="no", minconcordance = 2.0, 
 			qoption="bh95",imphetasmissing=TRUE,XXY.call=0.8, 
-			intermediateXF = c(0.2,0.8)) {
+			intermediateXF = c(0.5,0.5)) {
 
 	if (is(data,"gwaa.data")) data <- data@gtdata
 	if (!is(data,"snp.data")) stop("data argument should be of type gwaa.data or snp.data");

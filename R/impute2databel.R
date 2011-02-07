@@ -114,7 +114,14 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 	
 	if (!missing(samplefile))
 	{
-		temp <- scan(samplefile,what="character",nlines=1)
+		l1 <- scan(samplefile,what="character",nlines=1)
+		l2 <- scan(samplefile,what="character",nlines=1,skip=1)
+		temp <- scan(samplefile,what="character",nlines=1,skip=2)
+
+		if((length(l1)!=length(temp)) || (length(temp)!=length(l2))){
+            warning("Wrong number of words in sample file's header.");
+		}		
+
 		samnames <- scan(samplefile,what="character",skip=2)
 		samnames <- samnames[c(F,T,rep(F,(length(temp)-2)))]
 		if (length(samnames) == dim(dosefile)[1]) { 

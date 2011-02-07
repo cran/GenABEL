@@ -1,5 +1,6 @@
 \name{summary.snp.data}
 \alias{summary.snp.data}
+\alias{summary.snp.data_old}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{function to summary GWAA data}
 \description{
@@ -28,7 +29,7 @@ Hardy-Weinberg Equilibrium. American Journal of Human Genetics. 76: 887-93.
 \author{Yurii Aulchenko}
 \note{
 	The P-values reported for X-chromosome are based on analysis of female 
-	data, but other statistics (freqencies, calls, ...) are based on all data.
+	data, but other statistics (frequencies, calls, ...) are based on all data.
 	Statistics for Y-chromosome are based on male-only. P-HWE is not defined 
 	for mt- and Y- markers (set to 1.0).
 }

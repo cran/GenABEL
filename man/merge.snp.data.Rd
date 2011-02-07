@@ -5,7 +5,7 @@
 	function to merge two objects of snp.data-class
 }
 \usage{
-merge.snp.data(x, y, ... , error_amount = 1e+06, replacena = TRUE, forcestranduse = FALSE, sort = TRUE)
+merge.snp.data(x, y, ... , error_amount = 1e+06, replacena = TRUE, forcestranduse = FALSE, sort = TRUE, intersected_snps_only = FALSE)
 }
 \arguments{
   \item{x}{the first object of \code{\link{snp.data-class}}}
@@ -20,6 +20,8 @@ merge.snp.data(x, y, ... , error_amount = 1e+06, replacena = TRUE, forcestrandus
 	}
   \item{sort}{if TRUE, sorts the object according to chromosome and SNP 
 	position
+	}
+  \item{intersected_snps_only}{if TRUE, then only interesected SNPs will be in output
 	}
 }
 \details{

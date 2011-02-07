@@ -133,7 +133,8 @@
 #' 
 #' @aliases GenABEL-package GenABEL
 #' 
-#' @author Yurii Aulchenko
+#' @author Yurii Aulchenko et al. 
+#' (see help pages for specific functions)
 #' 
 #' @references 
 #' If you use GenABEL package in your analysis, please cite the following work:

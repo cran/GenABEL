@@ -41,4 +41,5 @@
 	
 	export.merlin(data,pedfile=pedf,datafile=NULL,
 			mapfile=mapf,format="plink", extendedmap=FALSE, ... )
+	
 }

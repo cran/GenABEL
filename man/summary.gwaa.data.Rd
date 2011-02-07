@@ -5,7 +5,7 @@
 Summary of phenotypic and genotypic parts of GWAA data
 }
 \usage{
-summary.gwaa.data(object, ...)
+\method{summary}{gwaa.data}(object, ...) 
 }
 \arguments{
   \item{object}{object of class \code{\link{gwaa.data-class}}}

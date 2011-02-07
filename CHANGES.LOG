@@ -1,3 +1,52 @@
+***** v. 1.6-5 (2011.02.07)
+
+Added '#include <cstdarg>' to iterator.cpp to solve 
+'[#1273] GenABEL 1.6-5 does not compile'
+
+commented S4methods... in NAMESPACE to meet the 
+request from the R-team; patched documentation for 
+summary.scan.gwaa and summary.gwaa.data 
+in order to avoid NOTE about S3methods "usage" 
+section
+
+added extra checks for impute2databel to ensure that 
+sample file header is not used
+
+change in merge.snp.data by Maksim Struchalin, adding option 
+"intersected_snps_only" (if TRUE, then only interesected SNPs 
+will be in output)
+
+Disabled check on intermediateXF in check.marker by setting intermediateXF=c(.5,.5) 
+by default. This will be dealt with further (see tracker '[#1210] intermediate 
+inbreeding checks with check.marker' ) 
+
+patched Roxygen documentation for qtscore
+
+use of 'setTxtProgressBar' in qtscore with times > 1 to indicate progress
+
+polygenic() added default option patchBasedOnFGLS, if no convergence based 
+on difFGLS criterion, fixed effect betas are patched to FGLS betas before 
+starting re-iteration 
+
+adding a wrapper chi2_CG -> cocohet
+
+fixed 'demo(ge03d2)'
+
+'stepids' argument added to export.merlin
+
+Fan/Maksim's procedure for cocohet (CCH) procedure added, renamed by Yurii
+
+Bug fix in export.plink() thanks to Nadya Belonogova
+
+Made sure that SE reported does not carry the sign of beta (always 'abs')
+
+added mechanism to check for updates at load time
+
+moved summary.snp.data to 'iterator' framework, changes in gwaa.data@gtdata@gtps 
+definition, now 'ANY' allowing for use of different types of data with 
+interator. Interestingly, for 'old' data type computations became faster!
+
+
 ***** v. 1.6-4 (2010.08.30)
 
 new official release tested by ESP29-2010 participants

@@ -1,7 +1,7 @@
 "export.merlin" <- 
 function(data,pedfile="merlin.ped",datafile="merlin.dat",
 		mapfile="merlin.map",format="merlin",fixstrand="no",
-		extendedmap=TRUE,traits=1, order = TRUE) {
+		extendedmap=TRUE,traits=1, order = TRUE, stepids = 100) {
 	if (!is(data,"gwaa.data")) stop("Data argumet should be of gwaa.data-class")
 	formats <- c("merlin","plink")
 	if (!(match(format,formats,nomatch=0)>0)) {
@@ -38,14 +38,15 @@ function(data,pedfile="merlin.ped",datafile="merlin.dat",
 		  names(data@gtdata@strand) <- savnam
 		}
 	}
-	bstp <- 100
+	bstp <- stepids #100
 	if (data@gtdata@nids>(bstp*1.5)) {
 		steps <- seq(from=0,to=data@gtdata@nids,by=bstp)
 		if (data@gtdata@nids != steps[length(steps)]) steps[length(steps)+1] <- data@gtdata@nids
 		dump.piece(data=data,from=1,to=steps[2],traits=traits,
 				pedfile=pedfile,append=F,format=format)
 		for (jjj in c(2:(length(steps)-1))) {
-			dump.piece(data=data,from=(steps[jjj]+1),to=(steps[jjj+1]),traits=traits,pedfile=pedfile,append=T)
+			dump.piece(data=data,from=(steps[jjj]+1),to=(steps[jjj+1]),traits=traits,
+					pedfile=pedfile,append=T,format=format)
 		}
 	} else {
 		dump.piece(data=data,from=1,to=data@gtdata@nids,traits=traits,

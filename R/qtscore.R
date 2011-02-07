@@ -1,3 +1,92 @@
+#' Fast score test for association
+#' 
+#' Fast score test for association 
+#' between a trait and genetic polymorphism
+#' 
+#' When formula contains covariates, the traits is analysed using GLM and later 
+#' residuals used when score test is computed for each of the SNPs in analysis. 
+#' Coefficients of regression are reported for the quantitative trait.
+#' 
+#' For binary traits, odds ratios (ORs) are reportted. When adjustemnt is 
+#' performed, first, "response" residuals are estimated after adjustment for 
+#' covariates and scaled to [0,1]. Reported effects are approximately equal 
+#' to ORs expected in logistic regression model. 
+#' 
+#' With no adjustment for binary traits, 1 d.f., the test is equivalent to the 
+#' Armitage test.
+#' 
+#' This is a valid function to analyse GWA data, including X chromosome. For X chromosome,
+#' stratified analysis is performed (strata=sex).
+#' 
+#' @param formula Formula describing fixed effects to be used in analysis, e.g. 
+#' y ~ a + b means that outcome (y) depends on two covariates, a and b. 
+#' If no covariates used in analysis, skip the right-hand side of the 
+#' equation.
+#' @param data An object of \code{\link{gwaa.data-class}}
+#' @param snpsubset ndex, character or logical vector with subset of SNPs to run analysis on. 
+#' If missing, all SNPs from \code{data} are used for analysis.
+#' @param idsubset ndex, character or logical vector with subset of IDs to run analysis on. 
+#' If missing, all people from \code{data/cc} are used for analysis.
+#' @param strata Stratification variable. If provieded, scores are computed within strata and 
+#' then added up.
+#' @param trait.type "gaussian" or "binomial" or "guess" (later option guesses trait type)
+#' @param times If more then one, the number of replicas to be used in derivation of 
+#' empirical genome-wide significance. See \code{\link{emp.qtscore}}, which
+#' calls qtscore with times>1 for details
+#' @param quiet do not print warning messages
+#' @param bcast If the argument times > 1, progress is reported once in bcast replicas
+#' @param clambda If inflation facot Lambda is estimated as lower then one, this parameter 
+#' controls if the original P1df (clambda=TRUE) to be reported in Pc1df, 
+#' or the original 1df statistics is to be multiplied onto this "deflation" 
+#' factor (clambda=FALSE). If a numeric value is provided, it is used as a correction factor.
+#' @param propPs proportion of non-corrected P-values used to estimate the inflation factor Lambda,
+#' passed directly to the \code{\link{estlambda}}
+#' @param details when FALSE, SNP and ID names are not reported in the returned object
+#' (saves some memory). This is experimental and will be not mantained anymore 
+#' as soon as we achieve better memory efficiency for storage of SNP and ID names
+#' (currently default R character data type used)
+#' 
+#' @return Object of class \code{\link{scan.gwaa-class}}
+#' 
+#' @references 
+#' Aulchenko YS, de Koning DJ, Haley C. Genomewide rapid association using mixed model 
+#' and regression: a fast and simple method for genome-wide pedigree-based quantitative 
+#' trait loci association analysis. Genetics. 2007 177(1):577-85.
+#' 
+#' Amin N, van Duijn CM, Aulchenko YS. A genomic background based method for 
+#' association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274. 
+#' 
+#' @author Yurii Aulchenko
+#' 
+#' @seealso \code{\link{mlreg}},
+#' \code{\link{mmscore}},
+#' \code{\link{egscore}},
+#' \code{\link{emp.qtscore}},
+#' \code{\link{plot.scan.gwaa}},
+#' \code{\link{scan.gwaa-class}}
+#' 
+#' @examples 
+#' data(srdta)
+#' #qtscore with stratification
+#' a <- qtscore(qt3~sex,data=srdta)
+#' plot(a)
+#' b <- qtscore(qt3,strata=phdata(srdta)$sex,data=srdta)
+#' add.plot(b,col="green",cex=2)
+#' # qtscore with extra adjustment
+#' a <- qtscore(qt3~sex+age,data=srdta)
+#' a
+#' plot(a)
+#' # compare results of score and chi-square test for binary trait
+#' a1 <- ccfast("bt",data=srdta,snps=c(1:100))
+#' a2 <- qtscore(bt,data=srdta,snps=c(1:100),trait.type="binomial")
+#' plot(a1,ylim=c(0,2))
+#' add.plot(a2,col="red",cex=1.5)
+#' # the good thing about score test is that we can do adjustment...
+#' a2 <- qtscore(bt~age+sex,data=srdta,snps=c(1:100),trait.type="binomial")
+#' points(a2[,"Position"],-log10(a2[,"P1df"]),col="green")
+#' 
+#' @keywords htest
+#' 
 "qtscore" <-
 		function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",
 				times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
@@ -82,6 +171,7 @@
 	if (trait.type=="binomial") bin<-1 else bin<-0
 	lenn <- data@gtdata@nsnps;
 	###out <- list()
+	if (times>1) {pb <- txtProgressBar(style = 3)}
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) resid <- sample(resid,replace=FALSE)
 		chi2 <- .C("qtscore_glob",as.raw(data@gtdata@gtps),as.double(resid),as.integer(bin),as.integer(data@gtdata@nids),as.integer(data@gtdata@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(10*data@gtdata@nsnps), PACKAGE="GenABEL")$chi2
@@ -178,14 +268,17 @@
 			pr.2df <- pr.2df + 1*(chi2.2df < max(chi2[(lenn+1):(2*lenn)]))
 			pr.c1df <- pr.c1df + 1*(chi2.c1df < th1)
 			pr.c2df <- pr.c2df + 1*(chi2.c2df < th1)
+#			if (!quiet && ((j-1)/bcast == round((j-1)/bcast))) {
+			##				cat("\b\b\b\b\b\b",round((100*(j-1)/times),digits=2),"%",sep="")
+#				cat(" ",round((100*(j-1)/times),digits=2),"%",sep="")
+#				flush.console()
+#			}
 			if (!quiet && ((j-1)/bcast == round((j-1)/bcast))) {
-#				cat("\b\b\b\b\b\b",round((100*(j-1)/times),digits=2),"%",sep="")
-				cat(" ",round((100*(j-1)/times),digits=2),"%",sep="")
-				flush.console()
+				setTxtProgressBar(pb, (j-1)/times)
 			}
 		}
 	}
-	if (times > bcast) cat("\n")
+	if (times > bcast) {setTxtProgressBar(pb, 1.0);cat("\n")}
 	
 	if (times>1) {
 		P1df <- pr.1df/times
@@ -219,12 +312,12 @@
 	#class(out) <- "scan.gwaa"
 	if (is.null(Pc1df)) {
 		results <- data.frame(N=chi2[(6*lenn+1):(lenn*7)],
-				effB = effB, se_effB = effB/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
+				effB = effB, se_effB = abs(effB)/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
 				effAB=effAB, effBB=effBB, chi2.2df = chi2.2df, P2df = P2df,
 				stringsAsFactors = FALSE)
 	} else {
 		results <- data.frame(N=chi2[(6*lenn+1):(lenn*7)],
-				effB = effB, se_effB = effB/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
+				effB = effB, se_effB = abs(effB)/sqrt(chi2.1df), chi2.1df = chi2.1df, P1df = P1df, 
 				Pc1df = Pc1df, 
 				effAB=effAB, effBB=effBB, chi2.2df = chi2.2df, P2df = P2df,
 				stringsAsFactors = FALSE)
@@ -241,203 +334,3 @@
 	out
 }
 
-###### ----------------------- ##################
-
-"qtscore.old" <-
-		function(formula,data,snpsubset,idsubset,strata,trait.type="gaussian",times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0,details=TRUE) {
-	if (!is(data,"gwaa.data")) {
-		stop("wrong data class: should be gwaa.data")
-	}
-	if (!missing(snpsubset)) data <- data[,snpsubset]
-	if (!missing(idsubset)) data <- data[idsubset,]
-	if (missing(strata)) {nstra=1; strata <- rep(0,data@gtdata@nids)}
-	ttargs <- c("gaussian","binomial")
-	if (!(match(trait.type,ttargs,nomatch=0)>0)) {
-		out <- paste("trait.type argument should be one of",ttargs,"\n")
-		stop(out)
-	}
-	if (trait.type=="gaussian") fam <- gaussian()
-	if (trait.type=="binomial") fam <- binomial()
-	
-	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
-	if (is(formula,"formula")) {
-		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
-		y <- model.response(mf)
-#		sdy <- sd(y)
-#		meany <- mean(y)
-#		if (trait.type=="gaussian") y <- (y-mean(y))/sd(y)
-		desmat <- model.matrix(formula,mf)
-		lmf <- glm.fit(desmat,y,family=fam)
-#		iniest <- lmf$coeff
-		mids <- rownames(data@phdata) %in% rownames(mf)
-		if (trait.type=="binomial") {
-			bin <- 1
-		} else {
-			bin <- 0
-		}
-		resid <- lmf$resid
-	} else if (is(formula,"numeric") || is(formula,"integer") || is(formula,"double")) {
-		y <- formula
-		mids <- (!is.na(y))
-		y <- y[mids]
-		resid <- y
-		if (length(unique(resid))==1) stop("trait is monomorphic")
-		if (length(unique(resid))==2) bin <- 1 else bin <- 0
-		if (!missing(trait.type)) {
-			if (trait.type=="binomial") {
-				if (bin == 0) stop("more then two levels in trait")
-				bin <- 1
-			} else if (trait.type=="gaussian") {
-				if (bin == 1) warning("binomial traits is analysed as gaussian")
-				bin <- 0
-			} else {
-				stop("trait type should be either binomial or gaussian")
-			}
-		}
-		if (bin == 1) {
-			trait.type="binomial" 
-			tmp <- levels(as.factor(y))
-			if (tmp[1] != "0" || tmp[2] != "1") stop("binomial outcome should be coded as 0/1")
-		} else if (bin == 0) {
-			trait.type="gaussian"
-		}
-	} else {
-		stop("formula argument must be a formula or one of (numeric, integer, double)")
-	}
-	if (!missing(data)) detach(data@phdata)
-	if (length(strata)!=data@gtdata@nids) stop("Strata variable and the data do not match in length")
-	if (any(is.na(strata))) stop("Strata variable contains NAs")
-	if (any(strata!=0)) {
-		olev <- levels(as.factor(strata))
-		nstra <- length(olev)
-		tstr <- strata
-		for (i in 0:(nstra-1)) tstr <- replace(tstr,(strata==olev[i+1]),i)
-		strata <- tstr
-		rm(tstr)
-	}
-	nstra <- length(levels(as.factor(strata)))
-	
-	tmeas <- as.logical(mids)
-	strata <- strata[tmeas]
-	
-	if (any(tmeas == FALSE)) {
-		if (!quiet) warning(paste(sum(!tmeas),"people (out of",length(tmeas),") excluded because they have trait or covariate missing\n"),immediate. = TRUE)
-		data <- data[tmeas,]
-	}
-	
-	lenn <- data@gtdata@nsnps;
-	out <- list()
-	for (j in c(1:(times+1*(times>1)))) {
-		if (j>1) resid <- sample(resid,replace=FALSE)
-		chi2 <- .C("qtscore",as.raw(data@gtdata@gtps),as.double(resid),as.integer(bin),as.integer(data@gtdata@nids),as.integer(data@gtdata@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(7*data@gtdata@nsnps), PACKAGE="GenABEL")$chi2
-		if (any(data@gtdata@chromosome=="X")) {
-			ogX <- data@gtdata[,data@gtdata@chromosome=="X"]
-			sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
-			chi2X <- .C("qtscore",as.raw(ogX@gtps),as.double(resid),as.integer(bin),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(7*ogX@nsnps), PACKAGE="GenABEL")$chi2
-			revec <- (data@gtdata@chromosome=="X")
-			revec <- rep(revec,6)
-			chi2 <- replace(chi2,revec,chi2X)
-			rm(ogX,chi2X,revec);gc(verbose=FALSE)
-		}
-		if (j == 1) {
-			chi2.1df <- chi2[1:lenn];
-			out$chi2.1df <- chi2.1df
-			chi2.2df <- chi2[(lenn+1):(2*lenn)];
-			out$chi2.2df <- chi2.2df
-			actdf <- chi2[(2*lenn+1):(3*lenn)];
-			if (lenn<=10 && !is.numeric(clambda)) {
-				lambda <- list()
-				lambda$estimate <- NA
-				lambda$se <- NA
-				chi2.c1df <- chi2.1df;
-			} else {
-				if (is.numeric(clambda)) {
-					lambda <- list()
-					lambda$estimate <- clambda
-					lambda$se <- NA
-					chi2.c1df <- chi2.1df/lambda$estimate;
-				} else {
-					lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
-					def <- 1/lambda$estimate
-					if (def > 1 && clambda) {
-						chi2.c1df <- chi2.1df;
-					} else {
-						chi2.c1df <- def*chi2.1df;
-					}
-				}
-			}
-			effB <- chi2[(3*lenn+1):(lenn*4)]
-			effAB <- chi2[(4*lenn+1):(lenn*5)]
-			effBB <- chi2[(5*lenn+1):(lenn*6)]
-			if (times>1) {
-				pr.1df <- rep(0,lenn)
-				pr.2df <- rep(0,lenn)
-				pr.c1df <- rep(0,lenn)
-			}
-		} else {
-			th1 <- max(chi2[1:lenn])
-			pr.1df <- pr.1df + 1*(chi2.1df < th1)
-			pr.2df <- pr.2df + 1*(chi2.2df < max(chi2[(lenn+1):(2*lenn)]))
-			pr.c1df <- pr.c1df + 1*(chi2.c1df < th1)
-			if (!quiet && ((j-1)/bcast == round((j-1)/bcast))) {
-				cat("\b\b\b\b\b\b",round((100*(j-1)/times),digits=2),"%",sep="")
-				flush.console()
-			}
-		}
-	}
-	if (times > bcast) cat("\n")
-	
-	if (times>1) {
-		out$P1df <- pr.1df/times
-		out$P1df <- replace(out$P1df,(out$P1df==0),1/(1+times))
-		out$P2df <- pr.2df/times
-		out$P2df <- replace(out$P2df,(out$P2df==0),1/(1+times))
-		out$Pc1df <- pr.c1df/times
-		out$Pc1df <- replace(out$Pc1df,(out$Pc1df==0),1/(1+times))
-	} else {
-		out$P1df <- pchisq(chi2.1df,1,lower=F)
-		out$P2df <- pchisq(chi2.2df,actdf,lower=F)
-		out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
-	}
-	out$lambda <- lambda
-	out$effB <- effB
-	out$effAB <- effAB
-	out$effBB <- effBB
-	out$N <- chi2[(6*lenn+1):(lenn*7)]
-	if (details) {
-		out$snpnames <- data@gtdata@snpnames
-		out$idnames <- data@gtdata@idnames
-	}
-	out$map <- data@gtdata@map
-	out$chromosome <- data@gtdata@chromosome
-	out$formula <- match.call()
-	out$family <- paste("score test for association with trait type",trait.type)
-	class(out) <- "scan.gwaa"
-	out
-}
-
-"test.type" <-
-		function(resid,trait.type) {
-	if (ismono(resid)) stop("trait is monomorphic")
-	if (isbinomial(resid)) {
-		if (trait.type == "gaussian") warning("binomial trait is analysed as gaussian")
-		tmp <- levels(as.factor(resid))
-		if (tmp[1] != "0" || tmp[2] != "1") stop("binomial outcome should be coded as 0/1")
-	} else {
-		if (trait.type == "binomial") stop("can not analyse trait with > 2 levels as binomial")
-	}
-}
-
-"isbinomial" <- 
-		function(y) {
-	y <- y[!is.na(y)]
-	if (length(unique(y)) > 2) return(FALSE)
-	else return(TRUE) 
-}
-
-"ismono" <- 
-		function(y) {
-	y <- y[!is.na(y)]
-	if (length(unique(y)) <= 1) return(TRUE)
-	else return(FALSE) 
-}

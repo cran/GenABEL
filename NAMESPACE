@@ -26,6 +26,7 @@ export(
 	ccfast,
 	check.marker,
 	check.trait,
+	cocohet,
 	convert.snp.affymetrix,
 	convert.snp.illumina,
 	convert.snp.mach,
@@ -33,6 +34,7 @@ export(
 	convert.snp.tped,
 	convert.snp.text,
 	crnames,
+	chi2_CG,
 	del.phdata,
 	descriptives.marker,
 	descriptives.scan,
@@ -93,11 +95,12 @@ export(
 	sset,
 	strand,
 	summary.check.marker,
-	summary.gwaa.data,
+	#summary.gwaa.data,
 	summary.snp.data,
-	summary.scan.gwaa,
+	summary.snp.data_old,
+	#summary.scan.gwaa,
 	Xfix,
-	ztransform #,
+	ztransform
 	#var.meta,
 	#var.test.homogeneity
 	#var.test.homogeneity.bartlett
@@ -146,9 +149,9 @@ S3method(plot,check.marker)
 S3method(plot,scan.gwaa)
 S3method(plot,scan.gwaa.2D)
 
-S4method('[',snp.data)
-S4method('[',gwaa.data)
-S4method('[',snp.mx)
+#S4method('[',snp.data)
+#S4method('[',gwaa.data)
+#S4method('[',snp.mx)
 
 S3method(as.character,gwaa.data)
 S3method(as.character,snp.data)

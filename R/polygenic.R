@@ -1,108 +1,110 @@
 #' Estimation of polygenic model
 #' 
-#'  This function maximises the likelihood of the data under polygenic 
-#' 	model with covariates an reports twice negative maximum likelihood estimates 
-#' 	and the inverse of variance-covariance matrix at the point of ML. 
+#' This function maximises the likelihood of the data under polygenic 
+#' model with covariates an reports twice negative maximum likelihood estimates 
+#' and the inverse of variance-covariance matrix at the point of ML. 
 #' 
-#' 	One of the major use of this function is to estimate residuals of the 
-#' 	trait and the inverse of the variance-covariance matrix for 
-#' 	further use in analysis with \code{\link{mmscore}} and 
-#' 	\code{\link{grammar}}.
+#' One of the major use of this function is to estimate residuals of the 
+#' trait and the inverse of the variance-covariance matrix for 
+#' further use in analysis with \code{\link{mmscore}} and 
+#' \code{\link{grammar}}.
 #' 
-#' 	Also, it can be used for a variant of GRAMMAR analysis, which 
-#' 	allows for permutations for GW significance by use of 
-#' 	environmental residuals as an analysis trait with \code{\link{qtscore}}.
+#' Also, it can be used for a variant of GRAMMAR analysis, which 
+#' allows for permutations for GW significance by use of 
+#' environmental residuals as an analysis trait with \code{\link{qtscore}}.
 #' 
-#' 	"Environmental residuals" (not to be mistaken with just "residuals") are 
-#' 	the residual where both the effect of covariates AND the estimated 
-#' 	polygenic effect (breeding values) are factored out. This thus 
-#' 	provides an estimate of the trait value contributed by environment
-#' 	(or, turning this other way around, the part of trait not explained 
-#' 	by covariates and by the polygene). Polygenic residuals are estimated 
-#' 	as
+#' "Environmental residuals" (not to be mistaken with just "residuals") are 
+#' the residual where both the effect of covariates AND the estimated 
+#' polygenic effect (breeding values) are factored out. This thus 
+#' provides an estimate of the trait value contributed by environment
+#' (or, turning this other way around, the part of trait not explained 
+#' by covariates and by the polygene). Polygenic residuals are estimated 
+#' as
 #' 
-#' 	\deqn{
-#' 	\sigma^2  V^{-1} (Y - (\hat{\mu} + \hat{\beta} C_1 + ...))
-#' 	}
+#' \deqn{
+#' \sigma^2 V^{-1} (Y - (\hat{\mu} + \hat{\beta} C_1 + ...))
+#' }
 #' 
-#' 	where \eqn{sigma^2} is the residual variance, \eqn{V^{-1}} is the 
-#' 	InvSigma (inverse of the var-cov matrix at the maximum of 
-#' 	polygenic model) and 
-#' 	\eqn{(Y - (\hat{\mu} + \hat{\beta} C_1 + ...))} is the trait 
-#' 	values adjusted for covariates (also at at the maximum of 
-#' 	polygenic model likelihood). 
+#' where \eqn{sigma^2} is the residual variance, \eqn{V^{-1}} is the 
+#' InvSigma (inverse of the var-cov matrix at the maximum of 
+#' polygenic model) and 
+#' \eqn{(Y - (\hat{\mu} + \hat{\beta} C_1 + ...))} is the trait 
+#' values adjusted for covariates (also at at the maximum of 
+#' polygenic model likelihood). 
 #' 
-#' 	It can also be used for heritability analysis.
-#' 	If you want to test significance of heritability, 
-#' 	estimate the model and write down 
-#' 	the function minimum reported at "h2an" element of the output 
-#' 	(this is twice negative MaxLikleihood). Then do next round of 
-#' 	estimation, but set fixh2=0. The difference between you function minima 
-#' 	gives a test distribued as chi-squared with 1 d.f.
+#' It can also be used for heritability analysis.
+#' If you want to test significance of heritability, 
+#' estimate the model and write down 
+#' the function minimum reported at "h2an" element of the output 
+#' (this is twice negative MaxLikleihood). Then do next round of 
+#' estimation, but set fixh2=0. The difference between you function minima 
+#' gives a test distribued as chi-squared with 1 d.f.
 #' 
-#' 	The way to compute the likleihood is partly based on 
-#' 	the paper of Thompson (see refs), namely instead of 
-#' 	taking inverse of var-cov matrix every time, 
-#' 	eigenvectors of the inverse of G (taken only once) 
-#' 	are used.
+#' The way to compute the likleihood is partly based on 
+#' the paper of Thompson (see refs), namely instead of 
+#' taking inverse of var-cov matrix every time, 
+#' eigenvectors of the inverse of G (taken only once) 
+#' are used.
 #' 
 #' 
-#'  @param formula Formula describing fixed effects to be used in analysis, e.g. 
-#' 	y ~ a + b means that outcome (y) depends on two covariates, a and b. 
-#' 	If no covariates used in analysis, skip the right-hand side of the 
-#' 	equation.
-#'  @param kinship.matrix Kinship matrix, as provided by e.g. ibs(,weight="freq"), 
-#' 	or estimated outside of GenABEL from pedigree data.
-#'  @param data An (optional) object of \code{\link{gwaa.data-class}} or a data frame with 
-#' 	outcome and covariates
-#'  @param fixh2 Optional value of heritability to be used, instead of maximisation. 
-#' 	The uses of this option are two-fold: (a) testing significance of 
-#' 	heritability and (b) using a priori known heritability to derive the 
-#' 	rest of MLEs and var.-cov. matrix.
-#'  @param starth2 Starting value for h2 estimate
-#'  @param trait.type "gaussian" or "binomial"
-#'  @param opt.method "nlm" or "optim". These two use dirrerent optimisation functions. 
-#'  We suggest using the default \code{\link{nlm}}, though 
-#' 	\code{\link{optim}} may give better results in some situations
-#'  @param scaleh2 Only relevant when "nlm" optimisation function is used. 
-#' 	"scaleh2" is the heritability 
-#' 	scaling parameter, regulating how "big" are parameter changes in h2 with the 
-#' 	respect to changes in other parameters. As other parameters are estimated 
-#' 	from previous regression, these are expected to change little from the 
-#' 	initial estimate. The default value of 1000 proved to work rather well under a 
-#' 	range of conditions.
-#'  @param quiet If FALSE (default), details of optimisation process are reported.
-#'  @param steptol steptal parameter of "nlm"
-#'  @param gradtol gradtol parameter of "nlm" 
-#'  @param optimbou fixed effects boundary scale parameter for 'optim'
-#'  @param fglschecks additional check for convergance on/off (convergence 
-#'  between estimates obtained and that from FGLS)
-#'  @param maxnfgls number of fgls checks to perform
-#'  @param maxdiffgls max difference allowed in fgls checks 
-#'  @param ... Optional arguments to be passed to \code{\link{nlm}} or (\code{\link{optim}}) 
-#' 	minimisation function
+#' @param formula Formula describing fixed effects to be used in analysis, e.g. 
+#' y ~ a + b means that outcome (y) depends on two covariates, a and b. 
+#' If no covariates used in analysis, skip the right-hand side of the 
+#' equation.
+#' @param kinship.matrix Kinship matrix, as provided by e.g. ibs(,weight="freq"), 
+#' or estimated outside of GenABEL from pedigree data.
+#' @param data An (optional) object of \code{\link{gwaa.data-class}} or a data frame with 
+#' outcome and covariates
+#' @param fixh2 Optional value of heritability to be used, instead of maximisation. 
+#' The uses of this option are two-fold: (a) testing significance of 
+#' heritability and (b) using a priori known heritability to derive the 
+#' rest of MLEs and var.-cov. matrix.
+#' @param starth2 Starting value for h2 estimate
+#' @param trait.type "gaussian" or "binomial"
+#' @param opt.method "nlm" or "optim". These two use dirrerent optimisation functions. 
+#' We suggest using the default \code{\link{nlm}}, though 
+#' \code{\link{optim}} may give better results in some situations
+#' @param scaleh2 Only relevant when "nlm" optimisation function is used. 
+#' "scaleh2" is the heritability 
+#' scaling parameter, regulating how "big" are parameter changes in h2 with the 
+#' respect to changes in other parameters. As other parameters are estimated 
+#' from previous regression, these are expected to change little from the 
+#' initial estimate. The default value of 1000 proved to work rather well under a 
+#' range of conditions.
+#' @param quiet If FALSE (default), details of optimisation process are reported.
+#' @param steptol steptal parameter of "nlm"
+#' @param gradtol gradtol parameter of "nlm" 
+#' @param optimbou fixed effects boundary scale parameter for 'optim'
+#' @param fglschecks additional check for convergance on/off (convergence 
+#' between estimates obtained and that from FGLS)
+#' @param maxnfgls number of fgls checks to perform
+#' @param maxdiffgls max difference allowed in fgls checks 
+#' @param patchBasedOnFGLS if FGLS checks not passed, 'patch' fixed 
+#' effect estimates based on FGLS expectation
+#' @param ... Optional arguments to be passed to \code{\link{nlm}} or (\code{\link{optim}}) 
+#' minimisation function
 #' 
-#'  @return 
-#'   A list with values 
-#'   \item{h2an}{A list supplied by the \code{\link{nlm}} minimisation routine. 
-#' 	Of particular interest are elements "estimate" containing parameter 
-#' 	maximal likelihood estimates (MLEs) (order: mean, betas for covariates, 
-#' 	heritability, (polygenic + residual variance)). The value of 
-#' 	twice negative maximum log-likelihood
-#' 	is returned as h2an\$minimum.}
-#'   \item{residualY}{Residuals from analysis, based on covariate effects only; 
-#' 	NOTE: these are NOT grammar "environmental residuals"!}
-#'   \item{esth2}{Estimate (or fixed value) of heritability}
-#'   \item{pgresidualY}{Environmental residuals from analysis, based on covariate effects 
-#' 	and predicted breeding value.
-#' 	}
-#'   \item{InvSigma}{Inverse of the variance-covariance matrix, computed at the 
-#' 	MLEs -- these are used in \code{\link{mmscore}} and \code{\link{grammar}}
-#' 	functions.}
-#'   \item{call}{The details of call}
-#'   \item{measuredIDs}{Logical values for IDs who were used in analysis 
-#' 	(traits and all covariates measured) == TRUE}
-#'   \item{convFGLS}{was convergence achieved according to FGLS criterionE}
+#' @return 
+#' A list with values 
+#' \item{h2an}{A list supplied by the \code{\link{nlm}} minimisation routine. 
+#' Of particular interest are elements "estimate" containing parameter 
+#' maximal likelihood estimates (MLEs) (order: mean, betas for covariates, 
+#' heritability, (polygenic + residual variance)). The value of 
+#' twice negative maximum log-likelihood
+#' is returned as h2an\$minimum.}
+#' \item{residualY}{Residuals from analysis, based on covariate effects only; 
+#' NOTE: these are NOT grammar "environmental residuals"!}
+#' \item{esth2}{Estimate (or fixed value) of heritability}
+#' \item{pgresidualY}{Environmental residuals from analysis, based on covariate effects 
+#' and predicted breeding value.
+#' }
+#' \item{InvSigma}{Inverse of the variance-covariance matrix, computed at the 
+#' MLEs -- these are used in \code{\link{mmscore}} and \code{\link{grammar}}
+#' functions.}
+#' \item{call}{The details of call}
+#' \item{measuredIDs}{Logical values for IDs who were used in analysis 
+#' (traits and all covariates measured) == TRUE}
+#' \item{convFGLS}{was convergence achieved according to FGLS criterionE}
 #' 
 #' 
 #' @references 
@@ -116,16 +118,16 @@
 #' 
 #' Amin N, van Duijn CM, Aulchenko YS. A genomic background based method for 
 #' association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274.
-#'  
+#' 
 #' @author Yurii Aulchenko
 #' 
 #' @note 
-#' 	Presence of twins may complicate your analysis. Check kinship matrix for 
-#' 	singularities, or rather use \code{\link{check.marker}} for identification 
-#' 	of twin samples. Take special care in interpretation.
+#' Presence of twins may complicate your analysis. Check kinship matrix for 
+#' singularities, or rather use \code{\link{check.marker}} for identification 
+#' of twin samples. Take special care in interpretation.
 #' 
-#' 	If a trait (no covarites) is used, make sure that order of IDs in 
-#' 	kinship.matrix is exactly the same as in the outcome
+#' If a trait (no covarites) is used, make sure that order of IDs in 
+#' kinship.matrix is exactly the same as in the outcome
 #' 
 #' @seealso 
 #' \code{\link{mmscore}},
@@ -150,14 +152,14 @@
 #' # estimated parameters
 #' h2dm$h2an
 #' 
-#' @keywords 
-#' htest
+#' @keywords htest
+#' 
 #' 
 "polygenic" <-
 		function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",
 				opt.method="nlm",scaleh2=1,quiet=FALSE,
 				steptol=1e-8, gradtol = 1e-8, optimbou = 8, 
-				fglschecks=TRUE,maxnfgls=8,maxdiffgls=1e-4, ...) {
+				fglschecks=TRUE,maxnfgls=8,maxdiffgls=1e-4, patchBasedOnFGLS = TRUE, ...) {
 	if (!missing(data)) if (is(data,"gwaa.data")) 
 		{
 			checkphengen(data)
@@ -180,7 +182,6 @@
 	
 	if (!missing(data)) attach(data,pos=2,warn.conflicts=FALSE)
 	if (is(formula,"formula")) {
-		print("b")
 		clafo <- "formula"
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 		y <- model.response(mf)
@@ -226,7 +227,7 @@
 			inierr <- sqrt(var(y)/length(y))
 		}
 	}
-
+	
 	if (!missing(data)) detach(data)
 	tmp <- t(relmat)
 	relmat[upper.tri(relmat)] <- tmp[upper.tri(tmp)]
@@ -256,7 +257,9 @@
 			lower <- c(iniest-inierr*optimbou,1.e-4)
 			upper <- c(iniest+inierr*optimbou,1)
 			cntrl <- list(); if (!quiet) cntrl <- list(trace=6,REPORT=1)
-			h2an <- optim(fn=polylik,par=c(iniest,tvar),method="L-BFGS-B",lower=lower,upper=upper,y=y,desmat=desmat,relmat=relmat,ervec=eigres$vec,fixh2=(fixh2),trait.type=trait.type,control=cntrl,scaleh2=1,...)
+			h2an <- optim(fn=polylik,par=c(iniest,tvar),method="L-BFGS-B",lower=lower,upper=upper,
+					y=y,desmat=desmat,relmat=relmat,ervec=eigres$vec,fixh2=(fixh2),trait.type=trait.type,
+					control=cntrl,scaleh2=1,...)
 		}
 	} else {
 		
@@ -318,6 +321,10 @@
 				gradtol <- gradtol/10;
 				if ((h2<1e-4 || h2>(1-1e-4)) && nfgls > floor(maxnfgls/2)) {
 					parsave[npar-1] <- runif(1,min=0.05,max=0.95)/scaleh2
+				}
+				if (patchBasedOnFGLS && diffgls > maxdiffgls) {
+					if (!quiet) {cat("fixed effect betas changed to FGLS-betas for re-estimation\n")}
+					parsave[1:(npar-2)] <- betaFGLS;
 				}
 			} else {
 				nfgls <- maxnfgls+1	
@@ -396,7 +403,8 @@
 	colnames(out$InvSigma) <- phids
 	pgres <- as.vector((1.-h2) * tvar * (out$InvSigma %*% out$residualY))
 	out$measuredIDs <- mids
-	names(out$measuredIDs) <- phids
+# need to fix -- now only measured names, while length is >
+#	names(out$measuredIDs) <- phids
 	out$pgresidualY <- rep(NA,length(mids))
 	out$pgresidualY[mids] <- pgres
 	names(out$pgresidualY) <- phids

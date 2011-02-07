@@ -4,7 +4,7 @@
 \usage{polygenic(formula, kinship.matrix, data, fixh2, starth2=0.3,
     trait.type="gaussian", opt.method="nlm", scaleh2=1, quiet=FALSE,
     steptol=1e-08, gradtol=1e-08, optimbou=8, fglschecks=TRUE,
-    maxnfgls=8, maxdiffgls=1e-04, ...)}
+    maxnfgls=8, maxdiffgls=1e-04, patchBasedOnFGLS=TRUE, ...)}
 \description{Estimation of polygenic model}
 \details{This function maximises the likelihood of the data under polygenic 
 model with covariates an reports twice negative maximum likelihood estimates 
@@ -28,7 +28,7 @@ by covariates and by the polygene). Polygenic residuals are estimated
 as
 
 \deqn{
-\sigma^2  V^{-1} (Y - (\hat{\mu} + \hat{\beta} C_1 + ...))
+\sigma^2 V^{-1} (Y - (\hat{\mu} + \hat{\beta} C_1 + ...))
 }
 
 where \eqn{sigma^2} is the residual variance, \eqn{V^{-1}} is the 
@@ -123,6 +123,8 @@ range of conditions.}
 between estimates obtained and that from FGLS)}
 \item{maxnfgls}{number of fgls checks to perform}
 \item{maxdiffgls}{max difference allowed in fgls checks}
+\item{patchBasedOnFGLS}{if FGLS checks not passed, 'patch' fixed 
+effect estimates based on FGLS expectation}
 \item{...}{Optional arguments to be passed to \code{\link{nlm}} or (\code{\link{optim}}) 
 minimisation function}}
 \examples{# note that procedure runs on CLEAN data

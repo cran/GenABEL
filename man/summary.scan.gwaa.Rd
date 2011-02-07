@@ -1,7 +1,9 @@
 \name{summary.scan.gwaa}
 \alias{summary.scan.gwaa}
 \title{Shortcut to 'descriptives...}
-\usage{summary.scan.gwaa(object, ...)}
+\usage{
+\method{summary}{scan.gwaa}(object, ...) 
+}
 \description{Shortcut to 'descriptives.scan'}
 \details{Shortcut to 'descriptives.scan'}
 \author{Yurii Aulchenko}

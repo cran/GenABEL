@@ -79,7 +79,7 @@ setMethod("show","snp.strand",
 setClass("snp.data",representation(nbytes="numeric",nids="numeric",nsnps="numeric",
 				idnames="character",snpnames="character",chromosome="factor",map="numeric",
 				coding="snp.coding",strand="snp.strand",
-				male="numeric",gtps="snp.mx"),package="GenABEL")
+				male="numeric",gtps="ANY"),package="GenABEL")
 snp.data <- function (nids,rawdata,
 		idnames=as.character(c(1:nids)),
 		snpnames=as.character(c(1:(length(rawdata)/ceiling(nids/4)))),

@@ -14,7 +14,7 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 		ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower", maf, p.level = -1, fdrate = 0.2, 
 		odds = 1000, hweidsubset, redundant = "no", 
 		minconcordance = 2.0, qoption = "bh95", imphetasmissing = TRUE, XXY.call=0.8,
-		intermediateXF = c(0.2, 0.8)) 
+		intermediateXF = c(0.5, 0.5)) 
 }
 \arguments{
   \item{data}{gwaa.data or snp.data object}
@@ -50,7 +50,8 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 			be treated as missing genotypes in the QC procedure}
   \item{XXY.call}{What proportion of Y-chromosome markers should be called to consider that 
 			Y-chromosome is present (in presence of XX)}
-  \item{intermediateXF}{X-chromosomal F to be considered 'intermediate' and regarded as error}
+  \item{intermediateXF}{X-chromosomal F to be considered 'intermediate' and regarded as error; 
+  			currently use of default disables this check}
 }
 \details{
 	In this procedure, sex errors are identified initally and then 
