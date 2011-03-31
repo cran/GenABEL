@@ -2,7 +2,8 @@
 \alias{convert.snp.mach}
 \title{function to convert genotypic data from MACH format to internal data format}
 \description{
-Converts genotypic data from MACH format to internal genotypic data formated file
+Converts genotypic data from MACH format to internal genotypic data formated file 
+(NOT recommended)
 }
 \usage{
 convert.snp.mach(pedfile, mapfile, infofile, outfile, quality = 0.9, column.quality = 7, strand = "+", ...)
@@ -12,7 +13,7 @@ convert.snp.mach(pedfile, mapfile, infofile, outfile, quality = 0.9, column.qual
 	File with genotypic data from MACH (geno or mlgeno)
 	}
   \item{mapfile}{
-	Name of the map file
+	Name of the map file (note that header line should be included)
 	}
   \item{infofile}{
 	Name MACH info-file
@@ -41,6 +42,11 @@ convert.snp.mach(pedfile, mapfile, infofile, outfile, quality = 0.9, column.qual
 	This is a simple script converting the MACH data with  \code{\link{convert.snp.ped}},
 	re-loading data, and filtering the snp.data object based on quality as specified in 
 	MACH info-file
+	
+	Note that it is NOT recommended to process imputations results with this procedure, 
+	as uncertainty inherent to imputations is lost after processing ("hard" calls are made)!
+	For the purposes of GWA analysis, we recommend procedures, which make direct use of 
+	estimated allele dose or genotypic probabilities.
 }
 \value{
 	Does not return any value, but writes file with GenABEL raw data

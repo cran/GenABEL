@@ -57,7 +57,7 @@
 #' For converting of GenABEL's data to other formats, see
 #' \code{\link{export.merlin}} (MERLIN and MACH formats), 
 #' \code{\link{export.impute}} (IMPUTE, SNPTEST and CHIAMO formats),
-#' \code{\link{export.plink}} (PLINK forat, also exports phenotypic data). 
+#' \code{\link{export.plink}} (PLINK format, also exports phenotypic data). 
 #' 
 #' To load the data, see \code{\link{load.gwaa.data}}.
 #' 
@@ -94,9 +94,9 @@
 #' \code{\link{mmscore}},
 #' \code{\link{egscore}},
 #' \code{\link{ibs}},
-#' \code{\link{r2fast}},
-#' \code{\link{dprfast}},
-#' \code{\link{rhofast}}
+#' \code{\link{r2fast}} (estimate linkage disequilibrium using R2),
+#' \code{\link{dprfast}} (estimate linkage disequilibrium using D'),
+#' \code{\link{rhofast}}  (estimate linkage disequilibrium using 'rho')
 #' 
 #' For specific tools facilitating analysis of the data with stratification
 #' (population stratification or (possibly unknown) pedigree structure), see
@@ -104,6 +104,7 @@
 #' \code{\link{ibs}} (computations of IBS / genomic IBD),
 #' \code{\link{egscore}} (stratification adjustment following Price et al.),
 #' \code{\link{polygenic}} (heritability analysis),
+#' \code{\link{polygenic_hglm}} (another function for heritability analysis),
 #' \code{\link{mmscore}} (score test of Chen and Abecasis),
 #' \code{\link{grammar}} (grammar test of Aulchenko et al.).
 #' 
@@ -111,6 +112,10 @@
 #' \code{\link{descriptives.marker}},
 #' \code{\link{descriptives.trait}},
 #' \code{\link{descriptives.scan}}.
+#' 
+#' For functions recunstructing relationships from genomic data, 
+#' see 
+#' \code{\link{findRelatives}}, \code{\link{reconstructNPs}}. 
 #' 
 #' For meta-analysis and related, see help on
 #' \code{\link{formetascore}}.

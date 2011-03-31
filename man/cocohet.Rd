@@ -15,7 +15,7 @@ cocohet(data, trait, window, return_all_result=TRUE, manhettan_filename="manhett
   \item{window}{Number of SNPs on the "right" of a given SNP which are used in analysis with a SNP. Object of class \code{\link{integer}}}
   \item{return_all_result}{If FALSE then return only a vector where each element is a chisq obtained as a maximum chisq between a given SNP and SNPs on the right within a window. If TRUE then return also a matrix where chisq's for all tests are stored. Object of class \code{\link{logical}}}
   \item{manhettan_filename}{File name where manhettan plot will be saved after analysis. Object of class \code{\link{character}}}
-  \item{test}{Name of the test to be performed. Object of class \code{\link{character}}}
+  \item{test}{Name of the test to be performed. Available tests are "CHI2", "YATES" (chi2 with Yates correction), and "FISHER". Object of class \code{\link{character}}}
   \item{min_expected_cut_off}{In case this is >=0 and test is NOT Pearson's chisq test then Pearson's chisq test (!) is performed only for SNPs which produce acontingency table where the expected number of subjects in each field is >min_expected_cut_off. Otherwise the specified test is performed. Object of class \code{\link{integer}} or \code{\link{numeric}}}
 }
 \details{
@@ -29,7 +29,6 @@ In case when the input parameter min_expected_cut_off is <0 the choosen in the i
 then always Pearson's chi-square test is
 performed exept of the cases when expected number of subjects in a field of contingency table is <min_expected_cut_off. In this case the test choosen in
 the input parameter test is performed.
-
 
 
 }

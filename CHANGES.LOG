@@ -1,3 +1,33 @@
+*** v. 1.6-6 (2011.04.18)
+
+Added Xia Shen's procedure 'polygenic_hglm'. Features: quick 
+convergence, standard errors for fixed effects.
+
+Updated check.marker, added warning if no. Y-markers is < 10 
+
+Applied the patch of Nicola Pirastu 
+http://lists.r-forge.r-project.org/pipermail/genabel-devel/2011-March/000182.html
+to descriptives.trait. Added RUnit regression tests, updated 
+documentation. Bugs fixed: [#1184], [#1185], [#1259]
+
+Added 'reconstructNPs' function; added extra options 
+to 'findRelatives'. 
+
+Added a number of functions facilitating relationship checks. 
+The core function is 'findRelatives'. Compared 
+to guessing relations from genomic kinship matrix, this 
+procedure offers several enhancements: (1) by use of IBD/IBS 
+3-state space, it allows to distinguish between some pairs, 
+which have the same kinship (e.g. parent-offspring from 
+brother-sister; uncle-nephew from grandparent-grandchild, etc.)  
+(2) it reports likelihood, allowing for more rigorous inferences
+
+Changes in convert.snp.mach documentation to reflect the fact that 
+the map-file should have header; changes to convert.snp.illumina 
+documentation to reflect the nature of the data better; added 
+option 'mapHasHeaderLine' to convert.snp.ped and updated documentation
+(resolving feature request #1317).  
+
 ***** v. 1.6-5 (2011.02.07)
 
 Added '#include <cstdarg>' to iterator.cpp to solve 

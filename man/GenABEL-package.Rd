@@ -58,7 +58,7 @@ functions include:
 For converting of GenABEL's data to other formats, see
 \code{\link{export.merlin}} (MERLIN and MACH formats), 
 \code{\link{export.impute}} (IMPUTE, SNPTEST and CHIAMO formats),
-\code{\link{export.plink}} (PLINK forat, also exports phenotypic data). 
+\code{\link{export.plink}} (PLINK format, also exports phenotypic data). 
 
 To load the data, see \code{\link{load.gwaa.data}}.
 
@@ -95,9 +95,9 @@ For fast analysis function, see
 \code{\link{mmscore}},
 \code{\link{egscore}},
 \code{\link{ibs}},
-\code{\link{r2fast}},
-\code{\link{dprfast}},
-\code{\link{rhofast}}
+\code{\link{r2fast}} (estimate linkage disequilibrium using R2),
+\code{\link{dprfast}} (estimate linkage disequilibrium using D'),
+\code{\link{rhofast}}  (estimate linkage disequilibrium using 'rho')
 
 For specific tools facilitating analysis of the data with stratification
 (population stratification or (possibly unknown) pedigree structure), see
@@ -105,6 +105,7 @@ For specific tools facilitating analysis of the data with stratification
 \code{\link{ibs}} (computations of IBS / genomic IBD),
 \code{\link{egscore}} (stratification adjustment following Price et al.),
 \code{\link{polygenic}} (heritability analysis),
+\code{\link{polygenic_hglm}} (another function for heritability analysis),
 \code{\link{mmscore}} (score test of Chen and Abecasis),
 \code{\link{grammar}} (grammar test of Aulchenko et al.).
 
@@ -112,6 +113,10 @@ For functions facilitating construction of tables for your manuscript, see
 \code{\link{descriptives.marker}},
 \code{\link{descriptives.trait}},
 \code{\link{descriptives.scan}}.
+
+For functions recunstructing relationships from genomic data, 
+see 
+\code{\link{findRelatives}}, \code{\link{reconstructNPs}}. 
 
 For meta-analysis and related, see help on
 \code{\link{formetascore}}.
@@ -133,7 +138,8 @@ For graphical facilities, see
 \code{\link{plot.check.marker}}.}
 \alias{GenABEL-package}
 \alias{GenABEL}
-\author{Yurii Aulchenko}
+\author{Yurii Aulchenko et al. 
+(see help pages for specific functions)}
 \references{If you use GenABEL package in your analysis, please cite the following work:
 
 Aulchenko Y.S., Ripke S., Isaacs A., van Duijn C.M. GenABEL: an R package 

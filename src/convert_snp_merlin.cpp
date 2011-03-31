@@ -8,7 +8,7 @@
  *
  **/
 
-#include <cstdlib>  
+#include <cstdlib>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 
-using namespace std; 
+using namespace std;
 
 //STL
 #include <vector>
@@ -26,7 +26,7 @@ using namespace std;
 
 #include <R.h>
 
-#define MAXIDS 100000
+#define MAXIDS 2000000
 
 string replace_mrl(string in);
 string replace_mach(string in);
@@ -41,7 +41,9 @@ string replace_mach(string in);
 **/
 
 extern "C" {
-  void convert_snp_merlin (char** pedfilename, char** mapfilename, char** outfilename, int* Strandid, int* bcast, char **allele_codes, int* Ncodes, int *Fmt, int *Tra) {
+  void convert_snp_merlin (char** pedfilename, char** mapfilename, char** outfilename,
+		  int* Strandid, int* bcast, char **allele_codes, int* Ncodes,
+		  int *Fmt, int *Tra, int *MapHasHeaderLine) {
 
     int verbose = *bcast ? 1 : 0;
 
@@ -49,11 +51,12 @@ extern "C" {
     int strandid = *Strandid;
     int format = *Fmt;
     int traits = *Tra;
+    int mapHasHeaderLine = *MapHasHeaderLine;
 
     long int linecount=0;
     string data;
     string token;
-    
+
     vector<string> iid; string tmp_iid;
     vector<string> chrom; string tmp_chrom;
     vector<string> snpnm; string tmp_snpnm;
@@ -63,7 +66,7 @@ extern "C" {
     vector<string> coding; string tmp_coding,tmp_coding1;
     vector<int> intcoding;
     vector<int> strand; string tmp_strand;
-    vector<string> codeset(ncodes); 
+    vector<string> codeset(ncodes);
     char tmp_chcoding [10];
 //    char tmp_chcoding1 [10];
 
@@ -80,10 +83,11 @@ extern "C" {
 
     if (verbose) {
       Rprintf("Reading map from file '%s' ...\n",mapfilename[0]);
-    }    
+    }
 
     int mapline=0;
-    getline(mapfile,data);
+// read and ignore header line
+    if (mapHasHeaderLine) getline(mapfile,data);
     if (strandid==3) {
     while (getline(mapfile,data)) {
       istringstream datas (data);
@@ -128,7 +132,7 @@ extern "C" {
     ///////////////////////////
     // reading pedigree file //
     ///////////////////////////
-    
+
     int nsnps = chrom.size();
 
     if (verbose) {
@@ -144,8 +148,8 @@ extern "C" {
 
     if (verbose) {
       Rprintf("Reading genotypes from file '%s' ...\n",pedfilename[0]);
-    }    
-    
+    }
+
     linecount = 0;
     double lasti = 1;
     if (format==0) {
@@ -164,11 +168,11 @@ extern "C" {
 	      if (!(chgt[2*(linecount-1)] = new char [2*nsnps])) error ("ran out of memory ...\n");
 	      if (!(chgt[2*(linecount-1)+1] = new char [2*nsnps])) error ("ran out of memory ...\n");
 	      for (int snp = 0; snp < nsnps; snp++) {
-		      if (datas >> gdata) {chgt[2*(linecount-1)][snp] = gdata;} 
+		      if (datas >> gdata) {chgt[2*(linecount-1)][snp] = gdata;}
 		      else {
 			      error ("too few genotypes for person '%s' ('%s', line %li) !\n",tmp_iid.c_str(),pedfilename[0],linecount);
 		      }
-		      if (datas >> gdata) {chgt[2*(linecount-1)+1][snp] = gdata;} 
+		      if (datas >> gdata) {chgt[2*(linecount-1)+1][snp] = gdata;}
 		      else {
 			      error ("too few genotypes for person '%s' ('%s', line %li) !\n",tmp_iid.c_str(),pedfilename[0],linecount);
 		      }
@@ -198,11 +202,11 @@ extern "C" {
 	      if (!(chgt[2*(linecount-1)] = new char [2*nsnps])) error ("ran out of memory ...\n");
 	      if (!(chgt[2*(linecount-1)+1] = new char [2*nsnps])) error ("ran out of memory ...\n");
 	      for (int snp = 0; snp < nsnps; snp++) {
-		      if (datas >> gdata) {chgt[2*(linecount-1)][snp] = gdata;} 
+		      if (datas >> gdata) {chgt[2*(linecount-1)][snp] = gdata;}
 		      else {
 			      error ("too few genotypes for person '%s' ('%s', line %li) !\n",tmp_iid.c_str(),pedfilename[0],linecount);
 		      }
-		      if (datas >> gdata) {chgt[2*(linecount-1)+1][snp] = gdata;} 
+		      if (datas >> gdata) {chgt[2*(linecount-1)+1][snp] = gdata;}
 		      else {
 			      error ("too few genotypes for person '%s' ('%s', line %li) !\n",tmp_iid.c_str(),pedfilename[0],linecount);
 		      }
@@ -247,12 +251,12 @@ extern "C" {
 	char allele1 = 0;
 	char allele2 = 0;
 /**
-        if (strandid==3) {
+	if (strandid==3) {
 	  char at[10];
 	  sprintf(at,"%s",coding[snp].c_str());
 	  allele1 = at[0];
 	  allele2 = at[1];
-        }
+	}
 **/
 
 
@@ -320,7 +324,7 @@ extern "C" {
 	if (tmp_gtype == NULL) {
 	  error ("ran out of memory reading file '%s' line %li !");
 	}
-	
+
 	idx = 0;
 	for (byte = 0; byte < nbytes; ++byte) {
 
@@ -329,7 +333,7 @@ extern "C" {
 
 	    switch (gnum[idx]+gnum[idx+1]) {
 	    case 2:
-              if (ca1 > ca2) 
+	      if (ca1 > ca2)
 		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
 	      else
 		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
@@ -338,7 +342,7 @@ extern "C" {
 	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)2 << offset[ind]);
 	      break;
 	    case 6:
-              if (ca1 > ca2) 
+	      if (ca1 > ca2)
 		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
 	      else
 		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
@@ -374,7 +378,7 @@ extern "C" {
 
     if (verbose) {
       Rprintf("Writing to file '%s' ...\n",outfilename[0]);
-    }    
+    }
 
     outfile << "#GenABEL raw data version 0.1";
     outfile << endl;
@@ -395,24 +399,24 @@ extern "C" {
 
     for (int i=0;i<nsnps;i++) {
 	    outfile.width(2);
-            outfile.fill('0');
+	    outfile.fill('0');
 	    outfile << intcoding[i] << " ";
     }
     outfile << endl;
 
     for (int i=0;i<nsnps;i++) {
 	    outfile.width(2);
-            outfile.fill('0');
+	    outfile.fill('0');
 	    outfile << strand[i] << " ";
     }
     outfile << endl;
 
       for (int i=0;i<nsnps;i++) {
       tmp_gtype = gtype[i];
-      
+
       for (byte = 0; byte < nbytes; ++byte) {
 	outfile.width(2);
-        outfile.fill('0');
+	outfile.fill('0');
 	outfile << (unsigned int)tmp_gtype[byte];
 	outfile << " ";
       }
@@ -420,12 +424,10 @@ extern "C" {
 
       delete [] tmp_gtype;
     }
-   
+
     if (verbose) {
       Rprintf("... done.\n");
-    }    
- 
+    }
+
   }
 }
-
-

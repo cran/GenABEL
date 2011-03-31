@@ -9,7 +9,7 @@ convert.snp.illumina(infile, outfile, strand = "+", bcast = 10000000)
 }
 \arguments{
   \item{infile}{
-	Pre-makeped linkage genotypic data file name
+	Map + genotypic data file name
 	}
   \item{outfile}{
 	Output data file

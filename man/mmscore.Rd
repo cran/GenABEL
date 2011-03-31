@@ -73,7 +73,7 @@ scans. Am J Hum Genet. 2007 Nov;81(5):913-26.
 # because this is a population-based study
 data(ge03d2.clean)
 #take half for speed
-ge03d2.clean <- ge03d2.clean[1:450,]
+ge03d2.clean <- ge03d2.clean[1:100,]
 gkin <- ibs(ge03d2.clean,w="freq")
 h2ht <- polygenic(height ~ sex + age,kin=gkin,ge03d2.clean)
 h2ht$est

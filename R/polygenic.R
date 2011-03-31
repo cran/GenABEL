@@ -129,7 +129,12 @@
 #' If a trait (no covarites) is used, make sure that order of IDs in 
 #' kinship.matrix is exactly the same as in the outcome
 #' 
+#' Please note that there is alternative to 'polygenic', 
+#' \code{\link{polygenic_hglm}}, which is faster than 
+#' 'polygenic'.
+#' 
 #' @seealso 
+#' \code{\link{polygenic_hglm}},
 #' \code{\link{mmscore}},
 #' \code{\link{grammar}}
 #' 

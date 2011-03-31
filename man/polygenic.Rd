@@ -87,8 +87,13 @@ singularities, or rather use \code{\link{check.marker}} for identification
 of twin samples. Take special care in interpretation.
 
 If a trait (no covarites) is used, make sure that order of IDs in 
-kinship.matrix is exactly the same as in the outcome}
-\seealso{\code{\link{mmscore}},
+kinship.matrix is exactly the same as in the outcome
+
+Please note that there is alternative to 'polygenic', 
+\code{\link{polygenic_hglm}}, which is faster than 
+'polygenic'.}
+\seealso{\code{\link{polygenic_hglm}},
+\code{\link{mmscore}},
 \code{\link{grammar}}}
 \keyword{htest}
 \arguments{\item{formula}{Formula describing fixed effects to be used in analysis, e.g. 

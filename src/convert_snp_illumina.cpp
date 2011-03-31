@@ -6,7 +6,7 @@
  *
  **/
 
-#include <cstdlib>  
+#include <cstdlib>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -14,7 +14,7 @@
 
 #include <stdio.h>
 
-using namespace std; 
+using namespace std;
 
 //STL
 #include <vector>
@@ -24,7 +24,7 @@ using namespace std;
 
 #include <R.h>
 
-#define MAXSNPs 5000000
+#define MAXSNPs 2000000
 
 /**
  *
@@ -52,7 +52,7 @@ extern "C" {
 
   string data;
   string tempstr;
-  
+
   vector<string> iid;
   vector<string> chrom; string tmp_chrom;
   vector<string> snpnam; string tmp_snpnam;
@@ -61,7 +61,7 @@ extern "C" {
   vector<string> coding; string tmp_coding,tmp_coding1;
   vector<unsigned short int> intcoding;
   vector<unsigned short int> strand; string tmp_strand;
-  vector<string> codeset(ncodes); 
+  vector<string> codeset(ncodes);
   char tmp_chcoding [10];
 
   for (int i=0;i<ncodes;i++) codeset[i].assign(allele_codes[i]);
@@ -73,8 +73,8 @@ extern "C" {
 
   if (loud) {
   Rprintf("Reading genotypes from file '%s' ...\n",filename[0]);
-  }  
-  
+  }
+
   nsnps = 0;
   unsigned long int lasti = 1;
 
@@ -115,13 +115,13 @@ extern "C" {
     snpnam.push_back(tmp_snpnam);
     map.push_back(tmp_map);
     if (strandid == 3) {
-	    if (!(datas >> tmp_strand)) error("Strand field is missing in line %i, SNP '%s'!\n",(nsnps+1),tmp_snpnam.c_str()); 
+	    if (!(datas >> tmp_strand)) error("Strand field is missing in line %i, SNP '%s'!\n",(nsnps+1),tmp_snpnam.c_str());
 	    if (tmp_strand == "u") strand.push_back(0);
 	    else if (tmp_strand == "+") strand.push_back(1);
 	    else if (tmp_strand == "-") strand.push_back(2);
 	    else error("Bad strand coding ('%s'), only '+', '-' or 'u' is accepted!\n",tmp_strand.c_str());
     } else strand.push_back(strandid);
-    
+
     unsigned long int idx = 0;
 
     idx = 0;
@@ -191,7 +191,7 @@ extern "C" {
 	if (tmp_gtype == NULL) {
 	  error ("ran out of memory reading file '%s' line %li !");
 	}
-	
+
 	idx = 0;
 	for (byte = 0; byte < nbytes; ++byte) {
 
@@ -200,7 +200,7 @@ extern "C" {
 
 	    switch (gnum[idx]+gnum[idx+1]) {
 	    case 2:
-              if (ca1 > ca2) 
+	      if (ca1 > ca2)
 		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
 	      else
 		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
@@ -209,7 +209,7 @@ extern "C" {
 	      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)2 << offset[ind]);
 	      break;
 	    case 6:
-              if (ca1 > ca2) 
+	      if (ca1 > ca2)
 		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)3 << offset[ind]);
 	      else
 		      tmp_gtype[byte] = tmp_gtype[byte] | ((unsigned char)1 << offset[ind]);
@@ -245,7 +245,7 @@ extern "C" {
 
     if (loud) {
       Rprintf("Writing to file '%s' ...\n",outfilename[0]);
-    }    
+    }
 
     outfile << "#GenABEL raw data version 0.1";
     outfile << endl;
@@ -266,24 +266,24 @@ extern "C" {
 
     for (unsigned long int i=0;i<nsnps;i++) {
 	    outfile.width(2);
-            outfile.fill('0');
+	    outfile.fill('0');
 	    outfile << (unsigned int)intcoding[i] << " ";
     }
     outfile << endl;
 
     for (unsigned long int i=0;i<nsnps;i++) {
 	    outfile.width(2);
-            outfile.fill('0');
+	    outfile.fill('0');
 	    outfile << (unsigned int)strand[i] << " ";
     }
     outfile << endl;
 
       for (unsigned long int i=0;i<nsnps;i++) {
       tmp_gtype = gtype[i];
-      
+
       for (byte = 0; byte < nbytes; ++byte) {
 	outfile.width(2);
-        outfile.fill('0');
+	outfile.fill('0');
 	outfile << (unsigned int)tmp_gtype[byte];
 	outfile << " ";
       }
@@ -291,13 +291,11 @@ extern "C" {
 
       delete [] tmp_gtype;
     }
-   
+
     if (loud) {
       Rprintf("... done.\n");
-    }    
+    }
 
 
 }
 }
-
-

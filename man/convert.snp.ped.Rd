@@ -6,14 +6,15 @@ Converts genotypic data in a variety of pedigree fromats (+map) to internal geno
 }
 \usage{
 convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1, 
-	strand = "u", bcast = 10000000, wslash=F)
+	strand = "u", bcast = 10000000, wslash=FALSE, mapHasHeaderLine=TRUE)
 }
 \arguments{
   \item{pedfile}{
-	Pre-makeped linkage genotypic data file name
+	Pre-makeped linkage genotypic data file name (no header line)
 	}
   \item{mapfile}{
-	Name of the map file
+	Name of the map file (note that by default header line should be included, 
+	see 'mapHasHeaderLine' to modify that)
 	}
   \item{outfile}{
 	Output data file
@@ -40,6 +41,9 @@ convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1,
 	otherwise it is assumed that alleles are separated with space. When 
 	wslash=T it is assumed that genotypes are coded with single characters, 
 	separated with slash (no spaces), e.g. "A/G", and not "A/ G" or "A / G".
+	}
+  \item{mapHasHeaderLine}{
+	Whether map-file has a header line
 	}
 }
 \details{
@@ -89,8 +93,9 @@ convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1,
 
 	Accepted strand coding: +, -, u (unknown)
 
-	Please note that the header line (e.g. "chrom	name	position") SHOULD 
-	be present in your file!
+	Please note that by default the header line (e.g. "chrom	name	position") SHOULD 
+	be present in your file, though you can use 'mapHasHeaderLine' argument to modify 
+	this behavior
 	
 }
 \value{
@@ -111,7 +116,7 @@ convert.snp.ped(pedfile, mapfile, outfile, format = "premakeped", traits = 1,
 }
 \examples{
 #
-# convert.snp.ped(ped="pedin.18",map="map.18",out="genos.raw")
+# convert.snp.ped(ped="pedin.18",mapfile="map.18",out="genos.raw")
 #
 }
 \keyword{IO}
