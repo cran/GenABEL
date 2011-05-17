@@ -91,4 +91,6 @@ relInfo <- findRelatives(df[27:30,],q=eaf)
 relInfo
 # look only for 1st and 2nd degree relatives
 relInfo1 <- findRelatives(df[27:30],q=eaf,gkinCutOff=-1,nmeivec=c(1,2,3))
-relInfo1}
+relInfo1
+relInfoVS <- findRelatives(df[27:30,],q=eaf,nmeivec=c(1:6),vsIDs=idnames(df[27:30,])[1:2])
+relInfoVS}

@@ -26,7 +26,7 @@ using namespace std;
 
 #include <R.h>
 
-#define MAXIDS 2000000
+#define MAXIDS 200000
 
 string replace_mrl(string in);
 string replace_mach(string in);

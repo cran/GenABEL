@@ -1,4 +1,4 @@
-\name{polygenic}
+\name{polygenic} 
 \alias{polygenic}
 \title{Estimation of polygenic model...}
 \usage{polygenic(formula, kinship.matrix, data, fixh2, starth2=0.3,

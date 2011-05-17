@@ -1,12 +1,12 @@
-RUNIT TEST PROTOCOL -- Thu Mar 31 00:50:19 2011 
+RUNIT TEST PROTOCOL -- Tue May 17 20:27:16 2011 
 *********************************************** 
-Number of test functions: 7 
+Number of test functions: 9 
 Number of errors: 0 
 Number of failures: 0 
 
  
 1 Test Suite : 
-GenABEL unit testing - 7 test functions, 0 errors, 0 failures
+GenABEL unit testing - 9 test functions, 0 errors, 0 failures
 
 
 
@@ -16,23 +16,29 @@ Test Suite: GenABEL unit testing
 Test function regexp: ^test.+ 
 Test file regexp: ^runit.+\.[rR]$ 
 Involved directory: 
-/Users/yuriiaulchenko/eclipse_workspace/pkg/GenABEL/tests/../inst/unitTests 
+/Users/yuriiaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests 
 --------------------------- 
-Test file: /Users/yuriiaulchenko/eclipse_workspace/pkg/GenABEL/tests/../inst/unitTests/runit.descriptives.trait.R 
-test.descriptives.trait: (1 checks) ... OK (0.74 seconds)
+Test file: /Users/yuriiaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.convert.snp.ped.R 
+test.convert.snp.ped: (0 checks) ... OK (0.02 seconds)
 --------------------------- 
-Test file: /Users/yuriiaulchenko/eclipse_workspace/pkg/GenABEL/tests/../inst/unitTests/runit.findRelatives.R 
-test.findRelatives: (10 checks) ... OK (119.15 seconds)
+Test file: /Users/yuriiaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.descriptives.trait.R 
+test.descriptives.trait: (1 checks) ... OK (0.76 seconds)
 --------------------------- 
-Test file: /Users/yuriiaulchenko/eclipse_workspace/pkg/GenABEL/tests/../inst/unitTests/runit.impute2xxx.R 
-test.impute2databel: (23 checks) ... OK (0.55 seconds)
+Test file: /Users/yuriiaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.findRelatives.R 
+test.findRelatives: (10 checks) ... OK (106.44 seconds)
 --------------------------- 
-Test file: /Users/yuriiaulchenko/eclipse_workspace/pkg/GenABEL/tests/../inst/unitTests/runit.impute2xxx_large.R 
+Test file: /Users/yuriiaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.impute2xxx.R 
+test.impute2databel: (23 checks) ... OK (0.74 seconds)
+--------------------------- 
+Test file: /Users/yuriiaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.impute2xxx_large.R 
 test.impute2xxx_large: (0 checks) ... OK (0 seconds)
 --------------------------- 
-Test file: /Users/yuriiaulchenko/eclipse_workspace/pkg/GenABEL/tests/../inst/unitTests/runit.iterator.R 
+Test file: /Users/yuriiaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.iterator.R 
 test.qtscore: (0 checks) ... OK (0 seconds)
-test.summary_snp_data: (3 checks) ... OK (8.58 seconds)
+test.summary_snp_data: (3 checks) ... OK (8.06 seconds)
 --------------------------- 
-Test file: /Users/yuriiaulchenko/eclipse_workspace/pkg/GenABEL/tests/../inst/unitTests/runit.mach2databel.R 
+Test file: /Users/yuriiaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.mach2databel.R 
 test.mach2databel: (8 checks) ... OK (0.25 seconds)
+--------------------------- 
+Test file: /Users/yuriiaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.polylik.R 
+test.polylik: (6 checks) ... OK (15.03 seconds)

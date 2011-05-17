@@ -62,8 +62,8 @@ function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=50) {
       m0  <- glm(fla0,family = family,data=phdata)
       anv1 <- anova(m0,m1,test="Chisq")
       anv2 <- anova(m0,m2,test="Chisq")
-      P1df[(w-1)*chsize+i] <- anv1$"P(>|Chi|)"[2]
-      P2df[(w-1)*chsize+i] <- anv2$"P(>|Chi|)"[2]
+      P1df[(w-1)*chsize+i] <- anv1[2, grep("^P.*Chi",names(anv1))]
+      P2df[(w-1)*chsize+i] <- anv2[2, grep("^P.*Chi",names(anv2))]
       if (polym>2) {
       	effB[(w-1)*chsize+i] <- m1$coeff["mygt"]
       	effAB[(w-1)*chsize+i] <- m1$coeff["as.factor(mygt)1"]
@@ -85,8 +85,8 @@ function (formula, family = gaussian(), data, snpsubset, idsubset, bcast=50) {
       m0  <- lm(fla0,data=phdata)
       anv1 <- anova(m0,m1,test="Chisq")
       anv2 <- anova(m0,m2,test="Chisq")
-      P1df[(w-1)*chsize+i] <- anv1$"P(>|Chi|)"[2]
-      P2df[(w-1)*chsize+i] <- anv2$"P(>|Chi|)"[2]
+	  P1df[(w-1)*chsize+i] <- anv1[2, grep("^P.*Chi",names(anv1))]
+	  P2df[(w-1)*chsize+i] <- anv2[2, grep("^P.*Chi",names(anv2))]
       if (polym>2) {
       	effB[(w-1)*chsize+i] <- m1$coeff["mygt"]
       	effAB[(w-1)*chsize+i] <- m1$coeff["as.factor(mygt)1"]

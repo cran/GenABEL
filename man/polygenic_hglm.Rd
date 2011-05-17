@@ -5,7 +5,14 @@
     conv=1e-06, maxit=100, ...)}
 \description{Estimation of polygenic model}
 \details{Estimation of polygenic model using a hierarchical generalized linear model 
-(HGLM; Lee and Nelder 1996. \code{hglm} package; Ronnegard et al. 2010).}
+(HGLM; Lee and Nelder 1996. \code{hglm} package; Ronnegard et al. 2010).
+
+The algorithm gives extended quasi-likelihood (EQL) estimates
+for restricted maximum likelihood (REML) (Ronnegard et al. 2010).
+Implemented is the inter-connected GLM interpretation of HGLM (Lee and Nelder 2001).
+Testing on fixed and random effects estimates are directly done using inter-connected
+GLMs. Testing on dispersion parameters (variance components) can be done by extracting
+the profile likelihood function value of REML.}
 \author{Xia Shen, Yurii Aulchenko}
 \references{Ronnegard, L, Shen, X and Alam, M (2010). hglm: A Package For Fitting 
 Hierarchical Generalized Linear Models. \emph{The R Journal}, \bold{2}(2), 20-28.
@@ -77,7 +84,7 @@ l0 <- as.numeric(logLik(nullht))
 # Self, SG and Liang KY (1987) Journal of the American Statistical Association.
 qchisq(((1 - .05) - .50)/.50, 1)
 # p-value
-pchisq(S, 1, lower.tail = FALSE)*2
+pchisq(S, 1, lower.tail = FALSE)/2
 
 #' # ----- for binary traits
 h2dm <- polygenic_hglm(dm2 ~ sex + age, kin = gkin, df, family = binomial(link = 'logit'))

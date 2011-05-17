@@ -1,4 +1,4 @@
-"polylik" <- function(coeffs,y,desmat,relmat,ervec,fixh2,trait.type,
+"polylik" <- function(coeffs,y,desmat,relmat,ervec,fixh2,trait.type, 
 		startlik=.Machine$double.xmax-2,scaleh2=1) {
 	#print(coeffs)
 	if (!missing(fixh2)) {

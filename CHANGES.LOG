@@ -1,4 +1,25 @@
-*** v. 1.6-6 (2011.04.18)
+*** v. 1.6-7 (2011.05.17)
+
+Submitted 1.6-7, based on r727, to CRAN
+
+Deleting some pdf from 'doc' and compressing 'data'
+
+Submitted 1.6-7, based on r718, to CRAN
+
+Fixed 'technical' bug [1398] (related to changes in R 2.14):
+https://r-forge.r-project.org/tracker/index.php?func=detail&aid=1398&group_id=505&atid=2058
+
+Set 'GenABEL developers' as a maintainer of the package; 
+set the genabel-devel list as 'maintainer' e-mail 
+
+Fixing bug [1388], added regression test
+https://r-forge.r-project.org/tracker/index.php?func=detail&aid=1388&group_id=505&atid=2058
+
+upgrade version number
+
+fix in example of polygenic_hglm
+
+*** v. 1.6-6 (2011.04.29)
 
 Added Xia Shen's procedure 'polygenic_hglm'. Features: quick 
 convergence, standard errors for fixed effects.

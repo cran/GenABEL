@@ -64,6 +64,8 @@ export(
 	ibs.old,
 	impute2databel,
 	impute2mach,
+	#LiLogCC,
+	#LiLog,
 	load.gwaa.data,
 	mach2databel,
 	makeTransitionMatrix,

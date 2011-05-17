@@ -93,6 +93,8 @@
 #' # look only for 1st and 2nd degree relatives
 #' relInfo1 <- findRelatives(df[27:30],q=eaf,gkinCutOff=-1,nmeivec=c(1,2,3))
 #' relInfo1
+#' relInfoVS <- findRelatives(df[27:30,],q=eaf,nmeivec=c(1:6),vsIDs=idnames(df[27:30,])[1:2])
+#' relInfoVS
 #' 
 findRelatives <- function(gtdata,nmeivec=c(1:2),q=NULL,epsilon=0.01, 
 		quiet=FALSE,OddsVsNull=1000,OddsVsNextBest=100,
@@ -123,18 +125,20 @@ findRelatives <- function(gtdata,nmeivec=c(1:2),q=NULL,epsilon=0.01,
 		warning('"q" is not specified; inferring from data')
 	}
 # set vsIDs if used
-	if (!is.null(vsIDs)) if (is.character(vsIDs)) {
+	if (!is.null(vsIDs)) {
+		if (is.character(vsIDs)) {
 			if (!all(vsIDs %in% idnam)) stop("can not find some of vsIDs")
 			vsIDs <- which(idnam %in% vsIDs)
 			if (length(vsIDs)>1) {ma <- max(vsIDs); mi <- min(vsIDs)} 
 			else ma <- mi <- vsIDs
 			if (ma>dim(gtdata)[1] || mi<1) stop("vsIDs out of range")
 		}
-	
+		notVsIDs <- c(1:dim(gtdata)[1])[which(!(c(1:dim(gtdata)[1]) %in% vsIDs))]
+	}
 # get gkin if used
 	lengthOut <- dim(gtdata)[1]
 	if (is.null(vsIDs)) lengthOut <- lengthOut*(lengthOut-1)/2
-	else lengthOut <- (lengthOut-1)*length(vsIDs)
+	else lengthOut <- (lengthOut-length(vsIDs))*length(vsIDs)
 	if (!is.null(gkinCutOff)) {
 		if (is.null(kinshipMatrix)) {
 			if (is(gtdata,"snp.data")) {
@@ -156,12 +160,21 @@ findRelatives <- function(gtdata,nmeivec=c(1:2),q=NULL,epsilon=0.01,
 			testUs <- as.vector(kinshipMatrix[lower.tri(kinshipMatrix)])
 			testUs <- (testUs>gkinCutOff)
 		} else {
-			testUs <- c()
-			for (jj in vsIDs) {
-				testUs <- c(testUs,as.vector((kinshipMatrix[jj,])[1:(jj-1)]),
-						as.vector((kinshipMatrix[,jj])[c((jj+1):dim(kinshipMatrix)[1])]))
-			}
-			#print(testUs)
+#			testUs <- c()
+#			for (jj in vsIDs) {
+#				if (jj>1) 
+#				testUs <- c(testUs,as.vector((kinshipMatrix[jj,])[1:(jj-1)]),
+#						as.vector((kinshipMatrix[,jj])[c((jj+1):dim(kinshipMatrix)[1])]))
+#			else 
+#				testUs <- c(testUs,
+#						as.vector((kinshipMatrix[,jj])[c((jj+1):dim(kinshipMatrix)[1])]))
+#			testUs <- 
+#				print(jj)
+#				print(testUs)
+#			}
+			kinshipMatrix[upper.tri(kinshipMatrix)] <- t(kinshipMatrix)[upper.tri(kinshipMatrix)]
+			testUs <- kinshipMatrix[vsIDs,notVsIDs]
+#			print(testUs)
 			testUs <- (testUs>gkinCutOff)
 		}
 		if (length(testUs) != lengthOut) 
@@ -209,9 +222,10 @@ findRelatives <- function(gtdata,nmeivec=c(1:2),q=NULL,epsilon=0.01,
 			gt1 <- gtdata[id1,]
 		bgt1 <- blurGenotype(gt1,q=q,epsilon=epsilon)
 		if (is.null(vsIDs)) id2list <- (id1+1):dim(gtdata)[1]
-		else id2list <- c(c(1:(id1-1)),c((id1+1):dim(gtdata)[1]))
+		else id2list <- notVsIDs #c(c(1:(id1-1)),c((id1+1):dim(gtdata)[1]))
 		for (id2 in id2list) {
 			name2 <- idnam[id2]
+			#print(id1,id2)
 			#print(c(outI,testUs))
 			if (testUs[outI]) { 
 				if (class(gtdata) == "snp.data")
@@ -246,21 +260,33 @@ findRelatives <- function(gtdata,nmeivec=c(1:2),q=NULL,epsilon=0.01,
 	if (!quiet) cat("\n")
 	#print(out)
 	meiMtmp <- apply(out,MAR=1,FUN=function(x){return(which.max(x))})
-	#print(relMtmp)
-	meiM <- matrix(ncol=dim(gtdata)[1],nrow=dim(gtdata)[1])
-	diag(meiM) <- 0
 	#print(meiMtmp)
-	meiM[lower.tri(meiM)] <- names(meiTab)[meiMtmp]
-	meiM[upper.tri(meiM)] <- t(meiM)[upper.tri(meiM)]
-	colnames(meiM) <- rownames(meiM) <- idnam
+	if (is.null(vsIDs)) {
+		meiM <- matrix(ncol=dim(gtdata)[1],nrow=dim(gtdata)[1])
+		diag(meiM) <- 0
+		meiM[lower.tri(meiM)] <- names(meiTab)[meiMtmp]
+		meiM[upper.tri(meiM)] <- t(meiM)[upper.tri(meiM)]
+		colnames(meiM) <- rownames(meiM) <- idnam
+	} else { 
+		meiM <- matrix(ncol=length(notVsIDs),nrow=length(vsIDs))
+		meiM[] <- names(meiTab)[meiMtmp]
+		rownames(meiM) <- idnam[vsIDs]
+		colnames(meiM) <- idnam[notVsIDs]
+	}
+	#print(meiM)
 	firstBestLik <- apply(out,MAR=1,FUN=function(x){return(max(x))})
 	which_firstBestLik <- apply(out,MAR=1,FUN=function(x){return(which.max(x))})
 	secondBestLik <- apply(out,MAR=1,FUN=function(x){x[order(x,decreasing=TRUE)[2]]})
 	cndX <- !(exp(firstBestLik-secondBestLik)>OddsVsNextBest 
 				& exp(firstBestLik)>OddsVsNull & (which_firstBestLik != (length(meiTab)-1)))
-	cnd <- diag(FALSE,dim(gtdata)[1],nrow=dim(gtdata)[1])
-	cnd[lower.tri(cnd)] <- cndX
-	cnd[upper.tri(cnd)] <- t(cnd)[upper.tri(cnd)]
+	if (is.null(vsIDs)) {
+		cnd <- diag(FALSE,dim(gtdata)[1],nrow=dim(gtdata)[1])
+		cnd[lower.tri(cnd)] <- cndX
+		cnd[upper.tri(cnd)] <- t(cnd)[upper.tri(cnd)]
+	} else {
+		cnd <- matrix(ncol=length(notVsIDs),nrow=length(vsIDs))
+		cnd[] <- cndX
+	}
 	guess <- meiM
 	guess[which(cnd==1)] <- NA  
 	out <- data.frame(outN1,outN2,out,stringsAsFactors=FALSE)

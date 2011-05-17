@@ -160,7 +160,7 @@ if(length(levels(chromosome_logic_vec_factor)) > 1)
 
 if(length(levels(chromosome_logic_vec_factor)) == 0)
 	{
-	cat("There are not intersected SNPs\n")
+	cat("There are no intersecting SNPs\n")
 	if(intersected_snps_only) return(list(data=NULL, id=NULL, snp=NULL))
 	}
 

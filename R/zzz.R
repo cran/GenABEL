@@ -1,11 +1,11 @@
 .onLoad <- function(lib, pkg) {
-	GenABEL.version <- "1.6-6"
-	cat("GenABEL v.",GenABEL.version,"(March 31, 2011) loaded\n")
+	GenABEL.version <- "1.6-7"
+	cat("GenABEL v.",GenABEL.version,"(May 17, 2011) loaded\n")
 	
 	# check for updates and news
 	address <- c(
 			"http://genabel.r-forge.r-project.org/version_and_news.html",
-			"http://mga.bionet.nsc.ru/~yurii/ABEL/version_and_news.html"
+			"http://www.genabel.org/sites/default/files/version_and_news.html"
 	)
 	svtmo <- options("timeout")
 	options("timeout"=10)

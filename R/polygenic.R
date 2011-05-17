@@ -1,4 +1,4 @@
-#' Estimation of polygenic model
+#' Estimation of polygenic model 
 #' 
 #' This function maximises the likelihood of the data under polygenic 
 #' model with covariates an reports twice negative maximum likelihood estimates 
