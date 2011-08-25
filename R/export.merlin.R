@@ -2,10 +2,10 @@
 function(data,pedfile="merlin.ped",datafile="merlin.dat",
 		mapfile="merlin.map",format="merlin",fixstrand="no",
 		extendedmap=TRUE,traits=1, order = TRUE, stepids = 100) {
-	if (!is(data,"gwaa.data")) stop("Data argumet should be of gwaa.data-class")
+	if (!is(data,"gwaa.data")) stop("Data argument should be of gwaa.data-class")
 	formats <- c("merlin","plink")
 	if (!(match(format,formats,nomatch=0)>0)) {
-		out <- paste("fromat argument should be one of",formats,"\n")
+		out <- paste("format argument should be one of",formats,"\n")
 		stop(out)
 	}
 	fixes <- c("no","+","-")

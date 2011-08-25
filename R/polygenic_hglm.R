@@ -76,8 +76,7 @@
 #' # ----- extract fixed effects estimates and standard errors
 #' h2ht$h2an
 #' 
-#' # test the significance of polygenic effect
-#' h2ht <- polygenic_hglm(height ~ sex + age, kin = gkin, df, method = 'REML')
+#' # ----- test the significance of polygenic effect
 #' nullht <- lm(height ~ sex + age, df)
 #' l1 <- h2ht$ProfLogLik
 #' l0 <- as.numeric(logLik(nullht))
@@ -90,7 +89,7 @@
 #' # p-value
 #' pchisq(S, 1, lower.tail = FALSE)/2
 #' 
-#' #' # ----- for binary traits
+#' # ----- for binary traits
 #' h2dm <- polygenic_hglm(dm2 ~ sex + age, kin = gkin, df, family = binomial(link = 'logit'))
 #' # ----- estimated parameters
 #' h2dm$h2an
@@ -104,7 +103,7 @@
 		stop("this function requires 'hglm' package to be installed")
 	if (!missing(data)) if (is(data,"gwaa.data")) 
 		{
-#			checkphengen(data)
+			checkphengen(data)
 			data <- phdata(data)
 		}
 	if (!missing(data)) 
@@ -114,9 +113,14 @@
 	
 	relmat <- kinship.matrix
 	relmat[upper.tri(relmat)] <- t(relmat)[upper.tri(relmat)]
-	mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
+	
+	call <- match.call()
+	if (inherits(try(length(formula), silent = TRUE), "try-error")) 
+		formula <- as.formula(paste(as.character(call)[2], '~ 1'))
+	
+	mf <- model.frame(formula, data, na.action = na.omit, drop.unused.levels = TRUE)
 	y <- model.response(mf)
-	desmat <- model.matrix(formula,mf)
+	desmat <- model.matrix(formula, mf)
 	phids <- rownames(data)[rownames(data) %in% rownames(mf)]
 	mids <- (allids %in% phids)
 	relmat <- relmat[mids,mids]
@@ -131,21 +135,28 @@
 	out$measuredIDs <- mids
 	out$hglm <- res_hglm
 	out$h2an <- list()
-	tVar <- res_hglm$varRan+res_hglm$varFix
+	tVar <- res_hglm$varRan + res_hglm$varFix
 	out$esth2 <- res_hglm$varRan/tVar
-	out$h2an$estimate <- c(res_hglm$fixef,out$esth2,tVar)
-	names(out$h2an$estimate)[(length(out$h2an$estimate)-1):(length(out$h2an$estimate))] <- 
+	out$h2an$estimate <- c(res_hglm$fixef,out$esth2, tVar)
+	names(out$h2an$estimate)[(length(out$h2an$estimate) - 1):(length(out$h2an$estimate))] <- 
 			c("h2","totalVar")
-	out$h2an$se <- c(res_hglm$SeFe,NA,NA)
+	out$h2an$se <- c(res_hglm$SeFe, NA, NA)
 	names(out$h2an$se) <- 
 			c(names(res_hglm$fixef), "h2","totalVar")
-	out$pgresidualY <- rep(NA,length(mids))
-	out$pgresidualY[mids] <- y-res_hglm$fv
-	out$residualY <- rep(NA,length(mids))
+	out$pgresidualY <- rep(NA, length(mids))
+	out$pgresidualY[mids] <- y - res_hglm$fv
+	out$residualY <- rep(NA, length(mids))
 	out$residualY[mids] <- y - desmat %*% res_hglm$fixef
-	out$InvSigma <- ginv(tVar*out$esth2*relmat + 
-					diag(tVar*(1-out$esth2),ncol=length(y),nrow=length(y)))
-	out$ProfLogLik <- res_hglm$ProfLogLik
+	Sigma <- tVar*out$esth2*relmat + diag(tVar*(1 - out$esth2), ncol = length(y), nrow = length(y))
+	out$InvSigma <- ginv(Sigma)
+	#out$InvSigma <- ginv(as.matrix(res_hglm$vcov))
+	#out$ProfLogLik <- res_hglm$ProfLogLik
+	
+	logdetSigma <- sum(log(eigen(Sigma, only.values = TRUE)$values))
+	temp <- determinant(t(desmat)%*%out$InvSigma%*%desmat, log = TRUE)
+	out$ProfLogLik <- as.numeric(- .5*logdetSigma 
+					- .5*t(out$residualY[mids])%*%out$InvSigma%*%out$residualY[mids]
+					- .5*temp$modulus*temp$sign)
 	
 	class(out) <- "polygenic"
 	out

@@ -72,8 +72,7 @@ summary(h2ht$hglm)
 # ----- extract fixed effects estimates and standard errors
 h2ht$h2an
 
-# test the significance of polygenic effect
-h2ht <- polygenic_hglm(height ~ sex + age, kin = gkin, df, method = 'REML')
+# ----- test the significance of polygenic effect
 nullht <- lm(height ~ sex + age, df)
 l1 <- h2ht$ProfLogLik
 l0 <- as.numeric(logLik(nullht))
@@ -86,7 +85,7 @@ qchisq(((1 - .05) - .50)/.50, 1)
 # p-value
 pchisq(S, 1, lower.tail = FALSE)/2
 
-#' # ----- for binary traits
+# ----- for binary traits
 h2dm <- polygenic_hglm(dm2 ~ sex + age, kin = gkin, df, family = binomial(link = 'logit'))
 # ----- estimated parameters
 h2dm$h2an}

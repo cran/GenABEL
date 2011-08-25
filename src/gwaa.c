@@ -1,8 +1,8 @@
 /*
-****************************************************
-** GenABEL v 1.1-9 (c) 2006 Yurii Aulchenko, EMCR **
-****************************************************
-*/
+ ****************************************************
+ ** GenABEL v 1.1-9 (c) 2006 Yurii Aulchenko, EMCR **
+ ****************************************************
+ */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,38 +16,38 @@ double SNPHWE(int, int, int);
 double CalculateRS(unsigned intnAA, unsigned int nAB, unsigned int nBA, unsigned int nBB, unsigned int nDH);
 
 void put_snps(int *b, int *Nsnps, char *a) {
-  int i,j,k,idx;
-  unsigned int sto;
-//  int ofs[4] = {6,4,2,0};
-  int nsnps = (*Nsnps);
-  int nbytes;
-  if ((nsnps % 4) == 0) nbytes = nsnps/4; else nbytes = ceil(1.*nsnps/4.);
-/*
+	int i,j,k,idx;
+	unsigned int sto;
+	//  int ofs[4] = {6,4,2,0};
+	int nsnps = (*Nsnps);
+	int nbytes;
+	if ((nsnps % 4) == 0) nbytes = nsnps/4; else nbytes = ceil(1.*nsnps/4.);
+	/*
   printf("nsnps = %i\n",nsnps);
   printf("nbytes = %i\n",nbytes);
   for (i=0;i<nsnps;i++) printf ("%i ",b[i]);
   printf("\n");
-*/
-  idx = 0;
-  for (i=0;i<nbytes;i++) {
-    sto = 0;
-    for (j=0;j<4;j++) {
-      k = b[idx++] << ofs[j];
-      sto = sto | k; 
-      if (idx>=nsnps) break;
-    }
-    a[i] = sto;
-/*
+	 */
+	idx = 0;
+	for (i=0;i<nbytes;i++) {
+		sto = 0;
+		for (j=0;j<4;j++) {
+			k = b[idx++] << ofs[j];
+			sto = sto | k;
+			if (idx>=nsnps) break;
+		}
+		a[i] = sto;
+		/*
     printf("%i %i %c\n",i,sto,a[i]);
-*/
-  }
+		 */
+	}
 }
- 
+
 void decomp(char *indata, int nids, int *gt) {
 	int i,j,idx;
 	char str;
-//	int msk[4] = {192,48,12,3};
-//	int ofs[4] = {6,4,2,0};
+	//	int msk[4] = {192,48,12,3};
+	//	int ofs[4] = {6,4,2,0};
 	int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	idx = 0;
@@ -73,59 +73,59 @@ void temp(char *indata, int *Nids, int *g) {
 }
 
 void get_snps_many(char *a, int *Nsnps, int *Nrows, int *b) {
-  int i,j,m,idx=0;
-  char str;
-//  int msk[4] = {192,48,12,3};
-//  int ofs[4] = {6,4,2,0};
-  int nsnps = (*Nsnps);
-  int nrows = (*Nrows);
-  int nbytes;
-  if ((nsnps % 4) == 0) nbytes = nsnps/4; else nbytes = ceil(1.*nsnps/4.);
-  /*
+	int i,j,m,idx=0;
+	char str;
+	//  int msk[4] = {192,48,12,3};
+	//  int ofs[4] = {6,4,2,0};
+	int nsnps = (*Nsnps);
+	int nrows = (*Nrows);
+	int nbytes;
+	if ((nsnps % 4) == 0) nbytes = nsnps/4; else nbytes = ceil(1.*nsnps/4.);
+	/*
   printf("nsnps = %i\n",nsnps);
   printf("nbytes = %i\n",nbytes);
   printf("nrows = %i\n",nrows);
-  */
-  for (m=0;m<nrows;m++) {
-  idx = 0;
-  for (i=0;i<nbytes;i++) {
-    /*
+	 */
+	for (m=0;m<nrows;m++) {
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			/*
     printf("adr(a) = %i\n",m*nbytes + i);
-    */
-    str = a[m*nbytes + i];
-    /*
+			 */
+			str = a[m*nbytes + i];
+			/*
     Rprintf("a = %c\n",str);
     Rprintf("a = %u\n",(unsigned short int) str);
-    */
-    for (j=0;j<4;j++) {
-      b[m*nsnps+idx] = str & msk[j]; 
-      b[m*nsnps+(idx++)] >>= ofs[j];
-      if (idx>=nsnps) {idx=0;break;}
-    }
-  }
-  }
-  /*
+			 */
+			for (j=0;j<4;j++) {
+				b[m*nsnps+idx] = str & msk[j];
+				b[m*nsnps+(idx++)] >>= ofs[j];
+				if (idx>=nsnps) {idx=0;break;}
+			}
+		}
+	}
+	/*
   for (i=0;i<nsnps;i++) printf ("%i ",b[i]);
   printf("\n");
-  */
+	 */
 }
 
 void get_snps_many_internal(char *a, int nsnps, int nrows, int *b) {
-  int i,j,m,idx=0;
-  char str;
-  int nbytes;
-  if ((nsnps % 4) == 0) nbytes = nsnps/4; else nbytes = ceil(1.*nsnps/4.);
-  for (m=0;m<nrows;m++) {
-  idx = 0;
-  for (i=0;i<nbytes;i++) {
-    str = a[m*nbytes + i];
-    for (j=0;j<4;j++) {
-      b[m*nsnps+idx] = str & msk[j]; 
-      b[m*nsnps+(idx++)] >>= ofs[j];
-      if (idx>=nsnps) {idx=0;break;}
-    }
-  }
-  }
+	int i,j,m,idx=0;
+	char str;
+	int nbytes;
+	if ((nsnps % 4) == 0) nbytes = nsnps/4; else nbytes = ceil(1.*nsnps/4.);
+	for (m=0;m<nrows;m++) {
+		idx = 0;
+		for (i=0;i<nbytes;i++) {
+			str = a[m*nbytes + i];
+			for (j=0;j<4;j++) {
+				b[m*nsnps+idx] = str & msk[j];
+				b[m*nsnps+(idx++)] >>= ofs[j];
+				if (idx>=nsnps) {idx=0;break;}
+			}
+		}
+	}
 }
 
 
@@ -134,20 +134,20 @@ void sset(char *indata, int *Nsnps, int *Nids, int *outlist, int *Noutlist, char
 	char str;
 	unsigned int k;
 	unsigned int sto;
-//	int msk[4] = {192,48,12,3};
-//	int ofs[4] = {6,4,2,0};
+	//	int msk[4] = {192,48,12,3};
+	//	int ofs[4] = {6,4,2,0};
 	int nsnps = (*Nsnps);
 	int nids = (*Nids);
 	int noutlist = (*Noutlist);
 	int gt[nids];
 	int outgt[noutlist];
-  	int nbytes;
-  	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
-  	int nbyte1;
-  	if ((noutlist % 4) == 0) nbyte1 = noutlist/4; else nbyte1 = ceil(1.*noutlist/4.);
-//	printf("nsnps = %i\n",nsnps);
-//	printf("nbytes = %i\n",nbytes);
-//	printf("nbyte1 = %i\n",nbyte1);
+	int nbytes;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+	int nbyte1;
+	if ((noutlist % 4) == 0) nbyte1 = noutlist/4; else nbyte1 = ceil(1.*noutlist/4.);
+	//	printf("nsnps = %i\n",nsnps);
+	//	printf("nbytes = %i\n",nbytes);
+	//	printf("nbyte1 = %i\n",nbyte1);
 	for (m=0;m<nsnps;m++) {
 		idx = 0;
 		for (i=0;i<nbytes;i++) {
@@ -158,12 +158,12 @@ void sset(char *indata, int *Nsnps, int *Nids, int *outlist, int *Noutlist, char
 				if (idx>=nids) {idx=0;break;}
 			}
 		}
-// subset gt
+		// subset gt
 		for (i=0;i<noutlist;i++) {
 			outgt[i] = gt[outlist[i]-1];
-//			printf("%i ",outgt[i]);
+			//			printf("%i ",outgt[i]);
 		} 
-//		printf("\n");
+		//		printf("\n");
 		idx = 0;
 		for (i=0;i<nbyte1;i++) {
 			sto = 0;
@@ -175,10 +175,10 @@ void sset(char *indata, int *Nsnps, int *Nids, int *outlist, int *Noutlist, char
 			out[m*nbyte1+i] = sto;
 		}
 	}
-/*
+	/*
 	for (i=0;i<nsnps;i++) printf ("%i ",b[i]);
 	printf("\n");
-*/
+	 */
 }
 
 
@@ -191,12 +191,12 @@ void snp_summary(char *indata, int *Nids, int *Nsnps, double *out) {
 	int gt[nids];
 	char str;
 	int count[3];
-//	int msk[4] = {192,48,12,3};
-//	int ofs[4] = {6,4,2,0};
+	//	int msk[4] = {192,48,12,3};
+	//	int ofs[4] = {6,4,2,0};
 	int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	double meaids,p;
-//	printf("! nsnps = %i nids = %i nbytes=%i\n",nsnps,nids,nbytes);
+	//	printf("! nsnps = %i nids = %i nbytes=%i\n",nsnps,nids,nbytes);
 	for (m=0;m<nsnps;m++) {
 		idx = 0;
 		for (i=0;i<nbytes;i++) {
@@ -212,7 +212,7 @@ void snp_summary(char *indata, int *Nids, int *Nsnps, double *out) {
 			if (gt[i]) {
 				count[gt[i]-1]++;
 				p+=(gt[i]-1);
-//				printf("%i = %i  ",i,gt[i]);
+				//				printf("%i = %i  ",i,gt[i]);
 			}
 		meaids = 1.*(count[0]+count[1]+count[2]);
 		double chi = 0.;
@@ -221,8 +221,8 @@ void snp_summary(char *indata, int *Nids, int *Nsnps, double *out) {
 			double div = 1./(4*meaids);
 			double expec[3] = {q*q*div,2.*p*q*div,p*p*div};
 			for (i=0;i<3;i++) chi+= (1.*count[i]-expec[i])*(1.*count[i]-expec[i])/expec[i];
-//			printf("%f %f %f\n",p,q,div);
-//			printf("%f %f %f\n",expec[0],expec[1],expec[2]);
+			//			printf("%f %f %f\n",p,q,div);
+			//			printf("%f %f %f\n",expec[0],expec[1],expec[2]);
 		} else {chi=0.;}
 		out[m]   = meaids;
 		out[(nsnps)*1+m] = meaids/nids;
@@ -231,7 +231,7 @@ void snp_summary(char *indata, int *Nids, int *Nsnps, double *out) {
 		out[(nsnps)*4+m] = count[1];
 		out[(nsnps)*5+m] = count[2];
 		out[(nsnps)*6+m] = chi;
-//		printf("\n%i %f \n",m,out[m*7]);
+		//		printf("\n%i %f \n",m,out[m*7]);
 	}
 }
 
@@ -327,30 +327,30 @@ void redundant(char *indata, int *Nids, int *Nsnps, double *Minc, int *outlist) 
 				if (!outlist[j]) {
 					outlist[j]=i+1;
 					if (minc>=1.0) {
-					for (k=0;k<nbytes;k++)
-						if (indata[i*nbytes+k] != indata[j*nbytes+k]) {
-							outlist[j]=0;
-							break;
-						}
+						for (k=0;k<nbytes;k++)
+							if (indata[i*nbytes+k] != indata[j*nbytes+k]) {
+								outlist[j]=0;
+								break;
+							}
 					} else {
-					for (t=0;t<4;t++) for (t1=0;t1<4;t1++) ctg[t][t1]=0;
-					for (k=0;k<nbytes;k++) 
-						if (indata[i*nbytes+k] != indata[j*nbytes+k]) 
-						{
-							get_snps_many(indata+i*nbytes+k,&i4,&i1,gt0);
-							get_snps_many(indata+j*nbytes+k,&i4,&i1,gt1);
-							for (t=0;t<4;t++) ctg[gt0[t]][gt1[t]]++; 
-						} 
-						else {ctg[1][1]+=4;}
-					s1 = ctg[0][1]+ctg[0][2]+ctg[0][3]+
-					     ctg[1][0]+ctg[1][2]+ctg[1][3]+
-					     ctg[2][0]+ctg[2][1]+ctg[2][3]+
-					     ctg[3][0]+ctg[3][1]+ctg[3][2];
-					s2 = ctg[0][0]+ctg[0][1]+ctg[0][3]+
-					     ctg[1][0]+ctg[1][2]+ctg[1][3]+
-					     ctg[2][1]+ctg[2][2]+ctg[2][3]+
-					     ctg[3][0]+ctg[3][1]+ctg[3][2];
-					if (s1 > maxdism && s2 > maxdism) outlist[j]=0;
+						for (t=0;t<4;t++) for (t1=0;t1<4;t1++) ctg[t][t1]=0;
+						for (k=0;k<nbytes;k++)
+							if (indata[i*nbytes+k] != indata[j*nbytes+k])
+							{
+								get_snps_many(indata+i*nbytes+k,&i4,&i1,gt0);
+								get_snps_many(indata+j*nbytes+k,&i4,&i1,gt1);
+								for (t=0;t<4;t++) ctg[gt0[t]][gt1[t]]++;
+							}
+							else {ctg[1][1]+=4;}
+						s1 = ctg[0][1]+ctg[0][2]+ctg[0][3]+
+								ctg[1][0]+ctg[1][2]+ctg[1][3]+
+								ctg[2][0]+ctg[2][1]+ctg[2][3]+
+								ctg[3][0]+ctg[3][1]+ctg[3][2];
+						s2 = ctg[0][0]+ctg[0][1]+ctg[0][3]+
+								ctg[1][0]+ctg[1][2]+ctg[1][3]+
+								ctg[2][1]+ctg[2][2]+ctg[2][3]+
+								ctg[3][0]+ctg[3][1]+ctg[3][2];
+						if (s1 > maxdism && s2 > maxdism) outlist[j]=0;
 					}
 				}
 			}
@@ -454,7 +454,7 @@ void fastcc(char *indata, int *cc, int *Nids, int *Nsnps, double *chi2) {
 			chi2[m+4*nsnps] = 0.;
 			chi2[m+5*nsnps] = 0.;
 		} else {
-/* genotypic test */
+			/* genotypic test */
 			rt[0] = count_cas[0]+count_cas[1]+count_cas[2];
 			rt[1] = count_con[0]+count_con[1]+count_con[2];
 			ct[0] = count_cas[0]+count_con[0];
@@ -468,16 +468,16 @@ void fastcc(char *indata, int *cc, int *Nids, int *Nsnps, double *chi2) {
 			chi2[m+2*nsnps]=2.;
 			if (ct[0]<1 || ct[1]<1 || ct[2]<1) chi2[m+2*nsnps]=1.;
 			if (count_cas[0]>0 && count_con[1]>0)
-			   chi2[m+4*nsnps] = (1.*count_cas[1]*count_con[0])/(1.*count_cas[0]*count_con[1]);
+				chi2[m+4*nsnps] = (1.*count_cas[1]*count_con[0])/(1.*count_cas[0]*count_con[1]);
 			else
-			   chi2[m+4*nsnps] = 10000.0;
+				chi2[m+4*nsnps] = 10000.0;
 			if (count_cas[0]>0 && count_con[2]>0)
-			   chi2[m+5*nsnps] = (1.*count_cas[2]*count_con[0])/(1.*count_cas[0]*count_con[2]);
+				chi2[m+5*nsnps] = (1.*count_cas[2]*count_con[0])/(1.*count_cas[0]*count_con[2]);
 			else
-			   chi2[m+5*nsnps] = 10000.0;
+				chi2[m+5*nsnps] = 10000.0;
 
 			chi2[m+6*nsnps] = rt[0] + rt[1];
-/* allelic test */
+			/* allelic test */
 			total *= 2.;
 			rt[0] *= 2.;
 			rt[1] *= 2.;
@@ -493,9 +493,9 @@ void fastcc(char *indata, int *cc, int *Nids, int *Nsnps, double *chi2) {
 			for (i=0;i<2;i++) if (ecas[i]>0.) chi2[m]+=(1.*count_cas[i]-ecas[i])*(1.*count_cas[i]-ecas[i])/ecas[i];
 			for (i=0;i<2;i++) if (econ[i]>0.) chi2[m]+=(1.*count_con[i]-econ[i])*(1.*count_con[i]-econ[i])/econ[i];
 			if (count_cas[0]>0 && count_con[1]>0)
-			   chi2[m+3*nsnps] = (1.*count_cas[1]*count_con[0])/(1.*count_cas[0]*count_con[1]);
+				chi2[m+3*nsnps] = (1.*count_cas[1]*count_con[0])/(1.*count_cas[0]*count_con[1]);
 			else
-			   chi2[m+3*nsnps] = 10000.0;
+				chi2[m+3*nsnps] = 10000.0;
 		}
 	}
 }
@@ -513,7 +513,7 @@ void qtscore(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, int *
 	double Tsg1, Tsg2, sg1[nstra], sg2[nstra], xg1[nstra], xg2[nstra];
 	double det, u, v, u1, u2, v11, v12, v22;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
-//	char chgt[nbytes];
+	//	char chgt[nbytes];
 
 	for (igt=0;igt<nsnps;igt++) {
 		get_snps_many(gdata+nbytes*igt,Nids,&i1,gt);
@@ -527,20 +527,20 @@ void qtscore(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, int *
 			xg2[j] = 0.;
 		}
 		for (i=0;i<nids;i++) {
-		    if (gt[i] != 0) {
-			cstr = stra[i];
-			dgt = 1.*gt[i] - 1.0;
-			totg[cstr]+=1.0;
-			if (dgt==1) {
-				sg1[cstr]+=1.0;
-				xg1[cstr]+=pheno[i];
-			} else if (dgt==2) {
-				sg2[cstr]+=1.0;
-				xg2[cstr]+=pheno[i];
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				totg[cstr]+=1.0;
+				if (dgt==1) {
+					sg1[cstr]+=1.0;
+					xg1[cstr]+=pheno[i];
+				} else if (dgt==2) {
+					sg2[cstr]+=1.0;
+					xg2[cstr]+=pheno[i];
+				}
+				x2[cstr] += pheno[i]*pheno[i];
+				sumx[cstr] += pheno[i];
 			}
-			x2[cstr] += pheno[i]*pheno[i];
-			sumx[cstr] += pheno[i];
-		    }
 		}
 		Ttotg=Tsg1=Tsg2=0.; 
 		for (j=0;j<nstra;j++) {
@@ -573,22 +573,22 @@ void qtscore(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, int *
 			u = u1+2.*u2;
 			v = v11+4.*v12+4.*v22;
 			if (v<1.e-16) {
-			  chi2[igt]=0.;
-			  chi2[igt+3*nsnps]=0.;
+				chi2[igt]=0.;
+				chi2[igt+3*nsnps]=0.;
 			} else {
-			  chi2[igt]=u*u/v;
-			  chi2[igt+3*nsnps]=u/(Tsg1+2.*Tsg2);
+				chi2[igt]=u*u/v;
+				chi2[igt+3*nsnps]=u/(Tsg1+2.*Tsg2);
 			}
 			det = v11*v22 - v12*v12;
 			if (det<(1.e-16)) {
 				chi2[igt+nsnps]=chi2[igt];
 				chi2[igt+2*nsnps] = 1.;
-			  	chi2[igt+4*nsnps]=chi2[igt+3*nsnps];
-			  	chi2[igt+5*nsnps]=2.*chi2[igt+3*nsnps];
+				chi2[igt+4*nsnps]=chi2[igt+3*nsnps];
+				chi2[igt+5*nsnps]=2.*chi2[igt+3*nsnps];
 			} else {
 				chi2[igt+nsnps]=(u1*u1*v22+u2*u2*v11-2.0*u1*u2*v12)/det;
-			  	chi2[igt+4*nsnps]=u1/Tsg1;
-			  	chi2[igt+5*nsnps]=u2/Tsg2;
+				chi2[igt+4*nsnps]=u1/Tsg1;
+				chi2[igt+5*nsnps]=u2/Tsg2;
 				if (Tsg1>0 && Tsg2>0 && Ttotg>0) 
 					chi2[igt+2*nsnps] = 2.;
 				else
@@ -612,7 +612,7 @@ void egscore(char *gdata, double *pheno, int *Naxes, double *axes, int *Nids, in
 	double Tsg1, Tsg2, sg1[nstra], sg2[nstra], xg1[nstra], xg2[nstra], gamma[nstra][naxes], saxg[nstra][naxes], sa2[nstra][naxes];
 	double det, u, v, u1, u2, v11, v12, v22;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
-//	char chgt[nbytes];
+	//	char chgt[nbytes];
 
 	for (igt=0;igt<nsnps;igt++) {
 		get_snps_many(gdata+nbytes*igt,Nids,&i1,gtint);
@@ -629,48 +629,48 @@ void egscore(char *gdata, double *pheno, int *Naxes, double *axes, int *Nids, in
 			xg2[j] = 0.;
 		}
 		for (i=0;i<naxes;i++) {
+			for (j=0;j<nstra;j++) {
+				gamma[j][i] = 0.;
+				saxg[j][i] = 0.;
+				sa2[j][i] = 0.;
+			}
+		}
+		for (j=0;j<naxes;j++) {
+			for (i=0;i<nids;i++) {
+				if (gtint[i] != 0) {
+					cstr = stra[i];
+					dgt = gt[i] - 1.0;
+					saxg[cstr][j] += dgt*axes[i+j*nids];
+					sa2[cstr][j] += axes[i+j*nids]*axes[i+j*nids];
+					//			Rprintf("%d %d %d %e %e %e %e\n",i,j,cstr,dgt,dgt*axes[i+j*nids],saxg[cstr][j],sa2[cstr][j]);
+				}
+			}
+		}
+		for (j=0;j<naxes;j++) {
+			for (i=0;i<nstra;i++) {
+				gamma[i][j] = saxg[i][j]/sa2[i][j];
+				//			Rprintf("%d %d %e %e %e\n",i,j,gamma[i][j],saxg[i][j],sa2[i][j]);
+			}
+		}
+		for (i=0;i<nids;i++) {
+			for (j=0;j<naxes;j++) {
+				cstr = stra[i];
+				gt[i] = gt[i] - gamma[cstr][j]*axes[i+j*nids];
+			}
+			//		Rprintf("%d %e\n",i,gt[i]);
+		}
 		for (j=0;j<nstra;j++) {
-			gamma[j][i] = 0.;
-			saxg[j][i] = 0.;
-			sa2[j][i] = 0.;
-		}
-		}
-		for (j=0;j<naxes;j++) {
-		for (i=0;i<nids;i++) {
-		    if (gtint[i] != 0) {
-			cstr = stra[i];
-			dgt = gt[i] - 1.0;
-			saxg[cstr][j] += dgt*axes[i+j*nids];
-			sa2[cstr][j] += axes[i+j*nids]*axes[i+j*nids];
-//			Rprintf("%d %d %d %e %e %e %e\n",i,j,cstr,dgt,dgt*axes[i+j*nids],saxg[cstr][j],sa2[cstr][j]);
-		    }
-		}
-		}
-		for (j=0;j<naxes;j++) {
-		for (i=0;i<nstra;i++) {
-			gamma[i][j] = saxg[i][j]/sa2[i][j];
-//			Rprintf("%d %d %e %e %e\n",i,j,gamma[i][j],saxg[i][j],sa2[i][j]);
-		}
-		}
-		for (i=0;i<nids;i++) {
-		for (j=0;j<naxes;j++) {
-			cstr = stra[i];
-			gt[i] = gt[i] - gamma[cstr][j]*axes[i+j*nids];
-		}
-//		Rprintf("%d %e\n",i,gt[i]);
-		}
-		for (j=0;j<nstra;j++) {
-		for (i=0;i<nids;i++) {
-		    if (gtint[i] != 0) {
-			cstr = stra[i];
-			totg[cstr]+=1.0;
-			sg1[cstr]+=gt[i];
-			sg2[cstr]+=gt[i]*gt[i];
-			sumx[cstr] += pheno[i];
-			x2[cstr] += pheno[i]*pheno[i];
-			xg1[cstr]+=gt[i]*pheno[i];
-		    }
-		}
+			for (i=0;i<nids;i++) {
+				if (gtint[i] != 0) {
+					cstr = stra[i];
+					totg[cstr]+=1.0;
+					sg1[cstr]+=gt[i];
+					sg2[cstr]+=gt[i]*gt[i];
+					sumx[cstr] += pheno[i];
+					x2[cstr] += pheno[i]*pheno[i];
+					xg1[cstr]+=gt[i]*pheno[i];
+				}
+			}
 		}
 		Ttotg=Tsg1=Tsg2=0.; 
 		for (j=0;j<nstra;j++) {
@@ -703,25 +703,25 @@ void egscore(char *gdata, double *pheno, int *Naxes, double *axes, int *Nids, in
 				u += (xg1[j]-sg1[j]*mx);
 				v += bb*(sg2[j]-sg1[j]*sg1[j]/totg[j]);
 			}
-//			u = u1+2.*u2;
-//			v = v11+4.*v12+4.*v22;
+			//			u = u1+2.*u2;
+			//			v = v11+4.*v12+4.*v22;
 			if (v<1.e-16) {
-			  chi2[igt]=0.;
-			  chi2[igt+3*nsnps]=0.;
+				chi2[igt]=0.;
+				chi2[igt+3*nsnps]=0.;
 			} else {
-			  chi2[igt]=(u*u/v)*(1.*nids/(1.*nids-1.*naxes-1.));
-			  chi2[igt+3*nsnps]=u/(Tsg1+2.*Tsg2);
+				chi2[igt]=(u*u/v)*(1.*nids/(1.*nids-1.*naxes-1.));
+				chi2[igt+3*nsnps]=u/(Tsg1+2.*Tsg2);
 			}
 			det = v11*v22 - v12*v12;
 			if (det<(1.e-16)) {
 				chi2[igt+nsnps]=chi2[igt];
 				chi2[igt+2*nsnps] = 1.;
-			  	chi2[igt+4*nsnps]=chi2[igt+3*nsnps];
-			  	chi2[igt+5*nsnps]=2.*chi2[igt+3*nsnps];
+				chi2[igt+4*nsnps]=chi2[igt+3*nsnps];
+				chi2[igt+5*nsnps]=2.*chi2[igt+3*nsnps];
 			} else {
 				chi2[igt+nsnps]=(u1*u1*v22+u2*u2*v11-2.0*u1*u2*v12)/det;
-			  	chi2[igt+4*nsnps]=u1/Tsg1;
-			  	chi2[igt+5*nsnps]=u2/Tsg2;
+				chi2[igt+4*nsnps]=u1/Tsg1;
+				chi2[igt+5*nsnps]=u2/Tsg2;
 				if (Tsg1>0 && Tsg2>0 && Ttotg>0) 
 					chi2[igt+2*nsnps] = 2.;
 				else
@@ -747,46 +747,46 @@ void mmscore(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 	double Tsg, sg[nstra];
 	double u, v;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
-//	Rprintf("nstra=%d nsnps=%d nids=%d nbytes=%d\n",nstra,nsnps,nids,nbytes);
+	//	Rprintf("nstra=%d nsnps=%d nids=%d nbytes=%d\n",nstra,nsnps,nids,nbytes);
 
 	for (igt=0;igt<nsnps;igt++) {
 		get_snps_many(gdata+nbytes*igt,Nids,&i1,gt);
-//		for (i=0;i<nids;i++) Rprintf("%d ",gt[i]-1);Rprintf("\n");
+		//		for (i=0;i<nids;i++) Rprintf("%d ",gt[i]-1);Rprintf("\n");
 		for (j=0;j<nstra;j++) {
 			totg[j] = 0.;
 			sg[j] = 0.;
 		}
 		Ttotg=Tsg=0.; 
 		for (i=0;i<nids;i++)
-		    if (gt[i] != 0) {
-			cstr = stra[i];
-			dgt = 1.*gt[i] - 1.0;
-			totg[cstr]+=1.0;
-			Ttotg += 1.0;
-			sg[cstr] += dgt;
-			Tsg += dgt;
-		    }
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				totg[cstr]+=1.0;
+				Ttotg += 1.0;
+				sg[cstr] += dgt;
+				Tsg += dgt;
+			}
 		chi2[igt+6*nsnps]=Ttotg;
 		for (j=0;j<nstra;j++) {
 			eG[j] = sg[j]/totg[j];
 		}
 		for (i=0;i<nids;i++) {
-		    gtctr[i] = 0.;
-		    if (gt[i] != 0) {
-			cstr = stra[i];
-			dgt = 1.*gt[i] - 1.0;
-			gtctr[i] = dgt - eG[cstr];
-//			Rprintf("i=%d gt[i]=%d gtctr[i]=%f\n",i,gt[i],gtctr[i]);
-		    }
+			gtctr[i] = 0.;
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				gtctr[i] = dgt - eG[cstr];
+				//			Rprintf("i=%d gt[i]=%d gtctr[i]=%f\n",i,gt[i],gtctr[i]);
+			}
 		}
 		for (i=0;i<nids;i++) {
 			svec[i] = 0.;
 			for (j=0;j<nids;j++) {
 				svec[i] += gtctr[j]*invS[nids*i+j];
-//				Rprintf("%d ",nids*i+j);
+				//				Rprintf("%d ",nids*i+j);
 			}
 		}
-//		Rprintf("\nTtotg=%f\n",Ttotg);
+		//		Rprintf("\nTtotg=%f\n",Ttotg);
 		if (Ttotg == 0) {
 			chi2[igt] = 0.;
 			chi2[igt+nsnps] = 0.;
@@ -797,20 +797,20 @@ void mmscore(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 		} else {
 			u = v = 0.;
 			for (i=0;i<nids;i++) {
-//				Rprintf("i=%d svec[i]=%f pheno[i]=%f gtctr[i]=%f\n",i,svec[i],pheno[i],gtctr[i]);
+				//				Rprintf("i=%d svec[i]=%f pheno[i]=%f gtctr[i]=%f\n",i,svec[i],pheno[i],gtctr[i]);
 				if (gt[i] != 0) {
 					u += svec[i]*pheno[i];
 					v += svec[i]*gtctr[i];
 				}
 			}
 			if (v<1.e-16) {
-			  chi2[igt]=0.;
-			  chi2[igt+3*nsnps]=0.;
+				chi2[igt]=0.;
+				chi2[igt+3*nsnps]=0.;
 			} else {
-			  chi2[igt]=u*u/v;
-			  chi2[igt+3*nsnps]=u/Tsg;
+				chi2[igt]=u*u/v;
+				chi2[igt+3*nsnps]=u/Tsg;
 			}
-//			Rprintf("u = %f, v= %f\n",u,v);
+			//			Rprintf("u = %f, v= %f\n",u,v);
 		}
 	}
 }
@@ -841,29 +841,29 @@ void mmscore_20090127(char *gdata, double *pheno, double *invS, int *Nids, int *
 		}
 		Ttotg=Tsg=0.; 
 		for (i=0;i<nids;i++)
-		    if (gt[i] != 0) {
-			cstr = stra[i];
-			dgt = 1.*gt[i] - 1.0;
-			totg[cstr]+=1.0;
-			Ttotg += 1.0;
-			sg[cstr] += dgt;
-			sph[cstr] += pheno[i];
-			Tsg += dgt;
-		    }
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				totg[cstr]+=1.0;
+				Ttotg += 1.0;
+				sg[cstr] += dgt;
+				sph[cstr] += pheno[i];
+				Tsg += dgt;
+			}
 		chi2[igt+6*nsnps]=Ttotg;
 		for (j=0;j<nstra;j++) {
 			eG[j] = sg[j]/totg[j];
 			ePH[j] = sph[j]/totg[j];
 		}
 		for (i=0;i<nids;i++) {
-		    gtctr[i] = 0.;
-		    phctr[i] = 0.;
-		    if (gt[i] != 0) {
-			cstr = stra[i];
-			dgt = 1.*gt[i] - 1.0;
-			gtctr[i] = dgt - eG[cstr];
-			phctr[i] = pheno[i] - ePH[cstr];
-		    }
+			gtctr[i] = 0.;
+			phctr[i] = 0.;
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				gtctr[i] = dgt - eG[cstr];
+				phctr[i] = pheno[i] - ePH[cstr];
+			}
 		}
 		for (i=0;i<nids;i++) {
 			svec[i] = 0.;
@@ -885,11 +885,91 @@ void mmscore_20090127(char *gdata, double *pheno, double *invS, int *Nids, int *
 				}
 			}
 			if (v<1.e-16) {
-			  chi2[igt]=0.;
-			  chi2[igt+3*nsnps]=0.;
+				chi2[igt]=0.;
+				chi2[igt+3*nsnps]=0.;
 			} else {
-			  chi2[igt]=u*u/v;
-			  chi2[igt+3*nsnps]=u/v;
+				chi2[igt]=u*u/v;
+				chi2[igt+3*nsnps]=u/v;
+			}
+		}
+	}
+}
+
+//
+//new new MMSCORE (2011.07.15)
+//
+
+void mmscore_20110715(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2)
+{
+	int nsnps = (*Nsnps);
+	int nstra = (*Nstra);
+	int nids = (*Nids);
+	int gt[nids];
+	int i, j, cstr, igt, i1=1;
+	int nbytes;
+	double Ttotg,dgt,totg[nstra],eG[nstra],ePH[nstra],svec[nids],gtctr[nids],phctr[nids];
+	double Tsg, sg[nstra],sph[nstra];
+	double u, v;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+
+	for (igt=0;igt<nsnps;igt++) {
+		get_snps_many(gdata+nbytes*igt,Nids,&i1,gt);
+		for (j=0;j<nstra;j++) {
+			totg[j] = 0.;
+			sg[j] = 0.;
+			sph[j] = 0.;
+		}
+		Ttotg=Tsg=0.;
+		for (i=0;i<nids;i++)
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				totg[cstr]+=1.0;
+				Ttotg += 1.0;
+				sg[cstr] += dgt;
+				sph[cstr] += pheno[i];
+				Tsg += dgt;
+			}
+		chi2[igt+6*nsnps]=Ttotg;
+		for (j=0;j<nstra;j++) {
+			eG[j] = sg[j]/totg[j];
+			ePH[j] = sph[j]/totg[j];
+		}
+		for (i=0;i<nids;i++) {
+			gtctr[i] = 0.;
+			phctr[i] = 0.;
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				gtctr[i] = dgt - eG[cstr];
+				phctr[i] = pheno[i] - ePH[cstr];
+			}
+		}
+		for (i=0;i<nids;i++) {
+			svec[i] = 0.;
+			for (j=0;j<nids;j++) svec[i] += gtctr[j]*invS[nids*i+j];
+		}
+		if (Ttotg == 0) {
+			chi2[igt] = 0.;
+			chi2[igt+nsnps] = 0.;
+			chi2[igt+2*nsnps] = 0.0001;
+			chi2[igt+3*nsnps] = 0.;
+			chi2[igt+4*nsnps] = 0.;
+			chi2[igt+5*nsnps] = 0.;
+		} else {
+			u = v = 0.;
+			for (i=0;i<nids;i++) {
+				if (gt[i] != 0) {
+					u += svec[i]*phctr[i];
+					v += svec[i]*gtctr[i];
+				}
+			}
+			if (v<1.e-16) {
+				chi2[igt]=0.;
+				chi2[igt+3*nsnps]=0.;
+			} else {
+				chi2[igt]=u*u/v;
+				chi2[igt+3*nsnps]=u/v;
 			}
 		}
 	}
@@ -907,7 +987,7 @@ void grammar(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 	double Tsg, sg[nstra];
 	double u, v;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
-//	char chgt[nbytes];
+	//	char chgt[nbytes];
 
 	for (i=0;i<nids;i++) {
 		svec[i] = 0.;
@@ -921,24 +1001,24 @@ void grammar(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 		}
 		Ttotg=Tsg=0.; 
 		for (i=0;i<nids;i++)
-		    if (gt[i] != 0) {
-			cstr = stra[i];
-			dgt = 1.*gt[i] - 1.0;
-			totg[cstr]+=1.0;
-			Ttotg += 1.0;
-			sg[cstr] += dgt;
-			Tsg += dgt;
-		    }
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				totg[cstr]+=1.0;
+				Ttotg += 1.0;
+				sg[cstr] += dgt;
+				Tsg += dgt;
+			}
 		chi2[igt+6*nsnps]=Ttotg;
 		for (j=0;j<nstra;j++) {
 			eG[j] = sg[j]/totg[j];
 		}
 		for (i=0;i<nids;i++)
-		    if (gt[i] != 0) {
-			cstr = stra[i];
-			dgt = 1.*gt[i] - 1.0;
-			gtctr[i] = dgt - eG[cstr];
-		    }
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				gtctr[i] = dgt - eG[cstr];
+			}
 		if (Ttotg == 0) {
 			chi2[igt] = 0.;
 			chi2[igt+nsnps] = 0.;
@@ -955,11 +1035,11 @@ void grammar(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, in
 				}
 			}
 			if (v<1.e-16) {
-			  chi2[igt]=0.;
-			  chi2[igt+3*nsnps]=0.;
+				chi2[igt]=0.;
+				chi2[igt+3*nsnps]=0.;
 			} else {
-			  chi2[igt]=u*u/v;
-			  chi2[igt+3*nsnps]=u/Tsg;
+				chi2[igt]=u*u/v;
+				chi2[igt+3*nsnps]=u/Tsg;
 			}
 		}
 	}
@@ -1023,7 +1103,7 @@ void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, d
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	for (i=0;i<(nids*5);i++) out[i]=0.;
 	for (m=0;m<nsnps;m++) {
-// extract genotypes
+		// extract genotypes
 		idx = 0;
 		for (i=0;i<nbytes;i++) {
 			str = indata[m*nbytes + i];
@@ -1033,11 +1113,11 @@ void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, d
 				if (idx>=nids) {idx=0;break;}
 			}
 		}
-// extract counts
+		// extract counts
 		count[0]=count[1]=count[2]=count[3]=sumgt=0;
 		for (i=0;i<nids;i++) count[gt[i]]++;
 		sumgt = count[1]+count[2]+count[3];
-// extract AFs
+		// extract AFs
 		if (useFreq==0) {
 			if (sumgt>=1) {
 				p0 = (count[1]*2.+count[2]*1.)/(2.*sumgt);
@@ -1053,7 +1133,7 @@ void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, d
 		if (p0>q0) maf=q0; else maf=p0;
 
 		if (maf>1.e-16) den=1./(p0*q0);
-			else den=0;
+		else den=0;
 
 		if (useFreq==0) {
 			if (sumgt>1)
@@ -1070,20 +1150,20 @@ void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, d
 		centgt[0]=0.;centgt[1]=0.-q0;centgt[2]=.5-q0;centgt[3]=1.-q0;
 
 		for (i=0;i<nids;i++)
-		if (gt[i]!=0)
-		{
-// compute no measured snps
-			out[i]+=1.;
-// compute no measured poly snps
-			if (maf>1e-16) out[nids+i]+=1.;
-// compute raw Hom
-			out[2*nids+i] += homweight[gt[i]];
-// compute weighted Hom
-			out[3*nids+i] += fel;
-// compute Var
-			out[4*nids+i] += centgt[gt[i]]*centgt[gt[i]]*den;
-//			Rprintf("%d %d %e %e %e %d %e %e %e\n",m,i,p0,q0,maf,sumgt,nfreq[m],out[2*nids+i],1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.));
-		}
+			if (gt[i]!=0)
+			{
+				// compute no measured snps
+				out[i]+=1.;
+				// compute no measured poly snps
+				if (maf>1e-16) out[nids+i]+=1.;
+				// compute raw Hom
+				out[2*nids+i] += homweight[gt[i]];
+				// compute weighted Hom
+				out[3*nids+i] += fel;
+				// compute Var
+				out[4*nids+i] += centgt[gt[i]]*centgt[gt[i]]*den;
+				//			Rprintf("%d %d %e %e %e %d %e %e %e\n",m,i,p0,q0,maf,sumgt,nfreq[m],out[2*nids+i],1. - 2.*p0*q0*nfreq[m]/(nfreq[m]-1.));
+			}
 
 	}
 }
@@ -1129,20 +1209,20 @@ void ibs(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Op
 			}
 		}
 		for (i=0;i<(nids-1);i++)
-		for (j=(i+1);j<nids;j++) {
-		if (gt[i]!=0 && gt[j]!=0 && !noninf) {
-			out[i*nids+j]+=1.;
-			out[j*nids+i]+=ibssum[gt[i]][gt[j]];
-		}
-		}
+			for (j=(i+1);j<nids;j++) {
+				if (gt[i]!=0 && gt[j]!=0 && !noninf) {
+					out[i*nids+j]+=1.;
+					out[j*nids+i]+=ibssum[gt[i]][gt[j]];
+				}
+			}
 	}
 	for (i=0;i<(nids-1);i++)
-	for (j=(i+1);j<nids;j++) {
-		if (out[i*nids+j]>0) 
-			out[j*nids+i]=out[j*nids+i]/(1.*out[i*nids+j]);
-		else
-			out[j*nids+i]=-1.;
-	}
+		for (j=(i+1);j<nids;j++) {
+			if (out[i*nids+j]>0)
+				out[j*nids+i]=out[j*nids+i]/(1.*out[i*nids+j]);
+			else
+				out[j*nids+i]=-1.;
+		}
 }
 
 
@@ -1152,7 +1232,7 @@ void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs
 	unsigned int nsnps = (*Nsnps);
 	unsigned int option = (*Option);
 	unsigned int gt[nids],noninf=0;
-//	unsigned int count[4],sumgt;
+	//	unsigned int count[4],sumgt;
 	double p,q,den,centgt[4];
 	double ibssum[4][4] = {{0.,0.,0.,0.},{0.,1.,.5,.0},{0.,.5,1.,.5},{0.,0.,.5,1.}};
 	char str;
@@ -1170,14 +1250,14 @@ void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs
 		}
 		noninf=0;
 		if (option > 0) {
-//			count[0]=count[1]=count[2]=count[3]=sumgt=0;
-//			for (i=0;i<nids;i++) count[gt[i]]++;
-//			sumgt = count[1]+count[2]+count[3];
-//			p = (count[3]*2.+1.*count[2])/(2.*sumgt);
+			//			count[0]=count[1]=count[2]=count[3]=sumgt=0;
+			//			for (i=0;i<nids;i++) count[gt[i]]++;
+			//			sumgt = count[1]+count[2]+count[3];
+			//			p = (count[3]*2.+1.*count[2])/(2.*sumgt);
 			p = freqs[m];
 			q = 1.-p;
-//			Rprintf("%d %d ",p,q);
-//			if (p*2*sumgt < (1.-(1e-16)) || q*2*sumgt < (1.-(1e-16))) {
+			//			Rprintf("%d %d ",p,q);
+			//			if (p*2*sumgt < (1.-(1e-16)) || q*2*sumgt < (1.-(1e-16))) {
 			if (p < 1.e-16 || q < 1.e-16) {
 				noninf=1;
 			} else {
@@ -1190,20 +1270,20 @@ void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs
 			}
 		}
 		for (i=0;i<(nids-1);i++)
-		for (j=(i+1);j<nids;j++) {
-		if (gt[i]!=0 && gt[j]!=0 && !noninf) {
-			out[i*nids+j]+=1.;
-			out[j*nids+i]+=ibssum[gt[i]][gt[j]];
-		}
-		}
+			for (j=(i+1);j<nids;j++) {
+				if (gt[i]!=0 && gt[j]!=0 && !noninf) {
+					out[i*nids+j]+=1.;
+					out[j*nids+i]+=ibssum[gt[i]][gt[j]];
+				}
+			}
 	}
 	for (i=0;i<(nids-1);i++)
-	for (j=(i+1);j<nids;j++) {
-		if (out[i*nids+j]>0) 
-			out[j*nids+i]=out[j*nids+i]/(1.*out[i*nids+j]);
-		else
-			out[j*nids+i]=-1.;
-	}
+		for (j=(i+1);j<nids;j++) {
+			if (out[i*nids+j]>0)
+				out[j*nids+i]=out[j*nids+i]/(1.*out[i*nids+j]);
+			else
+				out[j*nids+i]=-1.;
+		}
 }
 
 void ibspar(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Nids1, unsigned int *ids1, unsigned int * Nids2, unsigned int *ids2, double *freqs, unsigned int *Option, double *out) {
@@ -1245,20 +1325,20 @@ void ibspar(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int 
 			}
 		}
 		for (i=0;i<nids1;i++)
-		for (j=0;j<nids2;j++) {
-		if (gt[ids1[i]]!=0 && gt[ids2[j]]!=0 && !noninf) {
-			out[i*nids2+j]+=ibssum[gt[ids1[i]]][gt[ids2[j]]];
-			out[nids1*nids2+j*nids1+i]+=1.;
-		}
-		}
+			for (j=0;j<nids2;j++) {
+				if (gt[ids1[i]]!=0 && gt[ids2[j]]!=0 && !noninf) {
+					out[i*nids2+j]+=ibssum[gt[ids1[i]]][gt[ids2[j]]];
+					out[nids1*nids2+j*nids1+i]+=1.;
+				}
+			}
 	}
 	for (i=0;i<nids1;i++)
-	for (j=0;j<nids2;j++) {
-		if (out[nids1*nids2+j*nids1+i]>0) 
-			out[i*nids2+j]=out[i*nids2+j]/(1.*out[nids1*nids2+j*nids1+i]);
-		else
-			out[nids1*nids2+j*nids1+1]=-1.;
-	}
+		for (j=0;j<nids2;j++) {
+			if (out[nids1*nids2+j*nids1+i]>0)
+				out[i*nids2+j]=out[i*nids2+j]/(1.*out[nids1*nids2+j*nids1+i]);
+			else
+				out[nids1*nids2+j*nids1+1]=-1.;
+		}
 }
 
 void comp_qval(double *p, int *Length, double *out) {
@@ -1295,40 +1375,40 @@ void r2new(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *
 	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	for (m1=0;m1<nsnps1;m1++)
-	for (m2=0;m2<nsnps2;m2++) {
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[snps1[m1]*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[0][idx] = str & msk[j]; 
-				gt[0][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+		for (m2=0;m2<nsnps2;m2++) {
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[snps1[m1]*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[0][idx] = str & msk[j];
+					gt[0][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
-		}
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[snps2[m2]*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[1][idx] = str & msk[j]; 
-				gt[1][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[snps2[m2]*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[1][idx] = str & msk[j];
+					gt[1][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
+			for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
+			for (i=0;i<nids;i++)
+				cgt[gt[0][i]][gt[1][i]]++;
+			nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
+			nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
+			nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
+			nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
+			nDH = 2*cgt[2][2];
+			out[m2*nsnps1+m1] = (nAA+nAB+nBA+nBB+nDH)/2;
+			if (out[m2*nsnps1+m1])
+				out[nsnps1*nsnps2+m1*nsnps2+m2] = CalculateRS(nAA,nAB,nBA,nBB,nDH);
+			else
+				out[nsnps1*nsnps2+m1*nsnps2+m2] = 0.;
+			csp++;
 		}
-		for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
-		for (i=0;i<nids;i++)
-			cgt[gt[0][i]][gt[1][i]]++;
-		nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
-		nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
-		nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
-		nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
-		nDH = 2*cgt[2][2];
-		out[m2*nsnps1+m1] = (nAA+nAB+nBA+nBB+nDH)/2;
-		if (out[m2*nsnps1+m1])
-			out[nsnps1*nsnps2+m1*nsnps2+m2] = CalculateRS(nAA,nAB,nBA,nBB,nDH);
-		else
-			out[nsnps1*nsnps2+m1*nsnps2+m2] = 0.;
-		csp++;
-	}
 }
 
 void r2(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) {
@@ -1341,46 +1421,46 @@ void r2(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) {
 	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	for (m0=0;m0<(nsnps-1);m0++)
-	for (m1=(m0+1);m1<nsnps;m1++) {
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[m0*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[0][idx] = str & msk[j]; 
-				gt[0][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+		for (m1=(m0+1);m1<nsnps;m1++) {
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[m0*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[0][idx] = str & msk[j];
+					gt[0][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
-		}
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[m1*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[1][idx] = str & msk[j]; 
-				gt[1][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[m1*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[1][idx] = str & msk[j];
+					gt[1][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
+			for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
+			for (i=0;i<nids;i++)
+				cgt[gt[0][i]][gt[1][i]]++;
+			nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
+			nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
+			nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
+			nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
+			nDH = 2*cgt[2][2];
+			out[m1*nsnps+m0] = (nAA+nAB+nBA+nBB+nDH)/2;
+			if (out[m1*nsnps+m0])
+				out[m0*nsnps+m1] = CalculateRS(nAA,nAB,nBA,nBB,nDH);
+			else
+				out[m0*nsnps+m1] = 0.;
+			csp++;
 		}
-		for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
-		for (i=0;i<nids;i++)
-			cgt[gt[0][i]][gt[1][i]]++;
-		nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
-		nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
-		nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
-		nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
-		nDH = 2*cgt[2][2];
-		out[m1*nsnps+m0] = (nAA+nAB+nBA+nBB+nDH)/2;
-		if (out[m1*nsnps+m0])
-			out[m0*nsnps+m1] = CalculateRS(nAA,nAB,nBA,nBB,nDH);
-		else
-			out[m0*nsnps+m1] = 0.;
-		csp++;
-	}
 }
 
 /**
  This code is modified code from the LdCompare program by Hao, Di and Cawley 
  (Bioinformatics, 2006, 23: 252-254)
-**/
+ **/
 
 #define R2_EM_MAX_ITERATIONS 1000
 #define R2_EM_LIKELIHOOD_CONVERSION_TOLERANCE	1e-8
@@ -1434,7 +1514,7 @@ double CalculateRS(unsigned int nAA, unsigned int nAB, unsigned int nBA, unsigne
 				//assert(logLik > oldLogLik-EPSILON); /* total likelihood should be non-decreasing, else we have a bug */
 				if(logLik-oldLogLik < R2_EM_LIKELIHOOD_CONVERSION_TOLERANCE)
 					break;
-				
+
 			}
 			oldLogLik = logLik;
 		}
@@ -1504,7 +1584,7 @@ void esthfreq(unsigned int nAA, unsigned int nAB, unsigned int nBA, unsigned int
 				//assert(logLik > oldLogLik-EPSILON); /* total likelihood should be non-decreasing, else we have a bug */
 				if(logLik-oldLogLik < R2_EM_LIKELIHOOD_CONVERSION_TOLERANCE)
 					break;
-				
+
 			}
 			oldLogLik = logLik;
 		}
@@ -1534,48 +1614,48 @@ void rho(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) {
 	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	for (m0=0;m0<(nsnps-1);m0++)
-	for (m1=(m0+1);m1<nsnps;m1++) {
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[m0*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[0][idx] = str & msk[j]; 
-				gt[0][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+		for (m1=(m0+1);m1<nsnps;m1++) {
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[m0*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[0][idx] = str & msk[j];
+					gt[0][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
-		}
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[m1*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[1][idx] = str & msk[j]; 
-				gt[1][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[m1*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[1][idx] = str & msk[j];
+					gt[1][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
+			for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
+			for (i=0;i<nids;i++)
+				cgt[gt[0][i]][gt[1][i]]++;
+			nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
+			nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
+			nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
+			nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
+			nDH = 2*cgt[2][2];
+			double nchr = (double) (nAA+nAB+nBA+nBB+nDH);
+			if (nchr>0) {
+				esthfreq(nAA,nAB,nBA,nBB,nDH,&eAA,&eAB,&eBA,&eBB);
+				if (eAA*eBB - eAB*eBA < 0) {t=eAA;eAA=eBA;eBA=t;t=eAB;eAB=eBB;eBB=t;}
+				if (eAB>eBA) {t=eAA;eAA=eAB;eAB=t;t=eBA;eBA=eBB;eBB=t;}
+				if (eAA*eBB - eAB*eBA < 0) {t=eAA;eAA=eBA;eBA=t;t=eAB;eAB=eBB;eBB=t;}
+				if (eAB>eBA) {t=eAA;eAA=eAB;eAB=t;t=eBA;eBA=eBB;eBB=t;}
+				out[m0*nsnps+m1] = (eAA*eBB-eAB*eBA)/((eAA+eAB)*(eAB+eBB));
+				out[m1*nsnps+m0] = nchr*(eAA+eAB)*(eAB+eBB)/((eAA+eBA)*(eBA+eBB));
+			} else {
+				out[m0*nsnps+m1] = 0.;
+				out[m1*nsnps+m0] = 0.;
+			}
+			csp++;
 		}
-		for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
-		for (i=0;i<nids;i++)
-			cgt[gt[0][i]][gt[1][i]]++;
-		nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
-		nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
-		nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
-		nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
-		nDH = 2*cgt[2][2];
-		double nchr = (double) (nAA+nAB+nBA+nBB+nDH);
-		if (nchr>0) {
-			esthfreq(nAA,nAB,nBA,nBB,nDH,&eAA,&eAB,&eBA,&eBB);
-			if (eAA*eBB - eAB*eBA < 0) {t=eAA;eAA=eBA;eBA=t;t=eAB;eAB=eBB;eBB=t;}
-			if (eAB>eBA) {t=eAA;eAA=eAB;eAB=t;t=eBA;eBA=eBB;eBB=t;}
-			if (eAA*eBB - eAB*eBA < 0) {t=eAA;eAA=eBA;eBA=t;t=eAB;eAB=eBB;eBB=t;}
-			if (eAB>eBA) {t=eAA;eAA=eAB;eAB=t;t=eBA;eBA=eBB;eBB=t;}
-			out[m0*nsnps+m1] = (eAA*eBB-eAB*eBA)/((eAA+eAB)*(eAB+eBB));
-			out[m1*nsnps+m0] = nchr*(eAA+eAB)*(eAB+eBB)/((eAA+eBA)*(eBA+eBB));
-		} else {
-			out[m0*nsnps+m1] = 0.;
-			out[m1*nsnps+m0] = 0.;
-		}
-		csp++;
-	}
 }
 
 void dprime(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) {
@@ -1583,52 +1663,52 @@ void dprime(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) 
 	unsigned int nids = (*Nids);
 	unsigned int nsnps = (*Nsnps);
 	unsigned int gt[2][nids],cgt[4][4],nAA,nAB,nBA,nBB,nDH;
-//	double eAA,eAB,eBA,eBB,t,p_Ax,p_xA,p_Bx,p_xB,pA,pa,pB,pb,pAA,pAB,pBA,pBB,estD,estDp,Dmin,Dmax,pnAB;
+	//	double eAA,eAB,eBA,eBB,t,p_Ax,p_xA,p_Bx,p_xB,pA,pa,pB,pb,pAA,pAB,pBA,pBB,estD,estDp,Dmin,Dmax,pnAB;
 	double eAA,eAB,eBA,eBB,p_Ax,p_xA,p_Bx,p_xB,pAA,pAB,pBA,pBB,estD,estDp,Dmin,Dmax;
 	unsigned int csp = 0;
 	char str;
 	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	for (m0=0;m0<(nsnps-1);m0++)
-	for (m1=(m0+1);m1<nsnps;m1++) {
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[m0*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[0][idx] = str & msk[j]; 
-				gt[0][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+		for (m1=(m0+1);m1<nsnps;m1++) {
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[m0*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[0][idx] = str & msk[j];
+					gt[0][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
-		}
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[m1*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[1][idx] = str & msk[j]; 
-				gt[1][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[m1*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[1][idx] = str & msk[j];
+					gt[1][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
-		}
-		for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
-		for (i=0;i<nids;i++)
-			cgt[gt[0][i]][gt[1][i]]++;
-		nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
-		nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
-		nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
-		nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
-		nDH = 2*cgt[2][2];
-		double nchr = (double) (nAA+nAB+nBA+nBB+nDH);
-		if (nchr>0) {
-			esthfreq(nAA,nAB,nBA,nBB,nDH,&eAA,&eAB,&eBA,&eBB);
-			pAA = eAA / nchr;
-			pAB = eAB / nchr;
-			pBA = eBA / nchr;
-			pBB = eBB / nchr;
-			p_Ax = pAA + pAB;
-			p_xA = pAA + pBA;
-			p_Bx = pBA + pBB;
-			p_xB = pAB + pBB;
-/**
+			for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
+			for (i=0;i<nids;i++)
+				cgt[gt[0][i]][gt[1][i]]++;
+			nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
+			nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
+			nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
+			nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
+			nDH = 2*cgt[2][2];
+			double nchr = (double) (nAA+nAB+nBA+nBB+nDH);
+			if (nchr>0) {
+				esthfreq(nAA,nAB,nBA,nBB,nDH,&eAA,&eAB,&eBA,&eBB);
+				pAA = eAA / nchr;
+				pAB = eAB / nchr;
+				pBA = eBA / nchr;
+				pBB = eBB / nchr;
+				p_Ax = pAA + pAB;
+				p_xA = pAA + pBA;
+				p_Bx = pBA + pBB;
+				p_xB = pAB + pBB;
+				/**
 			pA = p_Ax; if (p_Ax < p_Bx) pA=p_Bx;
 			pB = p_xA; if (p_xA < p_xB) pB=p_xB;
 			pa = 1. - pA; pb = 1. - pB;
@@ -1640,19 +1720,19 @@ void dprime(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) 
 			Dmax = pA*pb; if (Dmax>pB*pa) Dmax=pB*pa;
 			estD = pnAB - pA * pB;
 			if (estD>0) {estDp = estD / Dmax;} else {estDp = estD / Dmin;}
-**/
-			estD = pAA*pBB - pAB*pBA;
-			Dmin = p_Ax*p_xB; if (Dmin>p_Bx*p_xA) Dmin = p_Bx*p_xA;
-			Dmax = -1.*p_Ax*p_xA; if (Dmax<(-1.*p_Bx*p_xB)) Dmax = -1.*p_Bx*p_xB;
-			if (estD<0) estDp = estD/Dmax; else estDp = estD/Dmin;
-			out[m0*nsnps+m1] = estDp;
-			out[m1*nsnps+m0] = estD; //(nchr/2.);
-		} else {
-			out[m0*nsnps+m1] = 0.;
-			out[m1*nsnps+m0] = 0.;
+				 **/
+				estD = pAA*pBB - pAB*pBA;
+				Dmin = p_Ax*p_xB; if (Dmin>p_Bx*p_xA) Dmin = p_Bx*p_xA;
+				Dmax = -1.*p_Ax*p_xA; if (Dmax<(-1.*p_Bx*p_xB)) Dmax = -1.*p_Bx*p_xB;
+				if (estD<0) estDp = estD/Dmax; else estDp = estD/Dmin;
+				out[m0*nsnps+m1] = estDp;
+				out[m1*nsnps+m0] = estD; //(nchr/2.);
+			} else {
+				out[m0*nsnps+m1] = 0.;
+				out[m1*nsnps+m0] = 0.;
+			}
+			csp++;
 		}
-		csp++;
-	}
 }
 
 void allld(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) {
@@ -1666,48 +1746,48 @@ void allld(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *out) {
 	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	for (m0=0;m0<(nsnps-1);m0++)
-	for (m1=(m0+1);m1<nsnps;m1++) {
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[m0*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[0][idx] = str & msk[j]; 
-				gt[0][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+		for (m1=(m0+1);m1<nsnps;m1++) {
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[m0*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[0][idx] = str & msk[j];
+					gt[0][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
-		}
-		idx = 0;
-		for (i=0;i<nbytes;i++) {
-			str = indata[m1*nbytes + i];
-			for (j=0;j<4;j++) {
-				gt[1][idx] = str & msk[j]; 
-				gt[1][idx++] >>= ofs[j];
-				if (idx>=nids) {idx=0;break;}
+			idx = 0;
+			for (i=0;i<nbytes;i++) {
+				str = indata[m1*nbytes + i];
+				for (j=0;j<4;j++) {
+					gt[1][idx] = str & msk[j];
+					gt[1][idx++] >>= ofs[j];
+					if (idx>=nids) {idx=0;break;}
+				}
 			}
+			for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
+			for (i=0;i<nids;i++)
+				cgt[gt[0][i]][gt[1][i]]++;
+			nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
+			nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
+			nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
+			nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
+			nDH = 2*cgt[2][2];
+			double nchr = (double) (nAA+nAB+nBA+nBB+nDH);
+			if (nchr>0) {
+				esthfreq(nAA,nAB,nBA,nBB,nDH,&eAA,&eAB,&eBA,&eBB);
+				if (eAA*eBB - eAB*eBA < 0) {t=eAA;eAA=eBA;eBA=t;t=eAB;eAB=eBB;eBB=t;}
+				if (eAB>eBA) {t=eAA;eAA=eAB;eAB=t;t=eBA;eBA=eBB;eBB=t;}
+				if (eAA*eBB - eAB*eBA < 0) {t=eAA;eAA=eBA;eBA=t;t=eAB;eAB=eBB;eBB=t;}
+				if (eAB>eBA) {t=eAA;eAA=eAB;eAB=t;t=eBA;eBA=eBB;eBB=t;}
+				out[m0*nsnps+m1] = (eAA*eBB-eAB*eBA)/((eAA+eAB)*(eAB+eBB));
+				out[m1*nsnps+m0] = nchr*(eAA+eAB)*(eAB+eBB)/((eAA+eBA)*(eBA+eBB));
+			} else {
+				out[m0*nsnps+m1] = 0.;
+				out[m1*nsnps+m0] = 0.;
+			}
+			csp++;
 		}
-		for (i=0;i<4;i++) for (j=0;j<4;j++) cgt[i][j]=0;
-		for (i=0;i<nids;i++)
-			cgt[gt[0][i]][gt[1][i]]++;
-		nAA = 2*cgt[1][1] + cgt[1][2] + cgt[2][1];
-		nAB = cgt[1][2] + 2*cgt[1][3] + cgt[2][3];
-		nBA = cgt[2][1] + 2*cgt[3][1] + cgt[3][2];
-		nBB = cgt[2][3] + cgt[3][2] + 2*cgt[3][3];
-		nDH = 2*cgt[2][2];
-		double nchr = (double) (nAA+nAB+nBA+nBB+nDH);
-		if (nchr>0) {
-			esthfreq(nAA,nAB,nBA,nBB,nDH,&eAA,&eAB,&eBA,&eBB);
-			if (eAA*eBB - eAB*eBA < 0) {t=eAA;eAA=eBA;eBA=t;t=eAB;eAB=eBB;eBB=t;}
-			if (eAB>eBA) {t=eAA;eAA=eAB;eAB=t;t=eBA;eBA=eBB;eBB=t;}
-			if (eAA*eBB - eAB*eBA < 0) {t=eAA;eAA=eBA;eBA=t;t=eAB;eAB=eBB;eBB=t;}
-			if (eAB>eBA) {t=eAA;eAA=eAB;eAB=t;t=eBA;eBA=eBB;eBB=t;}
-			out[m0*nsnps+m1] = (eAA*eBB-eAB*eBA)/((eAA+eAB)*(eAB+eBB));
-			out[m1*nsnps+m0] = nchr*(eAA+eAB)*(eAB+eBB)/((eAA+eBA)*(eBA+eBB));
-		} else {
-			out[m0*nsnps+m1] = 0.;
-			out[m1*nsnps+m0] = 0.;
-		}
-		csp++;
-	}
 }
 
 
@@ -1726,7 +1806,7 @@ void qtscore_glob(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, 
 	double u, v, u0, u1, u2, m0, m1, m2, v00, v02, v11, v12, v22, det; 
 	mx = -999.99;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
-//	char chgt[nbytes];
+	//	char chgt[nbytes];
 
 	for (igt=0;igt<nsnps;igt++) {
 		get_snps_many(gdata+nbytes*igt,Nids,&i1,gt);
@@ -1742,23 +1822,23 @@ void qtscore_glob(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, 
 			xg2[j] = 0.;
 		}
 		for (i=0;i<nids;i++) {
-		    if (gt[i] != 0) {
-			cstr = stra[i];
-			dgt = gt[i] - 1;
-			totg[cstr]+=1.0;
-			if (dgt==0) {
-				sg0[cstr]+=1.0;
-				xg0[cstr]+=pheno[i];
-			} else if (dgt==1) {
-				sg1[cstr]+=1.0;
-				xg1[cstr]+=pheno[i];
-			} else if (dgt==2) {
-				sg2[cstr]+=1.0;
-				xg2[cstr]+=pheno[i];
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = gt[i] - 1;
+				totg[cstr]+=1.0;
+				if (dgt==0) {
+					sg0[cstr]+=1.0;
+					xg0[cstr]+=pheno[i];
+				} else if (dgt==1) {
+					sg1[cstr]+=1.0;
+					xg1[cstr]+=pheno[i];
+				} else if (dgt==2) {
+					sg2[cstr]+=1.0;
+					xg2[cstr]+=pheno[i];
+				}
+				x2[cstr] += pheno[i]*pheno[i];
+				sumx[cstr] += pheno[i];
 			}
-			x2[cstr] += pheno[i]*pheno[i];
-			sumx[cstr] += pheno[i];
-		    }
 		}
 		Ttotg=Tsg0=Tsg1=Tsg2=0.; 
 		for (j=0;j<nstra;j++) {
@@ -1782,10 +1862,10 @@ void qtscore_glob(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, 
 			u0 = u1 = u2 = m0 = m1 = m2 = v00 = v02 = v11 = v12 = v22 = 0.;
 			for (j=0;j<nstra;j++) if (totg[j]>0) {
 				mx = sumx[j]/totg[j];
-//				if (type == 0) 
-					bb = (x2[j]/totg[j])-mx*mx;
-//				else
-//					bb = mx*(1.-mx);
+				//				if (type == 0)
+				bb = (x2[j]/totg[j])-mx*mx;
+				//				else
+				//					bb = mx*(1.-mx);
 				u0 += (xg0[j]-sg0[j]*mx);
 				m0 += xg0[j];
 				u1 += (xg1[j]-sg1[j]*mx);
@@ -1804,67 +1884,67 @@ void qtscore_glob(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, 
 			u = u1+2.*u2;
 			v = v11+4.*v12+4.*v22;
 			if (v<1.e-16) {
-			  chi2[igt]=-999.99;
-			  chi2[igt+3*nsnps]=-999.99;
+				chi2[igt]=-999.99;
+				chi2[igt+3*nsnps]=-999.99;
 			} else {
-			  chi2[igt]=u*u/v;
-			  if (type) {
-				double p1 = mx+u/(Tsg1+4.*Tsg2-Ttotg*((Tsg1+2.*Tsg2)/Ttotg)*((Tsg1+2.*Tsg2)/Ttotg));
-			  	chi2[igt+3*nsnps]=(1.-mx)*p1/((1.-p1)*mx);
-			  } else {
-//			  	chi2[igt+3*nsnps]=(Tsg0*(m0-mx)+Tsg1*(m1-mx)+Tsg2*(m2-mx))/Ttotg;
-			  	chi2[igt+3*nsnps]=u/(Tsg1+4.*Tsg2-Ttotg*((Tsg1+2.*Tsg2)/Ttotg)*((Tsg1+2.*Tsg2)/Ttotg));
-			  }
+				chi2[igt]=u*u/v;
+				if (type) {
+					double p1 = mx+u/(Tsg1+4.*Tsg2-Ttotg*((Tsg1+2.*Tsg2)/Ttotg)*((Tsg1+2.*Tsg2)/Ttotg));
+					chi2[igt+3*nsnps]=(1.-mx)*p1/((1.-p1)*mx);
+				} else {
+					//			  	chi2[igt+3*nsnps]=(Tsg0*(m0-mx)+Tsg1*(m1-mx)+Tsg2*(m2-mx))/Ttotg;
+					chi2[igt+3*nsnps]=u/(Tsg1+4.*Tsg2-Ttotg*((Tsg1+2.*Tsg2)/Ttotg)*((Tsg1+2.*Tsg2)/Ttotg));
+				}
 			}
 			det = v11*v22 - v12*v12;
-//			double rho2 = v12*v12/(v11*v22);
-//			if (v00 <= 0. || v11<=0. || v22<=0. || rho2<1.e-16 || abs(det)<1.e-16) {
-				chi2[igt+nsnps] = -999.99;
-				chi2[igt+2*nsnps] = 1.e-16;
-			  	chi2[igt+4*nsnps] =-999.99;
-			  	chi2[igt+5*nsnps] = -999.99;
-				chi2[igt+7*nsnps] = -999.99;
-				chi2[igt+8*nsnps] = -999.99;
-				chi2[igt+9*nsnps] = -999.99;
-//			} else {
-				if (v00>0.) {
-					chi2[igt+7*nsnps] = u0/sqrt(v00);
-					chi2[igt+nsnps] = u0*u0/v00;
-				}
-				if (v22>0.) {
-					chi2[igt+8*nsnps] = u2/sqrt(v22);
-					chi2[igt+nsnps] += u2*u2/v22;
-				}
-				if (v00*v22>0.) {
-					chi2[igt+9*nsnps] = v02/sqrt(v00*v22);
-					chi2[igt+nsnps] += -2.*u0*u2*v02/(v00*v22);
-					chi2[igt+nsnps] = chi2[igt+nsnps]/(1.-v02*v02/(v00*v22));
-				}
-//				if (v11 > 0. && v22 > 0. && v12 > 0. && rho2<1.) 
-//				if (!(v00 <= 0. || v11<=0. || v22<=0. || rho2*rho2<1.e-16 || abs(det)<1.e-16))
-//				HERE IS SOMETHING WRONG -- DO THE SAME AS IN QTSCORE CORRECTION!!!
-//				if (!(v12 <= 0. || v11<=0. || v22<=0. || (rho2*rho2-1.)<1.e-16 || abs(det)<1.e-16))
-//					chi2[igt+nsnps] = (u1*u1/v11 + u2*u2/v22 - 2.*rho2*u1*u2/v12)/(1.-rho2*rho2); 
-//				else 
-//					chi2[igt+nsnps] = chi2[igt];
-						//(u1*u1*v22+u2*u2*v11-2.0*u1*u2*v12)/det;
-				if (Tsg1>0) { if (type) {
-			  		chi2[igt+4*nsnps]=(1.-m0)*m1/((1.-m1)*m0);
-				} else {
-//				 	chi2[igt+4*nsnps]=(u1/Tsg1);
-			  		chi2[igt+4*nsnps]=m1-m0;
-				}}
-				if (Tsg2>0) { if (type) {
-			  		chi2[igt+5*nsnps]=(1.-m0)*m2/((1.-m2)*m0);
-				} else {
-//			  		chi2[igt+5*nsnps]=u2/Tsg2;
-			  		chi2[igt+5*nsnps]=m2-m0;
-				}}
-				if (Tsg1>0 && Tsg2>0) 
-					chi2[igt+2*nsnps] = 2.;
-				else if (Tsg1>0 || Tsg2>0) 
-					chi2[igt+2*nsnps] = 1.;
-//			}
+			//			double rho2 = v12*v12/(v11*v22);
+			//			if (v00 <= 0. || v11<=0. || v22<=0. || rho2<1.e-16 || abs(det)<1.e-16) {
+			chi2[igt+nsnps] = -999.99;
+			chi2[igt+2*nsnps] = 1.e-16;
+			chi2[igt+4*nsnps] =-999.99;
+			chi2[igt+5*nsnps] = -999.99;
+			chi2[igt+7*nsnps] = -999.99;
+			chi2[igt+8*nsnps] = -999.99;
+			chi2[igt+9*nsnps] = -999.99;
+			//			} else {
+			if (v00>0.) {
+				chi2[igt+7*nsnps] = u0/sqrt(v00);
+				chi2[igt+nsnps] = u0*u0/v00;
+			}
+			if (v22>0.) {
+				chi2[igt+8*nsnps] = u2/sqrt(v22);
+				chi2[igt+nsnps] += u2*u2/v22;
+			}
+			if (v00*v22>0.) {
+				chi2[igt+9*nsnps] = v02/sqrt(v00*v22);
+				chi2[igt+nsnps] += -2.*u0*u2*v02/(v00*v22);
+				chi2[igt+nsnps] = chi2[igt+nsnps]/(1.-v02*v02/(v00*v22));
+			}
+			//				if (v11 > 0. && v22 > 0. && v12 > 0. && rho2<1.)
+			//				if (!(v00 <= 0. || v11<=0. || v22<=0. || rho2*rho2<1.e-16 || abs(det)<1.e-16))
+			//				HERE IS SOMETHING WRONG -- DO THE SAME AS IN QTSCORE CORRECTION!!!
+			//				if (!(v12 <= 0. || v11<=0. || v22<=0. || (rho2*rho2-1.)<1.e-16 || abs(det)<1.e-16))
+			//					chi2[igt+nsnps] = (u1*u1/v11 + u2*u2/v22 - 2.*rho2*u1*u2/v12)/(1.-rho2*rho2);
+			//				else
+			//					chi2[igt+nsnps] = chi2[igt];
+			//(u1*u1*v22+u2*u2*v11-2.0*u1*u2*v12)/det;
+			if (Tsg1>0) { if (type) {
+				chi2[igt+4*nsnps]=(1.-m0)*m1/((1.-m1)*m0);
+			} else {
+				//				 	chi2[igt+4*nsnps]=(u1/Tsg1);
+				chi2[igt+4*nsnps]=m1-m0;
+			}}
+			if (Tsg2>0) { if (type) {
+				chi2[igt+5*nsnps]=(1.-m0)*m2/((1.-m2)*m0);
+			} else {
+				//			  		chi2[igt+5*nsnps]=u2/Tsg2;
+				chi2[igt+5*nsnps]=m2-m0;
+			}}
+			if (Tsg1>0 && Tsg2>0)
+				chi2[igt+2*nsnps] = 2.;
+			else if (Tsg1>0 || Tsg2>0)
+				chi2[igt+2*nsnps] = 1.;
+			//			}
 		}
 	}
 }

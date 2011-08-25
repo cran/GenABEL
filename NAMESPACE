@@ -84,6 +84,7 @@ export(
 	polygenic_hglm,
 	r2fast,
 	r2fast.old,
+	recodeChromosome,
 	reconstructNPs,
 	redundant,
 	refresh.gwaa.data,
@@ -130,6 +131,7 @@ exportMethods(
 	"annotation",
 	"chromosome",
 	"coding",
+	"coding<-",
 	"effallele",
 	"getcall",
 	"getfamily",
@@ -144,6 +146,7 @@ exportMethods(
 	"idnames",
 	"refallele",
 	"strand",
+	"strand<-",
 	"map",
 	"phdata",
 	"phdata<-"

@@ -11,7 +11,7 @@ of the genotypes (including missing values).
 \usage{
 check.marker(data, snpsubset, idsubset, callrate = 0.95, 
 		perid.call=0.95, extr.call = 0.1, extr.perid.call = 0.1, het.fdr = 0.01, 
-		ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower", maf, p.level = -1, fdrate = 0.2, 
+		ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="both", maf, p.level = -1, fdrate = 0.2, 
 		odds = 1000, hweidsubset, redundant = "no", 
 		minconcordance = 2.0, qoption = "bh95", imphetasmissing = TRUE, XXY.call=0.8,
 		intermediateXF = c(0.5, 0.5)) 
@@ -29,8 +29,9 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
   \item{ibs.mrk}{How many random markers should be used to estimate IBS. When ibs.mrk < 1, IBS checks are turned off.
 		When "all" all markers are used.
 		}
-  \item{ibs.exclude}{"both" or "lower" -- whether both samples with IBS>ibs.threshold should be excluded, 
-		or the one with lower call rate.
+  \item{ibs.exclude}{"both", "lower" or "none" -- whether both samples with IBS>ibs.threshold 
+  		should be excluded, the one with lower call rate, or no check (equivalent to use of 
+  		'ibs.mrk = -1').
 		}
   \item{maf}{cut-off Minor Allele Frequency. If not specified, the default value is 5 chromosomes 5/(2*nids(data))}
   \item{p.level}{cut-off p-value in check for Hardy-Weinberg Equilibrium. If negative, FDR is applied}

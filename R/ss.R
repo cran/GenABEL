@@ -314,7 +314,7 @@ setMethod(
 		definition = function(x,i,j,drop)
 		{
 			res <- results(x)
-			return(res[i,j,drop])
+			return(res[i,j,drop=drop])
 		}
 );
 
@@ -391,8 +391,11 @@ setMethod(
 			cod <- coding(object)
 			A1 <- substr(cod,1,1)
 			A2 <- substr(cod,2,2)
+#			res <- data.frame(Chromosome=chromosome(object),Position=map(object),
+#					Strand=strand(object),A1=A1,A2=A2,stringsAsFactors = FALSE)
+# should save space
 			res <- data.frame(Chromosome=chromosome(object),Position=map(object),
-					Strand=strand(object),A1=A1,A2=A2,stringsAsFactors = FALSE)
+					Strand=strand(object),A1=A1,A2=A2,stringsAsFactors = TRUE)
 			rownames(res) <- snpnames(object)
 			res
 		}
@@ -595,7 +598,9 @@ setMethod(
 		signature = "scan.gwaa",
 		definition = function(object) 
 		{
-			return(annotation(object)[,"Position"])
+			mp <- annotation(object)[,"Position"]
+			names(mp) <- snpnames(object)
+			return(mp)
 		}
 );
 
@@ -608,7 +613,9 @@ setMethod(
 		signature = "snp.data",
 		definition = function(object) 
 		{
-			return(as.character(object@chromosome))
+			chr <- as.character(object@chromosome)
+			names(chr) <- names(object@chromosome)
+			return(chr)
 		}
 );
 setMethod(
@@ -624,7 +631,9 @@ setMethod(
 		signature = "scan.gwaa",
 		definition = function(object) 
 		{
-			return(annotation(object)[,"Chromosome"])
+			chr <- as.character(annotation(object)[,"Chromosome"])
+			names(chr) <- snpnames(object) 
+			return(chr)
 		}
 );
 
@@ -659,6 +668,31 @@ setMethod(
 );
 
 setGeneric(
+		name = "strand<-",
+		def = function(x,value) {standardGeneric("strand<-");}
+);
+setMethod(
+		f = "strand<-",
+		signature = "snp.data",
+		definition = function(x,value) 
+		{
+			x <- patch_strand(data=x,snpid=snpnames(x),strand=value)
+			return(x)
+		}
+);
+setMethod(
+		f = "strand<-",
+		signature = "gwaa.data",
+		definition = function(x,value) 
+		{
+			strand(x@gtdata) <- value
+			return(x)
+		}
+);
+
+
+
+setGeneric(
 		name = "coding",
 		def = function(object) {standardGeneric("coding");}
 );
@@ -685,6 +719,37 @@ setMethod(
 		{
 			tmp <- annotation(object)[,c("A1","A2")]
 			return(paste(tmp[,1],tmp[,2],sep=""))
+		}
+);
+
+
+setGeneric(
+		name = "coding<-",
+		def = function(x,value) {standardGeneric("coding<-");}
+);
+setMethod(
+		f = "coding<-",
+		signature = "snp.data",
+		definition = function(x,value) 
+		{
+			rawVal <- as.raw(alleleID.char2raw()[value])
+			names(rawVal) <- x@snpnames
+			x@coding <- new("snp.coding",rawVal)
+			if (any(is.na(coding(x)))) {
+				cat("wrong coding value, should be one of ")
+				cat(names(alleleID.char2raw()),"\n")
+				stop()
+			}
+			return(x)
+		}
+);
+setMethod(
+		f = "coding<-",
+		signature = "gwaa.data",
+		definition = function(x,value) 
+		{
+			coding(x@gtdata) <- value
+			return(x)
 		}
 );
 

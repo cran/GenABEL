@@ -1,8 +1,10 @@
 "load.gwaa.data" <-
-function(phenofile = "pheno.dat", genofile = "geno.raw",force = TRUE, makemap=FALSE, sort=TRUE) {
+function(phenofile = "pheno.dat", genofile = "geno.raw",force = TRUE, makemap=FALSE, sort=TRUE, id="id") {
 # check that ID and SEX are correct
 	dta <- read.table(phenofile,header=TRUE,as.is=TRUE)
 	coln <- names(dta)
+	idColumn <- match(id,coln)
+	names(dta)[idColumn] <- "id"
 	if (!any(names(dta)=="id",na.rm=TRUE)) 
 		stop("the filed named \"id\", containing the identifier presented in both pheno- and geno- files was not found in the phenofile")
 	class(dta$id) <- "character"

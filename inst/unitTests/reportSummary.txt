@@ -1,9 +1,9 @@
-RUNIT TEST PROTOCOL -- Tue May 17 20:27:16 2011 
+RUNIT TEST PROTOCOL -- Thu Aug 25 16:20:06 2011 
 *********************************************** 
-Number of test functions: 9 
+Number of test functions: 13 
 Number of errors: 0 
 Number of failures: 0 
 
  
 1 Test Suite : 
-GenABEL unit testing - 9 test functions, 0 errors, 0 failures
+GenABEL unit testing - 13 test functions, 0 errors, 0 failures

@@ -1,0 +1,7 @@
+Name	Chr	Pos	id1	id2	id3	idNA
+snp1	1	1	AA	AA	AA	00
+snp2_2	1	5	AC	AC	AA	--
+snp3	1	30	TC	TC	TT	TT
+snp4	1	40	GA	GG	GA	00
+snp5	1	50	TT	TT	TT	00
+snp7	1	70	AC	AC	AA	--

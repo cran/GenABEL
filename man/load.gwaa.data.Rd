@@ -6,7 +6,7 @@ Load data (genotypes and phenotypes) from files to gwaa.data object
 }
 \usage{
 load.gwaa.data(phenofile = "pheno.dat", genofile = "geno.raw", 
-		force = TRUE, makemap = FALSE, sort = TRUE)
+		force = TRUE, makemap = FALSE, sort = TRUE, id = "id")
 }
 \arguments{
   \item{phenofile}{data table with pehnotypes}
@@ -15,6 +15,7 @@ load.gwaa.data(phenofile = "pheno.dat", genofile = "geno.raw",
   \item{force}{Force loading the data if heterozygous X-chromosome genotypes are found in male}
   \item{makemap}{Make a consequtive map in case if map is provided chromosome-specifically}
   \item{sort}{Should SNPs be sorted in ascending order according to chromosome and position?}
+  \item{id}{name of the column containing personal identification code in the phenofile}
 }
 \details{
 The genofile must be the one resulting from \code{\link{convert.snp.text}},  

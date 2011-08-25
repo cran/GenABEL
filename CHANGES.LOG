@@ -1,10 +1,88 @@
+*** v. 1.6-8 (2011.08.25)
+
+added 'strand<-' method for snp.data and gwaa.daat-class
+
+added 'id' argument to 'load.gwaa.daat'. This may be handy when eg 
+importing PLINK phenotypic data id="IID"
+
+Update of 'polygenic_hglm' by Xia Shen. Quote:
+We've updated the hglm package to version 1.2-2 recently on CRAN, where 
+the major updates include:
+- Sparse matrix implementation
+- Multiple random effects
+- Function hglm2() which accepts lme4-style formula input
+In this update of polygenic_hglm() the speed could be slightly faster than 
+before since the hglm() now uses sparse matrix technique (however I don't 
+expect it to be much faster since the kinship matrix is always dense). Other 
+modifications are:
+- The current update of hglm package does not spit out profile log-likelihood 
+since we haven't perfectly solved the likelihood computation for multiple random 
+effects yet. But since polygenic_hglm() only needs one random effect (polygenic 
+effect), I've re-implemented the likelihood computation directly in 
+polygenic_hglm(), and no need to specify 'method = "REML"' anymore.
+- In order to solve the problem from the forum about inputting formula as 
+'y' or 'y ~ 1', I've added a check before creating the model.frame, so now 
+ both types of inputs should work.
+
+Added 'recodeChromosome' function, which must be handy when e.g. importing data 
+from other software which uses integer for sex chromosomes and other non-autosomes
+(X, Y, mt).
+
++> tutorial genetic data QC - list all options, do not use default?
+
+'check.marker' added "none" (equal to ibs.mrk = -1); set "both" to default
+
+Updated documentation for 'scan.glm.2D'.
+
+Added GRAMMAR+ transformation and computation of GRAMMAR+ 
+correction factors to 'polygenic'.
+
+The default value for the stand option to convert.snp.tped() is now "u", 
+instead of "+". Now convert.snp.tped() and convert.snp.ped() have the 
+same defaults.
+
+Added patch of bug [#1322] + regression test (contributed 
+by Nicola Pirastu, see  
+https://lists.r-forge.r-project.org/pipermail/genabel-devel/2011-May/000276.html). 
+This is still suboptimal treatment -- the covariate is just dropped; 
+in say 'lm' it is 'kept' with NA as estimate, and IDs with missing 
+data dropped, which is not the case with 'polygenic'.
+
+Speeding up 'polygenic' by avoiding multiple inverses of 
+the matrix.
+
+Fixed bug in 'polygenic' causing the offset in 
+names(...$residualY) and names(...$pgresidualY) in 
+case of missing observations.  
+
+Updated the merge.snp.data procedure to allow meaningful 
+merging of mono- and poly- codings. Take care -- this is 
+new and not tested much yet! You best check few results 
+manually after the merge!
+
+Added coding<- method to gwaa.data and snp.data classes
+
+Added I/D encoding and monomorphic classes (AA, TT, GG, CC, 
+--, II, DD, ...) to 'snp.data' and convert.snp.*
+
+Updated 'polygenic' with use of 'polylik_eigen' developed by 
+Gulnara Svischeva. Now 'polygenic' works MUCH faster. The 
+main advantage of Gulnara's method is that time to compute 
+the likelihood function is approximately linear with number 
+of subjects. In that, relative speed-up grows with sample 
+size growth, e.g. for 100 IDs, it is x15, x40 for 200, 
+x60 for 400, and xX for 800 individuals (using two fixed effect 
+covariates, see runit.polylik.R). Also added RUnit test to check 
+consistency of results based on old 'polylik' and new 
+'polylik_eigen'.
+
+Upgrade version number 
+
 *** v. 1.6-7 (2011.05.17)
 
 Submitted 1.6-7, based on r727, to CRAN
 
 Deleting some pdf from 'doc' and compressing 'data'
-
-Submitted 1.6-7, based on r718, to CRAN
 
 Fixed 'technical' bug [1398] (related to changes in R 2.14):
 https://r-forge.r-project.org/tracker/index.php?func=detail&aid=1398&group_id=505&atid=2058

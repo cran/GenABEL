@@ -5,7 +5,7 @@
 	Changes strand in gwaa.data-class object
 }
 \usage{
-	patch_strand(data,snpid,strand,based_on="snpnames")
+	patch_strand(data,snpid,strand,based_on="snpnames", quiet = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -13,6 +13,7 @@
   \item{snpid}{vector of ids of snsp (name or position)}
   \item{strand}{vector of strands ("+","-","u")}
   \item{based_on}{either "snpnames" or "map" depending on what info is provided by snpid}
+  \item{quiet}{indicates if recoding report should be directed to the screen}
 }
 \details{
 For SNPs, as identified by 'snpid', changes strand to strand specified by 'strand'

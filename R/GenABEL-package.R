@@ -61,6 +61,12 @@
 #' 
 #' To load the data, see \code{\link{load.gwaa.data}}.
 #' 
+#' For conversion to DatABEL format (used by ProbABEL and some other 
+#' GenABEL suite packages), see 
+#' \code{\link{impute2databel}}, 
+#' \code{\link{impute2mach}}, 
+#' \code{\link{mach2databel}}. 
+#' 
 #' For data managment and manipulations see
 #' \code{\link{merge.gwaa.data}},
 #' \code{\link{merge.snp.data}},

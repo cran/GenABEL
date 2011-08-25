@@ -1,7 +1,7 @@
 "check.marker" <-
 		function(data, snpsubset, idsubset,
 				callrate=0.95,perid.call=0.95, extr.call = 0.1, extr.perid.call = 0.1, 
-				het.fdr=0.01, ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="lower",
+				het.fdr=0.01, ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="both",
 				maf, p.level=-1, 
 				fdrate = 0.2, odds = 1000, hweidsubset, redundant="no", minconcordance = 2.0, 
 				qoption="bh95",imphetasmissing=TRUE,XXY.call=0.8, 
@@ -22,6 +22,14 @@
 	sids <- data@idnames
 	smap <- data@map
 	schr <- chromosome(data)
+	
+	possibleIbsExclude <- c("both","lower","none")
+	if (length(ibs.exclude) != 1) 
+		stop("length(ibs.exclude) <> 1")
+	if (!(ibs.exclude %in% possibleIbsExclude)) 
+		stop(paste("'ibs.exclude' should be one of",possibleIbsExclude))
+	if (ibs.exclude == "none") 
+		ibs.mrk = -1
 	
 	cat("Excluding people/markers with extremely low call rate...\n")
 	cat(nsnps(data),"markers and",nids(data),"people in total\n")
@@ -92,7 +100,7 @@
 		cat(length(out.nxt$Xmrkfail),"X-linked markers are likely to be autosomal (odds >",odds,")\n")
 		cat(length(out.nxt$isfemale),"male are likely to be female (odds >",odds,")\n")
 		cat(length(out.nxt$ismale),"female are likely to be male (odds >",odds,")\n")
-		cat(length(out.nxt$otherSexErr)," people have intermediate inbreeding (",Ffemale," > F > ",Fmale,")\n",sep="")
+		cat(length(out.nxt$otherSexErr)," people have intermediate X-chromosome inbreeding (",Ffemale," > F > ",Fmale,")\n",sep="")
 		out <- update.check.marker(out,out.nxt)
 		updat <- 1
 		out.nxt <- Xcheck(data[out$idok,out$snpok[out$snpok %in% data@snpnames[chromosome(data)=="X"]]],Pgte=0.001,Pssw=0.01,Pmsw=0.01,odds=odds,tabonly=T)

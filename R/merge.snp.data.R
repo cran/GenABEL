@@ -127,6 +127,79 @@ which_snp_intersect_in_x <- which(is.element(x@snpnames,y@snpnames)*c(1:x@nsnps)
 which_snp_intersect_in_y <- match(x@snpnames, y@snpnames, nomatch = -1)
 which_snp_intersect_in_y <- which_snp_intersect_in_y[which_snp_intersect_in_y > 0]
 
+##### taking care of monomorphics -- YA, 2011.07.11 #####
+
+#print(which_snp_intersect_in_x)
+#print(which_snp_intersect_in_y)
+
+monos <- function(data) {
+	ss <- strsplit(data,"")
+	ff <- function(a) {
+		if (a[1]==a[2]) return(TRUE) else return(FALSE)
+	}
+	return(unlist(lapply(ss,FUN=ff)))
+}
+#x_filtered_mono_x_not_mono_y <- which(monos(coding(x)[which_snp_intersect_in_x]) & 
+#				!monos(coding(y)[which_snp_intersect_in_y]))
+if_mono_x_not_mono_y <- monos(coding(x)[which_snp_intersect_in_x]) & 
+				!monos(coding(y)[which_snp_intersect_in_y])
+which_mono_x_not_mono_y <- which_snp_intersect_in_x[if_mono_x_not_mono_y]
+#print(if_mono_x_not_mono_y)
+#print(which_mono_x_not_mono_y)
+if_mono_y_not_mono_x <- monos(coding(y)[which_snp_intersect_in_y]) & 
+				!monos(coding(x)[which_snp_intersect_in_x])
+which_mono_y_not_mono_x <- which_snp_intersect_in_y[if_mono_y_not_mono_x]
+#print(if_mono_y_not_mono_x)
+#print(which_mono_y_not_mono_x)
+#print(which_snp_intersect_in_y[x_filtered_mono_x_not_mono_y])
+# here need to check legacy based on coding and strand data e.g. 
+# AA(+) -> AG(+), TC(-) good; -> TC(+), AG(-), GC(+/-) no good
+#
+# take care of coding in x
+cdng_x <- coding(x)[which_snp_intersect_in_x[if_mono_x_not_mono_y]]
+cdng_y <- coding(y)[which_snp_intersect_in_y[if_mono_x_not_mono_y]]
+strnd_x <- strand(x)[which_snp_intersect_in_x[if_mono_x_not_mono_y]]
+strnd_y <- strand(y)[which_snp_intersect_in_y[if_mono_x_not_mono_y]]
+#print(cdng_x)
+#print(cdng_y)
+#print(strnd_x)
+#print(strnd_y)
+jjj <- 1
+for (iii in which_mono_x_not_mono_y) {
+#	print(iii)
+	mono <- cdng_x[jjj]
+	poly <- cdng_y[jjj]
+	monoStrand <- strnd_x[jjj]
+	polyStrand <- strnd_y[jjj]
+#	print(c(mono,poly,monoStrand,polyStrand,forcestranduse))
+	newC <- translate_mono_coding(mono,poly,monoStrand,polyStrand,forcestranduse=forcestranduse)
+	jjj <- jjj + 1 
+	coding(x)[iii] <- newC
+#	print(newC)
+}
+# take care of coding in y
+cdng_x <- coding(x)[which_snp_intersect_in_x[if_mono_y_not_mono_x]]
+cdng_y <- coding(y)[which_snp_intersect_in_y[if_mono_y_not_mono_x]]
+strnd_x <- strand(x)[which_snp_intersect_in_x[if_mono_y_not_mono_x]]
+strnd_y <- strand(y)[which_snp_intersect_in_y[if_mono_y_not_mono_x]]
+#print(cdng_x)
+#print(cdng_y)
+#print(strnd_x)
+#print(strnd_y)
+jjj <- 1
+for (iii in which_mono_y_not_mono_x) {
+#	print(iii)
+	mono <- cdng_y[jjj]
+	poly <- cdng_x[jjj]
+	monoStrand <- strnd_y[jjj]
+	polyStrand <- strnd_x[jjj]
+#	print(c(mono,poly,monoStrand,polyStrand,forcestranduse))
+	newC <- translate_mono_coding(mono,poly,monoStrand,polyStrand,forcestranduse=forcestranduse)
+	jjj <- jjj + 1 
+	coding(y)[iii] <- newC
+#	print(newC)
+}
+##### END taking care of monomorphics ###################
 
 if(intersected_snps_only) 
 	{
@@ -197,6 +270,11 @@ names(alleleID_reverse_raw) <- NULL #17 18 07 09 08 0a 03 05 04 06 10 0f 11 12 0
 #-------------------------------------------------------------------
 
 
+# deal with monomorphics
+#cdng_x <- coding(x)
+#cdng_y <- coding(y)
+#mono_x <- alleleID.ismono(cdng_x)
+#mono_y <- alleleID.ismono(cdng_y)
 
 
 return_val <-  .C("fast_merge_C_",

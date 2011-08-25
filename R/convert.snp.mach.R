@@ -1,5 +1,11 @@
 "convert.snp.mach" <- function(pedfile,mapfile,infofile,outfile,quality=0.9, column.quality = 7, strand="+", ... ) {
-
+	
+	cat("****************************************\n")
+	cat("THIS PROCDURE IS NOT RECOMMENDED FOR USE\n")
+	cat("CONSIDER USE OF REGRESSION-BASED PROCEDURES\n")
+	cat("FOR ANALYSIS OF IMPUTED DATA!!!\n\n")
+	cat("****************************************\n")
+	
 	cat("Converting data to raw format...\n")
 	convert.snp.ped(pedf=pedfile,mapf=mapfile,outf=outfile,format="mach", wslash=T, strand=strand, ... )
 	if (quality<=0) {

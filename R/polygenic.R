@@ -1,4 +1,4 @@
-#' Estimation of polygenic model 
+#' Estimation of polygenic model
 #' 
 #' This function maximises the likelihood of the data under polygenic 
 #' model with covariates an reports twice negative maximum likelihood estimates 
@@ -81,6 +81,8 @@
 #' @param maxdiffgls max difference allowed in fgls checks 
 #' @param patchBasedOnFGLS if FGLS checks not passed, 'patch' fixed 
 #' effect estimates based on FGLS expectation
+#' @param llfun function to compute likelihood (default 'polylik_eigen', also 
+#' avalable -- but not recommeneded -- 'polylik')
 #' @param ... Optional arguments to be passed to \code{\link{nlm}} or (\code{\link{optim}}) 
 #' minimisation function
 #' 
@@ -92,12 +94,14 @@
 #' heritability, (polygenic + residual variance)). The value of 
 #' twice negative maximum log-likelihood
 #' is returned as h2an\$minimum.}
+#' \item{esth2}{Estimate (or fixed value) of heritability}
 #' \item{residualY}{Residuals from analysis, based on covariate effects only; 
 #' NOTE: these are NOT grammar "environmental residuals"!}
-#' \item{esth2}{Estimate (or fixed value) of heritability}
 #' \item{pgresidualY}{Environmental residuals from analysis, based on covariate effects 
 #' and predicted breeding value.
 #' }
+#' \item{grresidualY}{GRAMMAR+ trait transformation}
+#' \item{grammarGamma}{list with GRAMMAR+ correction factors}
 #' \item{InvSigma}{Inverse of the variance-covariance matrix, computed at the 
 #' MLEs -- these are used in \code{\link{mmscore}} and \code{\link{grammar}}
 #' functions.}
@@ -119,7 +123,9 @@
 #' Amin N, van Duijn CM, Aulchenko YS. A genomic background based method for 
 #' association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274.
 #' 
-#' @author Yurii Aulchenko
+#' G. Svischeva et al. (in preparation)
+#' 
+#' @author Yurii Aulchenko, Gulnara Svischeva
 #' 
 #' @note 
 #' Presence of twins may complicate your analysis. Check kinship matrix for 
@@ -164,7 +170,8 @@
 		function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",
 				opt.method="nlm",scaleh2=1,quiet=FALSE,
 				steptol=1e-8, gradtol = 1e-8, optimbou = 8, 
-				fglschecks=TRUE,maxnfgls=8,maxdiffgls=1e-4, patchBasedOnFGLS = TRUE, ...) {
+				fglschecks=TRUE,maxnfgls=8,maxdiffgls=1e-4, patchBasedOnFGLS = TRUE, 
+				llfun = "polylik_eigen", ...) {
 	if (!missing(data)) if (is(data,"gwaa.data")) 
 		{
 			checkphengen(data)
@@ -184,8 +191,41 @@
 		out <- paste("opt.method argument should be one of",optargs,"\n")
 		stop(out)
 	}
+	if (llfun == "polylik_eigen") llFUN <- polylik_eigen
+	else if (llfun == "polylik") llFUN <- polylik
+	else stop("llfun should be 'polylik' or 'polylik_eigen'")
 	
 	if (!missing(data)) attach(data,pos=2,warn.conflicts=FALSE)
+	
+# beging patch bug #1322 (by Nicola Pirastu)
+	if (is(formula, "formula")){
+		mf <- model.frame(formula, data, na.action = na.omit, 
+				drop.unused.levels = TRUE)
+		ciccio=function(x)nlevels(as.factor(x))    
+		livelli=apply(mf,2,ciccio)
+		ch=length(livelli)
+		bad=which(livelli<2)
+		if(length(bad)>0) warning(paste("Variable",names(mf)[bad],"has only one value: Dropped"))
+		livelli=livelli[livelli>1]
+		mf=mf[names(livelli)]
+		if(length(livelli)>1){
+			if(length(livelli)==2){ formula=as.formula(paste(names(mf)[1],"~",names(mf)[2]))
+				
+			}else{
+				formula=(paste(names(mf)[1],"~",names(mf)[2]))
+				for(i in 3:length(livelli)){
+					
+					formula=paste(formula,"+",names(mf)[i])
+					
+				}
+				formula=as.formula(formula)	
+			}
+		}else{
+			stop("All covariates have only one value")	
+		}
+	}
+# end patch bug #1322
+	
 	if (is(formula,"formula")) {
 		clafo <- "formula"
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
@@ -198,7 +238,8 @@
 		sglm <- summary(rglm)
 		iniest <- sglm$coef[,1]
 		inierr <- sglm$coef[,2]
-		phids <- rownames(data)[rownames(data) %in% rownames(mf)]
+		allids <- rownames(data)
+		phids <- allids[rownames(data) %in% rownames(mf)]
 		#print("bb")
 		#print(phids)
 		relmat <- kinship.matrix[phids,phids]*2.0
@@ -214,7 +255,8 @@
 		y <- formula
 		if (length(y) != dim(kinship.matrix)[1]) stop("dimension of outcome and kinship.matrix do not match")
 		mids <- (!is.na(y))
-		phids <- data$id[mids]
+		allids <- data$id
+		phids <- allids[mids]
 		y <- y[mids]
 		relmat <- kinship.matrix[mids,mids]*2.0
 		sdy <- sd(y)
@@ -237,7 +279,14 @@
 	tmp <- t(relmat)
 	relmat[upper.tri(relmat)] <- tmp[upper.tri(tmp)]
 	rm(tmp);gc()
-	eigres <- eigen(ginv(relmat),symm=TRUE)
+	if (llfun=="polylik") eigres <- eigen(ginv(relmat),symm=TRUE)
+	else if (llfun=="polylik_eigen") {
+		eigres <- eigen(relmat,symm=TRUE)
+		if (any(eigres$values<0)) {
+			#eigres$values <- abs(eigres$values)
+			warning("some eigenvalues <=0, taking ABS for det; try option llfun='polylik'")
+		}
+	} else stop("cannot be here...")
 	if (!quiet) {
 		cat("LM estimates of fixed parameters:\n")
 		print(iniest);
@@ -249,21 +298,21 @@
 	convFGLS <- NULL;
 	
 	if (!missing(fixh2)) {
-		startlik <- polylik(c(iniest,tvar),y=y,desmat=desmat,relmat=relmat,
-				ervec=eigres$vec,fixh2=(fixh2/scaleh2),trait.type=trait.type,
+		startlik <- llFUN(c(iniest,tvar),y=y,desmat=desmat,relmat=relmat,
+				eigenRes=eigres,fixh2=(fixh2/scaleh2),trait.type=trait.type,
 				scaleh2=scaleh2)
 		if (opt.method=="nlm") {
 			prnlev <- 0; if (!quiet) prnlev <- 2;
-			h2an <- nlm(polylik,p=c(iniest,tvar),y=y,desmat=desmat,relmat=relmat,ervec=eigres$vec,
+			h2an <- nlm(llFUN,p=c(iniest,tvar),y=y,desmat=desmat,relmat=relmat,eigenRes=eigres,
 					fixh2=(fixh2/scaleh2),trait.type=trait.type,startlik=startlik,scaleh2=scaleh2,
 					print.level=prnlev,steptol=steptol,gradtol=gradtol,...)
-#		h2an <- nlm(polylik,p=c(iniest,tvar),y=y,desmat=desmat,relmat=relmat,ervec=eigres$vec,fixh2=(fixh2/scaleh2),trait.type=trait.type,startlik=startlik,scaleh2=scaleh2,...)
+#		h2an <- nlm(llFUN,p=c(iniest,tvar),y=y,desmat=desmat,relmat=relmat,eigenRes=eigres,fixh2=(fixh2/scaleh2),trait.type=trait.type,startlik=startlik,scaleh2=scaleh2,...)
 		} else {
 			lower <- c(iniest-inierr*optimbou,1.e-4)
 			upper <- c(iniest+inierr*optimbou,1)
 			cntrl <- list(); if (!quiet) cntrl <- list(trace=6,REPORT=1)
-			h2an <- optim(fn=polylik,par=c(iniest,tvar),method="L-BFGS-B",lower=lower,upper=upper,
-					y=y,desmat=desmat,relmat=relmat,ervec=eigres$vec,fixh2=(fixh2),trait.type=trait.type,
+			h2an <- optim(fn=llFUN,par=c(iniest,tvar),method="L-BFGS-B",lower=lower,upper=upper,
+					y=y,desmat=desmat,relmat=relmat,eigenRes=eigres,fixh2=(fixh2),trait.type=trait.type,
 					control=cntrl,scaleh2=1,...)
 		}
 	} else {
@@ -280,15 +329,15 @@
 				if (opt.method=="nlm") parsave <- c(iniest,starth2/scaleh2,tvar)
 				else parsave <- c(iniest,starth2,tvar)
 			}
-			startlik<-polylik(parsave,y=y,desmat=desmat,relmat=relmat,ervec=eigres$vec,
+			startlik<-llFUN(parsave,y=y,desmat=desmat,relmat=relmat,eigenRes=eigres,
 					trait.type=trait.type,scaleh2=scaleh2)
 			if (opt.method=="nlm") {
 				#print(parsave)
 				prnlev <- 0; if (!quiet) prnlev <- 2;
-				h2an <- nlm(polylik,p=parsave,y=y,desmat=desmat,relmat=relmat,ervec=eigres$vec,
+				h2an <- nlm(llFUN,p=parsave,y=y,desmat=desmat,relmat=relmat,eigenRes=eigres,
 						trait.type=trait.type,startlik=startlik,scaleh2=scaleh2,
 						print.level=prnlev,steptol=steptol,gradtol=gradtol,...)
-#		h2an <- nlm(polylik,p=c(iniest,(starth2/scaleh2),tvar),y=y,desmat=desmat,relmat=relmat,ervec=eigres$vec,trait.type=trait.type,startlik=startlik,scaleh2=scaleh2,...)
+#		h2an <- nlm(llFUN,p=c(iniest,(starth2/scaleh2),tvar),y=y,desmat=desmat,relmat=relmat,eigenRes=eigres,trait.type=trait.type,startlik=startlik,scaleh2=scaleh2,...)
 				parsave <- h2an$estimate
 			} else {
 				#print(parsave)
@@ -298,7 +347,9 @@
 				#print(lower)
 				#print(upper)
 				cntrl <- list(); if (!quiet) cntrl <- list(trace=6,REPORT=1)
-				h2an <- optim(fn=polylik,par=parsave,method="L-BFGS-B",lower=lower,upper=upper,y=y,desmat=desmat,relmat=relmat,ervec=eigres$vec,trait.type=trait.type,control=cntrl,scaleh2=1,...)
+				h2an <- optim(fn=llFUN,par=parsave,method="L-BFGS-B",lower=lower,upper=upper,
+						y=y,desmat=desmat,relmat=relmat,eigenRes=eigres,trait.type=trait.type,
+						control=cntrl,scaleh2=1,...)
 				parsave <- h2an$par
 			}
 			#print(parsave)
@@ -307,7 +358,13 @@
 			if (fglschecks && missing(fixh2)) {
 				npar <- length(parsave)
 				h2 <- parsave[npar-1]*scaleh2
-				iSigma <- ginv(h2*relmat + (1-h2)*diag(x=1,ncol=length(y),nrow=length(y)))
+# 
+#				iSigma <- ginv(h2*relmat + (1-h2)*diag(x=1,ncol=length(y),nrow=length(y)))
+# start new
+				if (llfun=="polylik") eigres <- eigen(relmat,symm=TRUE) # ensure eigres contain eigen of RelMat (not Inv(RelMat))
+				es <- (eigres$value*h2+1.-h2)*parsave[npar]*sdy*sdy
+				iSigma <- (eigres$vec) %*% diag(1./es,ncol=length(es)) %*% t(eigres$vec)
+# END new
 				LHest <- parsave[1:(npar-2)]
 				betaFGLS <- as.vector(ginv(t(desmat) %*% iSigma %*% desmat) %*% 
 								(t(desmat) %*% iSigma %*% y))
@@ -387,10 +444,10 @@
 	if (clafo == "formula") {
 		if (!missing(fixh2)) {fxeff <- h2an$est[1:(npar-1)]} else {fxeff <- h2an$est[1:(npar-2)]}
 		if (trait.type=="gaussian") {eY <- desmat %*% fxeff} else {ee <- exp(desmat %*% fxeff); eY <- ee/(1.+ee);}
-		out$residualY <- scay - eY
+		resY <- scay - eY
 	} else {
 		if (trait.type=="gaussian") {eY <- h2an$estimate[1]} else {ee <- exp(h2an$estimate[1]); eY <- ee/(1.+ee);}
-		out$residualY <- scay - eY
+		resY <- scay - eY
 	}
 	if (!missing(fixh2)) {
 		h2 <- fixh2
@@ -399,30 +456,84 @@
 	}
 	out$esth2 <- h2
 	tvar <- h2an$estimate[npar]
-	ervec <- eigres$vec
-	sigma <- h2*tvar*relmat + (1-h2)*tvar*diag(x=1,ncol=length(y),nrow=length(y))
+# old variant
+#        time0 <- proc.time()
+#	ervec <- eigres$vec
+#	sigma <- h2*tvar*relmat + (1-h2)*tvar*diag(x=1,ncol=length(y),nrow=length(y))
 #	es <- 1./diag(t(ervec) %*% (sigma) %*% ervec)
 #	ginvsig <- ervec %*% diag(es,ncol=length(y)) %*% t(ervec)
-	out$InvSigma <- ginv(sigma) #ginvsig
+#	out$InvSigma <- ginv(sigma) #ginvsig
+#	print(proc.time()-time0)
+# end old variant
+# old variant'
+#	time0 <- proc.time()
+#	ervec <- eigres$vec
+#	sigma <- h2*tvar*relmat + (1-h2)*tvar*diag(x=1,ncol=length(y),nrow=length(y))
+#	es <- 1./diag(t(ervec) %*% (sigma) %*% ervec)
+#	ginvsig <- ervec %*% diag(es,ncol=length(y)) %*% t(ervec)
+#	out$InvSigma <- ginv(sigma) #ginvsig
+#	print(proc.time()-time0)
+# end old variant'
+# new implementation of InvSigma
+	if (fglschecks && missing(fixh2)) { 
+		ginvsig <- iSigma # already computed it in FGLS checks
+	} else {
+		if (llfun=="polylik") eigres <- eigen(relmat,symm=TRUE) # ensure eigres contain eigen of RelMat (not Inv(RelMat))
+		es <- tvar*(eigres$value*h2+1.-h2)
+		#print(es[1:5])
+		#print(eigres$vec[1:5,1:5])
+		#print(((diag(1./es,ncol=length(es))))[1:5,1:5])
+		ginvsig <- (eigres$vec) %*% diag(1./es,ncol=length(es)) %*% t(eigres$vec)
+		#print(ginvsig[1:5,1:5])
+	}
+	out$InvSigma <- ginvsig #ginvsig
+# END new implementation of InvSigma
 	rownames(out$InvSigma) <- phids
 	colnames(out$InvSigma) <- phids
-	pgres <- as.vector((1.-h2) * tvar * (out$InvSigma %*% out$residualY))
 	out$measuredIDs <- mids
-# need to fix -- now only measured names, while length is >
-#	names(out$measuredIDs) <- phids
+# compute 'environmental' residuals for GRAMMAR-2007	
+	InvSigma_x_residualY <- (out$InvSigma %*% resY)
+	pgresY <- as.vector((1.-h2) * tvar * InvSigma_x_residualY)
 	out$pgresidualY <- rep(NA,length(mids))
-	out$pgresidualY[mids] <- pgres
-	names(out$pgresidualY) <- phids
-	resY <- out$residualY
+	out$pgresidualY[mids] <- pgresY
+	names(out$pgresidualY) <- allids #phids
+# compute residuals 	
 	out$residualY <- rep(NA,length(mids))
 	out$residualY[mids] <- resY
-	names(out$residualY) <- phids
+	names(out$residualY) <- allids #phids
+	
+# compute GRAMMAR+ (G. Svischeva) residuals
+	eigValInvSig<- as.vector(1./es)
+	zu <- mean(eigValInvSig)*tvar
+	fi <- (1-(1-out$esth2)*zu)/(out$esth2 * tvar)
+	# this is most expensive operation
+	Bu <- eigres$vec %*% diag(sqrt(eigValInvSig)) %*% t(eigres$vec)
+# GRAMMAR+ transformed outcome
+	grresY <- as.vector((1/sqrt(fi)) * (Bu %*% resY))
+	out$grresidualY <- rep(NA,length(mids))
+	out$grresidualY[mids] <- grresY
+	names(out$grresidualY) <- allids #phids
+# GRAMMAR+ correction coefficients
+	VarYG1 <- mean(pgresY^2)
+	z <- 1-(zu-1)*(1-out$esth2)/out$esth2
+	out$grammarGamma <- list()
+	out$grammarGamma$Beta <- z*(1-out$esth2)
+	out$grammarGamma$Test <- z*((1-out$esth2)^2)*tvar/VarYG1
+# END GRAMMAR+ computations
+	
 	out$call <- match.call()
 	out$convFGLS <- convFGLS
 	
-	a <- determinant(sigma,logarithm=T)
-	a <- a$modulus * a$sign
-	b <- (t(resY) %*% out$InvSigma %*% resY)
+# old variant
+#	time0 <- proc.time()
+#	a <- determinant(sigma,logarithm=T)
+#	a <- a$modulus * a$sign
+#	print(proc.time()-time0)
+# end old variant
+# new variant
+	a <- sum(log(abs(es))) # logarithm of determinant of sigma as sum of logarithm of eigenvalues
+# end new variant
+	b <- (t(resY) %*% InvSigma_x_residualY)
 	loglik <- a+b
 	out$h2an$minimum <- as.vector(loglik)
 	

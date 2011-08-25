@@ -1,5 +1,5 @@
 "convert.snp.tped" <-
-  function(tpedfile,tfamfile,outfile,strand="+",bcast=10000) {
+  function(tpedfile,tfamfile,outfile,strand="u",bcast=10000) {
 
 	alcodes <- alleleID.codes()
 

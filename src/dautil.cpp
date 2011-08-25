@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <stdarg.h>
 
 #include "dautil.h"
 

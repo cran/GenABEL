@@ -5,17 +5,28 @@ alleleID.alleles <- function() {
 	alleles <- c("A","T","G","C","-")
 	idx <- 3
 	for (i in alleles) {
-	for (j in alleles) {
-		if (i==j) next;
-		a[[idx]] <- c(i,j)
-		idx <- idx + 1
-	}
+		for (j in alleles) {
+			if (i==j) next;
+			a[[idx]] <- c(i,j)
+			idx <- idx + 1
+		}
 	}
 	a[[idx]] <- c("2","1")
 	idx <- idx + 1
 	a[[idx]] <- c("B","A")
+	idx <- idx + 1
+	a[[idx]] <- c("I","D")
+	idx <- idx + 1
+	a[[idx]] <- c("D","I")
+	idx <- idx + 1
+	allalleles <- c("1","2","B","I","D","A","T","G","C","-")
+	for (jj in allalleles) {
+		a[[idx]] <- c(jj,jj)
+		idx <- idx + 1
+	}
 	a
 }
+
 alleleID.codes <- function() {
 	a <- alleleID.alleles()
 	out <- c("OPPA")
@@ -30,8 +41,8 @@ alleleID.codes.reverse <- function() {
 	a <- alleleID.alleles()
 	out <- c("OPPA")
 	idx <- 1
-	alleles <- c("A","T","G","C","-")
-	reval <- c("T","A","C","G","-")
+	alleles <- c("A","T","G","C","-","I","D")
+	reval <- c("T","A","C","G","-","I","D")
 	for (i in a) {
 		x <- match(alleles,i)
 		if (sum(!is.na(x)) == 2) {
@@ -106,4 +117,48 @@ alleleID.effective <- function() {
 	out
 }
 
-
+translate_mono_coding <- function(mono,poly,strandMono,strandPoly,forcestranduse) {
+	hasallele <- function(mono,poly) {
+		mono <- strsplit(mono,"")[[1]][1]
+		spl <- strsplit(poly,"")
+		#print(spl[[1]][1])
+		#print(spl[[1]][2])
+		#print(mono)
+		if (spl[[1]][1] == mono || spl[[1]][2] == mono) { 
+			return(TRUE)
+		} else {
+			return(FALSE)
+		}
+	}
+	swapmonofirst <- function(mono,poly) {
+		mono <- strsplit(mono,"")[[1]][1]
+		spl <- strsplit(poly,"")
+		#print(spl[[1]][1])
+		#print(mono)
+		if (spl[[1]][1] == mono)
+			return(paste(spl[[1]][1],spl[[1]][2],sep="")) 
+		else if (spl[[1]][2] == mono) 
+			return(paste(spl[[1]][2],spl[[1]][1],sep="")) 
+		else 
+			stop("swapmonofirst: error")
+	}
+	polyN <- which(alleleID.codes() == poly)
+	poly.reverse <- alleleID.codes.reverse()[polyN]
+	if (!(poly %in% c("AT","TA","GC","CG")) & !forcestranduse) {
+		if (hasallele(mono,poly)) 
+			return(swapmonofirst(mono,poly))
+		else if (hasallele(mono,poly.reverse))
+			return(swapmonofirst(mono,poly.reverse))
+	} else if (forcestranduse) {
+		if (strandMono=="u" || strandPoly=="u") return(mono)
+		if (strandMono!=strandPoly) {
+			polyN <- which(alleleID.codes() == poly)
+			poly <- alleleID.codes.reverse()[polyN]
+		}
+		if (hasallele(mono,poly)) 
+			return(swapmonofirst(mono,poly))
+		else 
+			return(mono)
+	}
+	return(mono)
+}
