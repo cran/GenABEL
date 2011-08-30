@@ -1,5 +1,5 @@
-43723094e3041a07abc2a884661796cd *CHANGES.LOG
-1d2f25f30f59061ee7575e55f24c026d *DESCRIPTION
+b1b574f23915b0816b4c14a697982a97 *CHANGES.LOG
+57daed727113af669789d1903f6caa56 *DESCRIPTION
 369adabf8d5caf15522f2038c271a1cd *NAMESPACE
 95d5d4859f5f15ce187a8f93e2219b9f *R/GASurv.R
 db40e7d9194d834edf5b242890a8ba75 *R/GenABEL-package.R
@@ -108,7 +108,7 @@ bd3c823ded16b6336f0c68075fc6c3fb *R/snp.data.R
 9f583dd6fcd925a63a376edbd11f4080 *R/snp.names.R
 1d9e11f2678fd885565ccfa4446aed27 *R/snp.subset.R
 fc26a018ac7b60be717e74bc6b293618 *R/sortmap.internal.R
-87b97a03a99e24a3b6a697820f614e5d *R/ss.R
+0a21aa82e067a8f4a9003a22fd02c5d7 *R/ss.R
 7fbcf094bbe56c5b6556a5d3f24054f6 *R/sset.R
 fc5c82f8dd56aceab0006c665c8f8ad0 *R/summary.check.marker.R
 6080a0a272b6a2c34495ae093e2603d0 *R/summary.gwaa.data.R
@@ -117,7 +117,7 @@ fc5c82f8dd56aceab0006c665c8f8ad0 *R/summary.check.marker.R
 9d23750c432381c6f028ea11c516573c *R/summary.snp.data_old.R
 e730fd15d99278c182e479488a79935c *R/update.check.marker.R
 ea1a5833100337200959f1fc763f4b29 *R/ztransform.R
-a89f0401c55ed2cc59674eaf8a777950 *R/zzz.R
+8bb7051c45e703dabf3d7d468a26029a *R/zzz.R
 ce4dfc87fc5a4c594cd5450daa68bc2f *TODO
 f7c653af4ae99ad2374fa6302e086a2b *data/datalist
 66d47259d24958338b1b35a101aa6c15 *data/ge03d2.RData
@@ -339,7 +339,6 @@ a190984ebffc419d57dc5dbbfe3be878 *src/survS.h
 ec1ff1dff59527a17709843737134ddd *src/survproto.h
 ff0bb8b9a583bd1b2854aae801506de7 *tests/TEST10x15.geno
 d2a505ffff8be0246128c34ecf285227 *tests/big_data/README
-ec724cb79f503b17e427be9dcfa3ead3 *tests/doRUnit.R
 20153ff373f0496d5f6c98edb787d09a *tests/gatest.illu
 bfd757466aa5f6219a228477286194ff *tests/gatest.map
 c458885da66174e3ab9c897c11bf0d6c *tests/gatest.ped

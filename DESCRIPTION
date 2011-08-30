@@ -1,10 +1,10 @@
 Package: GenABEL
 Type: Package
 Title: genome-wide SNP association analysis
-Version: 1.6-8
-Date: 2011-08-25
+Version: 1.6-9
+Date: 2011-08-30
 Author: GenABEL developers
-Maintainer: GenABEL developers <genabel-devel@r-forge.r-project.org>
+Maintainer: GenABEL developers <genabel.project@gmail.com>
 Depends: R (>= 2.10.0), methods, MASS
 Suggests: qvalue, genetics, haplo.stats, DatABEL (>= 0.9-0), hglm,
         MetABEL, PredictABEL
@@ -12,6 +12,6 @@ Description: a package for genome-wide association analysis between
         quantitative or binary traits and single-nucleotide
         polymorphisms (SNPs).
 License: GPL (>= 2)
-Packaged: 2011-08-29 22:36:02 UTC; yuryaulchenko
+Packaged: 2011-08-30 09:38:57 UTC; yuryaulchenko
 Repository: CRAN
-Date/Publication: 2011-08-30 05:35:48
+Date/Publication: 2011-08-30 13:13:02

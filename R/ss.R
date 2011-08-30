@@ -314,6 +314,7 @@ setMethod(
 		definition = function(x,i,j,drop)
 		{
 			res <- results(x)
+			if (missing(j)) drop=FALSE
 			return(res[i,j,drop=drop])
 		}
 );
