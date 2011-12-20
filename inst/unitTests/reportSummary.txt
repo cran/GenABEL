@@ -1,9 +1,12 @@
-RUNIT TEST PROTOCOL -- Thu Aug 25 16:20:06 2011 
+RUNIT TEST PROTOCOL -- Tue Dec  6 13:20:55 2011 
 *********************************************** 
-Number of test functions: 13 
+Number of test functions: 18 
 Number of errors: 0 
-Number of failures: 0 
+Number of failures: 2 
 
  
 1 Test Suite : 
-GenABEL unit testing - 13 test functions, 0 errors, 0 failures
+GenABEL unit testing - 18 test functions, 0 errors, 2 failures
+FAILURE in test.exports: Error in checkIdentical(xBack[, sameCode], dta[, sameCode]) : FALSE 
+FAILURE in test.polylik: Error in checkEquals(h2htNew$pgresidualY, h2htOld$pgresidualY) : 
+  Mean relative difference: 1.756053e-08

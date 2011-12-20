@@ -73,7 +73,7 @@ function(formula,data,snpsubset,idsubset,gtmode="additive",trait.type="guess")
 	if (gtdata@nids != n)
 		stop("incompatible dimensions")
 	if (any(gtdata@chromosome == "X") & !any(colnames(x)=="sex"))
-		warning("You analysed X chromosome without adjhstment for sex")
+		warning("You analysed X chromosome without adjustment for sex")
 	if (ttype==1)
 		chi2 <- .C("linreg_gwaa",as.double(y),as.double(x),as.raw(gtdata@gtps),as.integer(n),
 			as.integer(ncol(x)),as.integer(gtdata@nsnps),as.integer(gtm),chi2=double(3*gtdata@nsnps))$chi2

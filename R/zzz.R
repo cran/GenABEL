@@ -1,8 +1,24 @@
 .onLoad <- function(lib, pkg) {
-	GenABEL.version <- "1.6-9"
-	cat("GenABEL v.",GenABEL.version,"(August 30, 2011) loaded\n")
-	
-	# check for updates and news
+	## this is something which should be fixed: both version 
+	## and date can come from DESCRIPTION!
+	#pkgDescription <- packageDescription(pkg)
+	#pkgVersion <- pkgDescription$Version
+	#pkgDate <- pkgDescription$Date
+	pkgVersion <- "1.7-0"
+	pkgDate <- "December 20, 2011"
+	welcomeMessage <- paste(pkg," v. ",pkgVersion," (",pkgDate,") loaded\n",sep="")
+	# check if CRAN version is the same as loaded
+	cranVersion <- checkPackageVersionOnCRAN(pkg)
+	if (!is.null(cranVersion)) 
+		if (pkgVersion != cranVersion) {
+			welcomeMessage <- paste(welcomeMessage,
+					"\nInstalled ",pkg," version (",pkgVersion,") is not the same as stable\n",
+					"version available from CRAN (",cranVersion,"). Unless used intentionally,\n",
+					"consider updating to the latest CRAN version. For that, use\n",
+					"'install.packages(\"",pkg,"\")', or ask your system administrator\n",
+					"to update the package.\n\n",sep="")
+		}
+	# check for news
 	address <- c(
 			"http://genabel.r-forge.r-project.org/version_and_news.html",
 			"http://www.genabel.org/sites/default/files/version_and_news.html"
@@ -24,38 +40,25 @@
 	if (class(tryRes1) != "try-error") {
 		if (length(fulltext)>0)
 		{
-			a <- tolower(fulltext)
-			a <- a[grep("<gastable>",a)+1]
-			if (length(a)>0) {
-				# message to all users
-				strnews <- grep("<messagetoall>",tolower(fulltext))
-				endnews <- grep("</messagetoall>",tolower(fulltext))
-				if (length(strnews)>0 && length(endnews)>0) 
-					if ((endnews-1) >= (strnews+1)) {
-						cat(fulltext[(strnews+1):(endnews-1)],sep="\n")
-					}
-				# compare versions
-				a <- strsplit(a,"")[[1]]
-				ver <- a[grep("[0-9]",a)]
-				ver <- paste(ver[1],".",ver[2],"-",ver[3],sep="")
-				if (GenABEL.version != ver) {
-					cat(  "\nInstalled GenABEL version (",GenABEL.version,") is not the same as stable\n",
-							"version available from CRAN (",ver,"). Unless used intentionally,\n",
-							"consider updating to the latest CRAN version. For that, use\n",
-							"'install.packages(\"GenABEL\")', or ask your system administrator\n",
-							"to update the package.\n\n",sep="")
-					# check for new-version news
-					strnews <- grep("<ganews>",tolower(fulltext))
-					endnews <- grep("</ganews>",tolower(fulltext))
-					if (length(strnews)>0 && length(endnews)>0) 
-						if ((endnews-1) >= (strnews+1)) {
-							cat(fulltext[(strnews+1):(endnews-1)],sep="\n")
-						}
+			# message to all users
+			strnews <- grep("<messagetoall>",tolower(fulltext))
+			endnews <- grep("</messagetoall>",tolower(fulltext))
+			if (length(strnews)>0 && length(endnews)>0) 
+				if ((endnews-1) >= (strnews+1)) {
+					welcomeMessage <- paste(welcomeMessage,
+							fulltext[(strnews+1):(endnews-1)],sep="\n")
 				}
-			}
+			# check for specific package news
+			strnews <- grep(paste("<",pkg,"news>",sep=""),tolower(fulltext))
+			endnews <- grep(paste("</",pkg,"news>",sep=""),tolower(fulltext))
+			if (length(strnews)>0 && length(endnews)>0) 
+				if ((endnews-1) >= (strnews+1)) {
+					welcomeMessage <- paste(welcomeMessage,
+							fulltext[(strnews+1):(endnews-1)],sep="\n")
+				}
 		}
 		#rm(a,fulltext,ver)
 	}
 	options("timeout"=svtmo)
-	#rm(tryRes0,tryRes1,conn,svtmo)
+	packageStartupMessage(welcomeMessage)
 }

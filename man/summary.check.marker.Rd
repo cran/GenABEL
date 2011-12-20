@@ -7,7 +7,7 @@ Provides cross-tabulation summarising number
 of marker which did not pass this or that criteria
 }
 \usage{
-summary.check.marker(object, ...)
+	\method{summary}{check.marker}(object, ...)
 }
 \arguments{
   \item{object}{object of class \code{\link{check.marker-class}}}

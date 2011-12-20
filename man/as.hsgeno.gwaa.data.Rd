@@ -6,7 +6,7 @@
 	to "hsgeno" data frame
 }
 \usage{
-	as.hsgeno.gwaa.data(x, ...)
+	\method{as.hsgeno}{gwaa.data}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{gwaa.data-class}}}

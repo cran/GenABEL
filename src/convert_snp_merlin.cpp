@@ -20,7 +20,6 @@ using namespace std;
 
 //STL
 #include <vector>
-#include <vector>
 #include <map>
 #include <iterator>
 

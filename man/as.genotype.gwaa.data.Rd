@@ -6,7 +6,7 @@
 	to "genotype" data frame
 }
 \usage{
-	as.genotype.gwaa.data(x, ...)
+	\method{as.genotype}{gwaa.data}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{gwaa.data-class}}}

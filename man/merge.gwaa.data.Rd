@@ -5,7 +5,7 @@
 	function to merge two objects of gwaa.data-class
 }
 \usage{
-merge.gwaa.data(x, y, ... )
+	\method{merge}{gwaa.data}(x, y, ...)
 }
 \arguments{
   \item{x}{the first object of \code{\link{gwaa.data-class}}}

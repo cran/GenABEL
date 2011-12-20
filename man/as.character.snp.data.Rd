@@ -6,7 +6,8 @@
 	to "character"
 }
 \usage{
-	as.character.snp.data(x, ...)
+	\method{as.character}{snp.data}(x, ...)
+%	as.character.snp.data(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{snp.data-class}}}

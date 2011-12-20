@@ -105,7 +105,7 @@ char gtps_container::get(unsigned id_position, unsigned snp_position)
 {
 get_our_byte_number_and_local_person_number(id_position, snp_position); //calculate our_byte_number value
 
-char our_byte_vallue = gtps_array[our_byte_number-1];
+//char our_byte_vallue = gtps_array[our_byte_number-1];
 
 
 
@@ -124,12 +124,12 @@ char* gtps_container::get_gtps_array_for_snp(unsigned snp_position)
 char* gtps_for_one_snp = new char(nbytes_for_one_snp);
 get_our_byte_number_and_local_person_number(1, snp_position); //calculate our_byte_number value
 
-std::cout<<"gtps_container::get_gtps_array_for_snp:  our_byte_number="<<our_byte_number<<"\n";
-std::cout<<"gtps_container::get_gtps_array_for_snp:  nbytes_for_one_snp="<<nbytes_for_one_snp<<"\n";
+//std::cout<<"gtps_container::get_gtps_array_for_snp:  our_byte_number="<<our_byte_number<<"\n";
+//std::cout<<"gtps_container::get_gtps_array_for_snp:  nbytes_for_one_snp="<<nbytes_for_one_snp<<"\n";
 	
-std::cout<<"gtps_array[0]="<<int(gtps_array[0])<<"\n";
+//std::cout<<"gtps_array[0]="<<int(gtps_array[0])<<"\n";
 
-for(int i=0 ; i<nbytes_for_one_snp; i++)
+for(unsigned int i=0 ; i<nbytes_for_one_snp; i++)
 	{
 	gtps_for_one_snp[i]=gtps_array[our_byte_number-1+i];
 	}
@@ -150,7 +150,10 @@ return gtps_for_one_snp;
 char gtps_container::get_strand(unsigned snp_position)
 {
 if(do_we_have_strand_and_codding_arrays) return strand_array[snp_position-1]; 
-else std::cout<<"gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)\n";
+else {
+	//std::cout<<"gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)\n";
+	error("gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)");
+}
 }
 
 
@@ -158,7 +161,10 @@ else std::cout<<"gtps_container::get_strand: You can not get strand since you cr
 char gtps_container::get_coding(unsigned snp_position)
 {
 if(do_we_have_strand_and_codding_arrays) return coding_array[snp_position-1]; 
-else std::cout<<"gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)\n";
+else {
+	//std::cout<<"gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)\n";
+	error("gtps_container::get_strand: You can not get strand since you create object with constructor gtps_container(char * gtps_array_raw, unsigned id_numbers, unsigned snp_numbers)");
+}
 }
 
 

@@ -9,7 +9,7 @@ load.gwaa.data(phenofile = "pheno.dat", genofile = "geno.raw",
 		force = TRUE, makemap = FALSE, sort = TRUE, id = "id")
 }
 \arguments{
-  \item{phenofile}{data table with pehnotypes}
+  \item{phenofile}{data table with phenotypes}
   \item{genofile}{internally formatted genotypic data file (see \code{\link{convert.snp.text}} to 
 			convert data)}
   \item{force}{Force loading the data if heterozygous X-chromosome genotypes are found in male}

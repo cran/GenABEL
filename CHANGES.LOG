@@ -1,3 +1,41 @@
+*** v. 1.7-0 (2011.12.20)
+
+Addressed bug [#1383] (message about upgrade on loading the library 
+not entirely correct) by adding new function checkPackageVersionOnCRAN() 
+and re-writing zzz.R (.onLoad) using it.  
+
+Addressed bug [#1673] (bug in load.gwaa.data and export.merlin when 
+sorting is enabled, filed in by Daniel Taliun), added unit test 
+runit.sortmap.internal.R/test.sortmap.internal.bug1673
+
+Addressed bug [#1676] (regression in merge of gwaa.data, phenotypes 
+don't get merged correctly; filed in by Lennart Karssen), added unit 
+test runit.merge.R/test.merge.bug1676
+
+Added 'KS' method to estimate lambda in 'estlambda'. Generates rather 
+good results (under null) and may be considered as default option in the future, 
+after testing under the alternative. 
+
+Account for situation when HGLM fails to converge (s.e.'s set to NA in 
+h2$h2an$se) 
+
+added option 'transposed' to 'export.plink' to export TPED files
+
+speeding-up 'mmscore' by x1.8 through more efficient vector-matrix 
+product computations 
+
+export.merlin, export.plink now runs much faster (exports on C++ code)
+
+Bug [#1641] (regression bug with merge.snp.data in version 1.6.9; 
+filed in by Karl Froner) fixed. Now GenABEL deals with exceptional 
+situation in merge.snp.data / monomorphic part; added case of no overlap 
+in SNPs (skip monomorphic staff then). RUnit regression test 
+runit.merge.R/test.merge.bug1641 added.   
+
+Modifications in 'estlambda': plot=FALSE by default, added option 
+to estimate Lambda with median method; added option 'filter' for 
+filtering SNPs with 0-statistics
+
 *** v. 1.6-9 (2011.08.30)
 
 Change the name of 'maintainer' to genabel.project@gmail.com to avoid spamming 

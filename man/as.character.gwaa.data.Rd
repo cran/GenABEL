@@ -6,7 +6,7 @@
 	\code{\link{gwaa.data-class}} to "character"
 }
 \usage{
-	as.character.gwaa.data(x, ...)
+	\method{as.character}{gwaa.data}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{gwaa.data-class}}}

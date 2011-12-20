@@ -56,13 +56,14 @@ void decomp(char *indata, int nids, int *gt) {
 		for (j=0;j<4;j++) {
 			gt[idx] = str & msk[j]; 
 			gt[idx++] >>= ofs[j];
-			printf("%i (%i);",idx-1,gt[idx-1]);
+			//printf("%i (%i);",idx-1,gt[idx-1]);
 			if (idx>=nids) {idx=0;break;}
 		}
 	}
-	printf("going out of decomp...\n");
+	//printf("going out of decomp...\n");
 }
 
+/*
 void temp(char *indata, int *Nids, int *g) {
 	int i;
 	int nids = (*Nids);
@@ -71,6 +72,7 @@ void temp(char *indata, int *Nids, int *g) {
 	for (i=0;i<nids;i++) printf("%i ",g[i]);
 	printf("\n");
 }
+*/
 
 void get_snps_many(char *a, int *Nsnps, int *Nrows, int *b) {
 	int i,j,m,idx=0;
@@ -895,11 +897,13 @@ void mmscore_20090127(char *gdata, double *pheno, double *invS, int *Nids, int *
 	}
 }
 
+
 //
-//new new MMSCORE (2011.07.15)
+// new MMSCORE (2011.09.16)
+// efficient vector-matrix multiplication
 //
 
-void mmscore_20110715(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2)
+void mmscore_20110916(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2)
 {
 	int nsnps = (*Nsnps);
 	int nstra = (*Nstra);
@@ -910,6 +914,8 @@ void mmscore_20110715(char *gdata, double *pheno, double *invS, int *Nids, int *
 	double Ttotg,dgt,totg[nstra],eG[nstra],ePH[nstra],svec[nids],gtctr[nids],phctr[nids];
 	double Tsg, sg[nstra],sph[nstra];
 	double u, v;
+	double temp1,temp2;
+
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 
 	for (igt=0;igt<nsnps;igt++) {
@@ -945,10 +951,29 @@ void mmscore_20110715(char *gdata, double *pheno, double *invS, int *Nids, int *
 				phctr[i] = pheno[i] - ePH[cstr];
 			}
 		}
+
+		/**
 		for (i=0;i<nids;i++) {
 			svec[i] = 0.;
-			for (j=0;j<nids;j++) svec[i] += gtctr[j]*invS[nids*i+j];
+			int offS = nids*i;
+			for (j=0;j<nids;j++) {
+				svec[i] += gtctr[j]*invS[offS+j];
+			}
 		}
+		**/
+		for (i=0;i<nids;i++) svec[i] = 0.;
+
+		for (i=0;i<nids;i++) {
+			int offS = nids*i;
+			temp1 = gtctr[i];
+			temp2 = 0.;
+			for (j=(i+1);j<nids;j++) {
+				svec[j] += temp1*invS[offS+j];
+				temp2 += invS[offS+j]*gtctr[j];
+			}
+			svec[i] += temp2 + invS[offS+i]*gtctr[i];
+		}
+
 		if (Ttotg == 0) {
 			chi2[igt] = 0.;
 			chi2[igt+nsnps] = 0.;
@@ -974,6 +999,235 @@ void mmscore_20110715(char *gdata, double *pheno, double *invS, int *Nids, int *
 		}
 	}
 }
+
+
+//
+// DOES NOT WORK!!!
+//
+
+void mmscore_20110915(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2)
+{
+	int nsnps = (*Nsnps);
+	int nstra = (*Nstra);
+	int nids = (*Nids);
+	int gt[nids];
+	int i, j, cstr, igt, i1=1;
+	int nbytes;
+	double Ttotg,dgt,totg[nstra],eG[nstra],ePH[nstra],svec[nids],gtctr[nids];
+	double Tsg, sg[nstra],sph[nstra],nIndividuals[nstra];
+	double u, v;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+
+	// compute strata-specific means for y
+	// compute SUMi Yi SUMj OMEGAij and SUMij OMEGAij
+	for (j=0;j<nstra;j++) {
+		sph[j] = 0.;
+		nIndividuals[j] = 0.;
+		ePH[j] = 0.;
+	}
+	double sumOmegaJ[nids];
+	double YiSumOmegaij[nids];
+	double sumOmega = 0.;
+	double sumYiSumOmegaij = 0.;
+	for (i=0;i<nids;i++) {
+		sumOmegaJ[i] = 0.;
+		YiSumOmegaij[i] = 0.;
+		for (j=0;j<nids;j++) {
+			cstr = stra[j];
+			sph[cstr] += pheno[j];
+			nIndividuals[cstr]++;
+			sumOmegaJ[i] += invS[nids*i+j];
+		}
+		sumOmega += sumOmegaJ[i];
+		YiSumOmegaij[j] = pheno[i]*sumOmegaJ[i];
+		sumYiSumOmegaij += YiSumOmegaij[j];
+		ePH[j] = sph[j]/nIndividuals[j];
+	}
+
+	for (igt=0;igt<nsnps;igt++) {
+		get_snps_many(gdata+nbytes*igt,Nids,&i1,gt);
+		for (j=0;j<nstra;j++) {
+			totg[j] = 0.;
+			sg[j] = 0.;
+		}
+		Ttotg=Tsg=0.;
+		for (i=0;i<nids;i++)
+			if (gt[i] != 0) {
+				cstr = stra[i];
+				dgt = 1.*gt[i] - 1.0;
+				totg[cstr]+=1.0;
+				Ttotg += 1.0;
+				sg[cstr] += dgt;
+				Tsg += dgt;
+			}
+		chi2[igt+6*nsnps]=Ttotg;
+		for (j=0;j<nstra;j++) {
+			eG[j] = sg[j]/totg[j];
+		}
+		for (i=0;i<nids;i++) {
+			cstr = stra[i];
+			if (gt[i] == 0) {
+				gtctr[i] = eG[cstr];
+			} else {
+				gtctr[i] = 1.*gt[i] - 1.0;
+			}
+		}
+		double sumYSumGOmega = 0.;
+		double sumGSumGOmega = 0.;
+		double sumGSumOmega = 0.;
+		double SumSumGOmega = 0.;
+		double summand2y, summand3y, summand2g, summand3g, summand4;
+		summand2y = summand3y = summand2g = summand3g = summand4 = 0.;
+		for (i=0;i<nids;i++) {
+			cstr = stra[i];
+			svec[i] = 0.;
+			for (j=0;j<nids;j++) {
+				svec[i] += gtctr[j]*invS[nids*i+j];
+			}
+			sumYSumGOmega += pheno[i]*svec[i];
+			sumGSumGOmega += gtctr[i]*svec[i];
+			sumGSumOmega += gtctr[i]*sumOmegaJ[i];
+			SumSumGOmega += svec[i];
+			summand2y += eG[cstr]*YiSumOmegaij[i];
+			summand2g += eG[cstr]*gtctr[i]*sumOmegaJ[i];
+			summand3y += ePH[cstr]*svec[i];
+			summand3g += eG[cstr]*svec[i];
+			summand4 += ePH[cstr]*eG[cstr]*sumOmega;
+		}
+		if (Ttotg == 0) {
+			chi2[igt] = 0.;
+			chi2[igt+nsnps] = 0.;
+			chi2[igt+2*nsnps] = 0.0001;
+			chi2[igt+3*nsnps] = 0.;
+			chi2[igt+4*nsnps] = 0.;
+			chi2[igt+5*nsnps] = 0.;
+		} else {
+			u = v = 0.;
+			u = sumYSumGOmega - summand2y - summand3y + summand4;
+			v = sumGSumGOmega - summand2g - summand3g + summand4;
+			if (v<1.e-16) {
+				chi2[igt]=0.;
+				chi2[igt+3*nsnps]=0.;
+			} else {
+				chi2[igt]=u*u/v;
+				chi2[igt+3*nsnps]=u/v;
+			}
+		}
+	}
+}
+
+//
+// mmscore for the case of no stratification
+// DOES NOT WORK (AND NO POINT)
+//
+
+void mmscore_20110915_nostrat(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2)
+{
+	int nsnps = (*Nsnps);
+	int nstra = (*Nstra);
+	if (nstra!=1) return;
+	int nids = (*Nids);
+	int gt[nids];
+	int i, j, igt, i1=1;
+	int nbytes;
+	double Ttotg,dgt,svec[nids],gtctr[nids];
+	double Tsg;
+	double u, v;
+	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+
+	// compute strata-specific means for y
+	// compute SUMi Yi SUMj OMEGAij and SUMij OMEGAij
+	double OmegaX[nids*nids*4];
+	double sumOmegaJ[nids];
+	double YiSumOmegaij[nids];
+	double sumOmega = 0.;
+	double sumYiSumOmegaij = 0.;
+	double sumY = 0.;
+	for (i=0;i<nids;i++) {
+		sumOmegaJ[i] = 0.;
+		YiSumOmegaij[i] = 0.;
+		for (j=0;j<nids;j++) {
+			sumOmegaJ[i] += invS[nids*i+j];
+			for (int omegaMult=0;omegaMult<4;omegaMult++) {
+				OmegaX[nids*i+j+omegaMult*nids*nids] = invS[nids*i+j] * (1. * (omegaMult-1));
+			}
+		}
+		sumOmega += sumOmegaJ[i];
+		YiSumOmegaij[j] = pheno[i]*sumOmegaJ[i];
+		sumYiSumOmegaij += YiSumOmegaij[j];
+		sumY += pheno[j];
+	}
+	double meanY = sumY/(1.*nids);
+
+	for (igt=0;igt<nsnps;igt++) {
+		get_snps_many(gdata+nbytes*igt,Nids,&i1,gt);
+		Ttotg=Tsg=0.;
+		for (i=0;i<nids;i++)
+			if (gt[i] != 0) {
+				gtctr[i] = 1.*gt[i] - 1.0;
+				Ttotg += 1.0;
+				Tsg += gtctr[i];
+			}
+		double meanG = Tsg/Ttotg;
+
+		for (i=0;i<nids;i++) for (j=0;j<nids;j++) OmegaX[nids*i+j]=meanG;//*invS[nids*i+j];
+
+		chi2[igt+6*nsnps]= Ttotg;
+		for (i=0;i<nids;i++) {
+			if (gt[i] == 0) {
+				gtctr[i] = meanG;
+			}
+		}
+		double sumYSumGOmega = 0.;
+		double sumGSumGOmega = 0.;
+		double sumGSumOmega = 0.;
+		double SumSumGOmega = 0.;
+		double summand2y, summand3y, summand2g, summand3g, summand4;
+		summand2y = summand3y = summand2g = summand3g = summand4 = 0.;
+		int gtOffs[4];
+		gtOffs[0]=0;gtOffs[1]=nids*nids;gtOffs[2]=nids*nids*2;gtOffs[3]=nids*nids*3;
+		for (i=0;i<nids;i++) {
+			svec[i] = 0.;
+//			double * offS = &invS[nids*i];
+			int offS = nids*i;
+			for (j=0;j<nids;j++) {
+//				svec[i] += gtctr[j]*offS[j];
+				svec[i] += gtctr[j]*invS[offS+j];
+//				svec[i] += gtctr[j]*invS[nids*i+j];
+//				svec[i] += OmegaX[offS+j+gtOffs[gt[j]]];
+			}
+			sumYSumGOmega += pheno[i]*svec[i];
+			sumGSumGOmega += gtctr[i]*svec[i];
+			sumGSumOmega += gtctr[i]*sumOmegaJ[i];
+			SumSumGOmega += svec[i];
+		}
+		summand2g = meanG*sumGSumOmega;
+		summand2y = meanG*sumYiSumOmegaij;
+		summand3y = meanY*SumSumGOmega;
+		summand3g = meanG*SumSumGOmega;
+		summand4 = meanY*meanG*sumOmega;
+		if (Ttotg == 0) {
+			chi2[igt] = 0.;
+			chi2[igt+nsnps] = 0.;
+			chi2[igt+2*nsnps] = 0.0001;
+			chi2[igt+3*nsnps] = 0.;
+			chi2[igt+4*nsnps] = 0.;
+			chi2[igt+5*nsnps] = 0.;
+		} else {
+			u = v = 0.;
+			u = sumYSumGOmega - summand2y - summand3y + summand4;
+			v = sumGSumGOmega - summand2g - summand3g + summand4;
+			if (v<1.e-16) {
+				chi2[igt]=0.;
+				chi2[igt+3*nsnps]=0.;
+			} else {
+				chi2[igt]=u*u/v;
+				chi2[igt+3*nsnps]=u/v;
+			}
+		}
+	}
+}
+
 
 void grammar(char *gdata, double *pheno, double *invS, int *Nids, int *Nsnps, int *Nstra, int *stra, double *chi2) 
 {
@@ -1249,7 +1503,7 @@ void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs
 			}
 		}
 		noninf=0;
-		if (option > 0) {
+		if (option == 1) {
 			//			count[0]=count[1]=count[2]=count[3]=sumgt=0;
 			//			for (i=0;i<nids;i++) count[gt[i]]++;
 			//			sumgt = count[1]+count[2]+count[3];

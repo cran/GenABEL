@@ -6,7 +6,7 @@
 	\code{\link{gwaa.data-class}} 
 }
 \usage{
-	as.data.frame.gwaa.data(x, ...)
+	\method{as.data.frame}{gwaa.data}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{data.frame-class}}}

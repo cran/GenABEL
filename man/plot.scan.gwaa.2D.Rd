@@ -6,7 +6,7 @@ Plots results of 2D analysis produced by
 \code{\link{scan.glm.2D}} or \code{\link{scan.haplo.2D}}
 }
 \usage{
-plot.scan.gwaa.2D(x, y, ..., df=1)
+	\method{plot}{scan.gwaa.2D}(x, y, ..., df=1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -20,7 +20,7 @@ if(FALSE) {
 
 ### --- Test functions ---
 
-test.polylik <- function()
+test.polylik <- function(tol = 2*.Machine$double.eps^0.5)
 {
     data(ge03d2.clean)
     df <- ge03d2.clean[1:150,autosomal(ge03d2.clean)]
@@ -41,10 +41,10 @@ test.polylik <- function()
     tO; tN; tO/tN;
     print(h2htNew$h2an)
     print(h2htOld$h2an)
-    checkEquals(h2htNew$h2an$est,h2htOld$h2an$est)
-    checkEquals(h2htNew$h2an$min,h2htOld$h2an$min)
-    checkEquals(h2htNew$residualY,h2htOld$residualY)
-    checkEquals(h2htNew$pgresidualY,h2htOld$pgresidualY)
-    checkEquals(h2htNew$InvSigma,h2htOld$InvSigma)
-    checkEquals(h2htNew$measuredIDs,h2htOld$measuredIDs)
+    checkEquals(h2htNew$h2an$est,h2htOld$h2an$est, tolerance = tol)
+    checkEquals(h2htNew$h2an$min,h2htOld$h2an$min, tolerance = tol)
+    checkEquals(h2htNew$residualY,h2htOld$residualY, tolerance = tol)
+    checkEquals(h2htNew$pgresidualY,h2htOld$pgresidualY, tolerance = tol)
+    checkEquals(h2htNew$InvSigma,h2htOld$InvSigma, tolerance = tol)
+    checkEquals(h2htNew$measuredIDs,h2htOld$measuredIDs, tolerance = tol)
 }

@@ -18,13 +18,13 @@ public:
 		mematrix<double> tXX = tX*(rdata.X);
 
 		double N = tXX.get(0,0);
-		if (verbose) {printf("tXX:\n");tXX.print();}
+		if (verbose) {Rprintf("tXX:\n");tXX.print();}
 		mematrix<double> tXX_i = invert(tXX);
-		if (verbose) {printf("tXX-1:\n");tXX_i.print();}
+		if (verbose) {Rprintf("tXX-1:\n");tXX_i.print();}
 		mematrix<double> tXY = tX*(rdata.Y);
-		if (verbose) {printf("tXY:\n");tXY.print();}
+		if (verbose) {Rprintf("tXY:\n");tXY.print();}
 		beta = tXX_i*tXY;
-		if (verbose) {printf("beta:\n");(beta).print();}
+		if (verbose) {Rprintf("beta:\n");(beta).print();}
 
 		// now compute residual variance
 		sigma2 = 0.;
@@ -37,14 +37,14 @@ public:
 			sigma2 += (beta.get(i,0)) * (beta.get(j,0)) * tXX.get(i,j);
 		sigma2 /= (N - double(length_beta));
 
-		if (verbose) {printf("sigma2 = %Lf\n",sigma2);}
+		if (verbose) {Rprintf("sigma2 = %Lf\n",sigma2);}
 
 		for (int i=0;i<(length_beta);i++)
 		{	
 			double value = sqrt(sigma2*tXX_i.get(i,i));
 			sebeta.put(value,i,0);
 		}
-		if (verbose) {printf("sebeta (%d):\n",sebeta.nrow);sebeta.print();}
+		if (verbose) {Rprintf("sebeta (%d):\n",sebeta.nrow);sebeta.print();}
 	}
 	~linear_reg()
 	{
@@ -78,8 +78,8 @@ public:
 		double prev = (rdata.Y).column_mean(0);
 		if (prev>=1. || prev <=0.)
 		{
-			fprintf(stderr,"prevalence not within (0,1)\n");
-			exit(1);
+			//fprintf(stderr,"prevalence not within (0,1)\n");
+			error("prevalence not within (0,1)");
 		}
 		for (int i = 0;i<length_beta;i++) beta.put(0.,i,0);
 		beta.put(log(prev/(1.-prev)),0,0);
@@ -106,18 +106,18 @@ public:
 
 //			printMatr(productMatrDiag(tX,W));
 			mematrix<double> tmp = productMatrDiag(tX,W);
-			if (verbose) {printf("tXW:\n");tmp.print();}
+			if (verbose) {Rprintf("tXW:\n");tmp.print();}
 			mematrix<double> tXWX = tmp*(rdata.X);
 			N = tXWX.get(0,0);
 
-			if (verbose) {printf("tXWX:\n");tXWX.print();}
+			if (verbose) {Rprintf("tXWX:\n");tXWX.print();}
 			tXWX_i=invert(tXWX);
-			if (verbose) {printf("tXWX-1:\n");tXWX_i.print();}
+			if (verbose) {Rprintf("tXWX-1:\n");tXWX_i.print();}
 			mematrix<double> tmp1 = productMatrDiag(tX,W);
 			mematrix<double> tXWz = tmp1*z;
-			if (verbose) {printf("tXWz:\n");tXWz.print();}
+			if (verbose) {Rprintf("tXWz:\n");tXWz.print();}
 			beta = tXWX_i*tXWz;
-			if (verbose) {printf("beta:\n");beta.print();}
+			if (verbose) {Rprintf("beta:\n");beta.print();}
 	
 		}
 		sigma2 = 0.;
@@ -127,7 +127,7 @@ public:
 			double value = sqrt(tXWX_i.get(i,i));
 			sebeta.put(value,i,0);
 		}
-		if (verbose) {printf("sebeta (%d):\n",sebeta.nrow);sebeta.print();}
+		if (verbose) {Rprintf("sebeta (%d):\n",sebeta.nrow);sebeta.print();}
 	}
 	~logistic_reg()
 	{
@@ -164,7 +164,10 @@ public:
 		mematrix<double> u(cdata.X.nrow,1);
 		mematrix<double> imat(cdata.X.nrow,cdata.X.nrow);
 		double * work = new (nothrow) double[cdata.X.ncol*2+2*(cdata.X.nrow)*(cdata.X.nrow)+3*(cdata.X.nrow)];
-		if (!work) {perror("can not allocate work matrix");exit(1);}
+		if (!work) {
+			//perror("can not allocate work matrix");exit(1);
+			error("can not allocate work matrix");
+		}
 		double loglik[2];
 		int flag;
 		double sctest=1.0;

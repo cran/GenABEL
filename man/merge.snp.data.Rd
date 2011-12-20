@@ -5,7 +5,8 @@
 	function to merge two objects of snp.data-class
 }
 \usage{
-merge.snp.data(x, y, ... , error_amount = 1e+06, replacena = TRUE, forcestranduse = FALSE, sort = TRUE, intersected_snps_only = FALSE)
+	\method{merge}{snp.data}(x, y, ... , error_amount = 1e+06, replacena = TRUE, 
+							forcestranduse = FALSE, sort = TRUE, intersected_snps_only = FALSE)
 }
 \arguments{
   \item{x}{the first object of \code{\link{snp.data-class}}}

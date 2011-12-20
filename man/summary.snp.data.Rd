@@ -11,7 +11,7 @@ P-value of the exact test for HWE, Fmax (estimate of deviation from HWE,
 allowing meta-analysis) and LRT P-value for HWE test are listed
 }
 \usage{
-summary.snp.data(object, ...)
+	\method{summary}{snp.data}(object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

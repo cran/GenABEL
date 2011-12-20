@@ -6,7 +6,7 @@
 	to "hsgeno" data frame
 }
 \usage{
-	as.hsgeno.snp.data(x, ...)
+	\method{as.hsgeno}{snp.data}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{snp.data-class}}}

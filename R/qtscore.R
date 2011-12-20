@@ -147,7 +147,7 @@
 		stop("formula argument should be a formula or a numeric vector")
 	}
 	if (!missing(data)) detach(data@phdata)
-	if (length(strata)!=data@gtdata@nids) stop("Strata variable and the data do not match in length")
+	if (length(strata)!=nids(data)) stop("Strata variable and the data do not match in length")
 	if (any(is.na(strata))) stop("Strata variable contains NAs")
 	if (any(strata!=0)) {
 		olev <- levels(as.factor(strata))
@@ -169,17 +169,58 @@
 	
 #	if (trait.type=="binomial" & !is(formula,"formula")) bin<-1 else bin <- 0
 	if (trait.type=="binomial") bin<-1 else bin<-0
-	lenn <- data@gtdata@nsnps;
+	lenn <- nsnps(data);
 	###out <- list()
 	if (times>1) {pb <- txtProgressBar(style = 3)}
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) resid <- sample(resid,replace=FALSE)
-		chi2 <- .C("qtscore_glob",as.raw(data@gtdata@gtps),as.double(resid),as.integer(bin),as.integer(data@gtdata@nids),as.integer(data@gtdata@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(10*data@gtdata@nsnps), PACKAGE="GenABEL")$chi2
-		if (any(data@gtdata@chromosome=="X")) {
-			ogX <- data@gtdata[,data@gtdata@chromosome=="X"]
-			sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
-			chi2X <- .C("qtscore_glob",as.raw(ogX@gtps),as.double(resid),as.integer(bin),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(10*ogX@nsnps), PACKAGE="GenABEL")$chi2
-			revec <- (data@gtdata@chromosome=="X")
+#		if (old) {
+			chi2 <- .C("qtscore_glob",as.raw(data@gtdata@gtps),as.double(resid),as.integer(bin),
+					as.integer(data@gtdata@nids),as.integer(data@gtdata@nsnps), as.integer(nstra), 
+					as.integer(strata), chi2 = double(10*data@gtdata@nsnps), PACKAGE="GenABEL")$chi2
+#		} else {
+#			gtNrow <- dim(data)[1]
+#			gtNcol <- dim(data)[2]
+#			chi2 <- .Call("iteratorGA", 
+#					data@gtdata@gtps, 
+#					as.integer(gtNrow), as.integer(gtNcol),
+#					as.character("qtscore_glob"),   # Function
+#					as.character("R"),  			# Output type
+#					as.integer(2),      			# MAR
+#					as.integer(1),					# Steps
+#					as.integer(5),      			# nr of extra arguments
+#					as.double(resid),
+#					as.integer(bin),
+#					as.integer(data@gtdata@nids),
+#					as.integer(nstra), 
+#					as.integer(strata), 
+#					package="GenABEL")
+#		}
+		if (any(chromosome(data)=="X")) {
+			ogX <- gtdata(data[,chromosome(data)=="X"])
+			sxstra <- strata; sxstra[male(ogX)==1] <- strata[male(ogX)==1]+nstra
+#			if (old) {
+				chi2X <- .C("qtscore_glob",as.raw(ogX@gtps),as.double(resid),as.integer(bin),
+						as.integer(nids(ogX)),as.integer(nsnps(ogX)), as.integer(nstra*2), 
+						as.integer(sxstra), chi2 = double(10*nsnps(ogX)), PACKAGE="GenABEL")$chi2
+#			} else {
+#				chi2X <- .Call("iteratorGA", 
+#						ogX@gtps, 
+#						as.integer(ogX@nsnps), 	# nCol
+#						as.integer(ogX@nids), 	# nRow
+#						as.character("qtscore_glob"), # Function
+#						as.character("R"),  	# Output type
+#						as.integer(1),      	# MAR
+#						as.integer(1),			# Steps
+#						as.integer(5),      	# nr of arguments
+#						as.double(resid),
+#						as.integer(bin),
+#						as.integer(nids),
+#						as.integer(nstra*2), 
+#						as.integer(sxstra), 
+#						package="GenABEL")
+#			}
+			revec <- (chromosome(data)=="X")
 			revec <- rep(revec,6)
 			chi2 <- replace(chi2,revec,chi2X)
 			rm(ogX,chi2X,revec);gc(verbose=FALSE)

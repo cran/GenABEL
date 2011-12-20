@@ -6,13 +6,13 @@ mematrix<DT>::mematrix(int nr, int nc)
 {
 	if (nr<=0)
 	{
-		fprintf(stderr,"mematrix(): nr <= 0\n");
-		exit(1);
+		//fprintf(stderr,"mematrix(): nr <= 0\n");
+		error("mematrix(): nr <= 0");
 	}
 	if (nc<=0)
 	{
-		fprintf(stderr,"mematrix(): nc <= 0\n");
-		exit(1);
+		//fprintf(stderr,"mematrix(): nc <= 0\n");
+		error("mematrix(): nc <= 0");
 	}
 	nrow = nr;
 	ncol = nc;
@@ -20,8 +20,8 @@ mematrix<DT>::mematrix(int nr, int nc)
 	data = new (nothrow) DT [ncol*nrow];
 	if (!data) 
 	{
-		fprintf(stderr,"mematrix(nr,nc): cannot allocate memory (%d,%d)\n",nrow,ncol);
-		exit(1);
+		//fprintf(stderr,"mematrix(nr,nc): cannot allocate memory (%d,%d)\n",nrow,ncol);
+		error("mematrix(nr,nc): cannot allocate memory");
 	}
 //	fprintf(stderr,"mematrix(nr,nc): can allocate memory (%d,%d)\n",nrow,ncol);
 }
@@ -34,8 +34,8 @@ mematrix<DT>::mematrix(const mematrix <DT> & M)
 	data = new (nothrow) DT [M.ncol*M.nrow];
 	if (!data)
 	{
-		fprintf(stderr,"mematrix const(mematrix): cannot allocate memory (%d,%d)\n",M.nrow,M.ncol);
-		exit(1);
+		//fprintf(stderr,"mematrix const(mematrix): cannot allocate memory (%d,%d)\n",M.nrow,M.ncol);
+		error("mematrix const(mematrix): cannot allocate memory");
 	}
 //	fprintf(stderr,"mematrix const(mematrix): can allocate memory (%d,%d)\n",M.nrow,M.ncol);
 	for(int i=0 ; i<M.ncol*M.nrow;i++) data[i] = M.data[i];
@@ -52,9 +52,9 @@ mematrix<DT> &mematrix<DT>::operator=(const mematrix<DT> &M)
 		data = new (nothrow) DT [M.ncol*M.nrow];
 		if (!data) 
 		{
-			fprintf(stderr,"mematrix=: cannot allocate memory (%d,%d)\n",M.nrow,M.ncol);
+			//fprintf(stderr,"mematrix=: cannot allocate memory (%d,%d)\n",M.nrow,M.ncol);
 			delete [] data;
-			exit(1);
+			error("mematrix=: cannot allocate memory");
 		}
 		ncol = M.ncol;
 		nrow = M.nrow;
@@ -69,8 +69,8 @@ DT &mematrix<DT>::operator[](int i)
 {
 	if (i<0 || i>=(ncol*nrow)) 
 	{
-		fprintf(stderr,"mematrix[]: %d out of bounds (0,%d)\n",i,nrow*ncol-1);
-		exit(1);
+		//fprintf(stderr,"mematrix[]: %d out of bounds (0,%d)\n",i,nrow*ncol-1);
+		error("mematrix[]: out of bounds");
 	}
 	return data[i];
 }
@@ -86,8 +86,8 @@ mematrix<DT> mematrix<DT>::operator+(mematrix<DT> &M)
 {
 	if (ncol != M.ncol || nrow != M.nrow)
 	{
-		fprintf(stderr,"mematrix+: matrices not equal in size (%d,%d) and (%d,%d)",nrow,ncol,M.nrow,M.ncol);
-		exit(1);
+		//fprintf(stderr,"mematrix+: matrices not equal in size (%d,%d) and (%d,%d)",nrow,ncol,M.nrow,M.ncol);
+		error("mematrix+: matrices not equal in size");
 	}
 	mematrix<DT> temp(nrow,ncol);
 	for (int i=0;i<nelements;i++) temp.data[i] = data[i] + M.data[i];
@@ -105,8 +105,8 @@ mematrix<DT> mematrix<DT>::operator-(mematrix<DT> &M)
 {
 	if (ncol != M.ncol || nrow != M.nrow)
 	{
-		fprintf(stderr,"mematrix-: matrices not equal in size (%d,%d) and (%d,%d)",nrow,ncol,M.nrow,M.ncol);
-		exit(1);
+		//fprintf(stderr,"mematrix-: matrices not equal in size (%d,%d) and (%d,%d)",nrow,ncol,M.nrow,M.ncol);
+		error("mematrix-: matrices not equal in size");
 	}
 	mematrix<DT> temp(nrow,ncol);
 	for (int i=0;i<nelements;i++) temp.data[i] = data[i] - M.data[i];
@@ -124,8 +124,8 @@ mematrix<DT> mematrix<DT>::operator*(mematrix<DT> &M)
 {
 	if (ncol != M.nrow)
 	{
-		fprintf(stderr,"mematrix*: ncol != nrow (%d,%d) and (%d,%d)",nrow,ncol,M.nrow,M.ncol);
-		exit(1);
+		//fprintf(stderr,"mematrix*: ncol != nrow (%d,%d) and (%d,%d)",nrow,ncol,M.nrow,M.ncol);
+		error("mematrix*: ncol != nrow");
 	}
 	mematrix<DT> temp(nrow,M.ncol);
 	for (int j=0;j<temp.nrow;j++)
@@ -150,13 +150,13 @@ void mematrix<DT>::reinit(int nr, int nc)
 	if (nelements>0) delete [] data;
 	if (nr<=0)
 	{
-		fprintf(stderr,"mematrix(): nr <= 0\n");
-		exit(1);
+		//fprintf(stderr,"mematrix(): nr <= 0\n");
+		error("mematrix(): nr <= 0");
 	}
 	if (nc<=0)
 	{
-		fprintf(stderr,"mematrix(): nc <= 0\n");
-		exit(1);
+		//fprintf(stderr,"mematrix(): nc <= 0\n");
+		error("mematrix(): nc <= 0");
 	}
 	nrow = nr;
 	ncol = nc;
@@ -164,8 +164,8 @@ void mematrix<DT>::reinit(int nr, int nc)
 	data = new (nothrow) DT [ncol*nrow];
 	if (!data) 
 	{
-		fprintf(stderr,"mematrix(nr,nc): cannot allocate memory (%d,%d)\n",nrow,ncol);
-		exit(1);
+		//fprintf(stderr,"mematrix(nr,nc): cannot allocate memory (%d,%d)\n",nrow,ncol);
+		error("mematrix(nr,nc): cannot allocate memory");
 	}
 }
 template <class DT> 
@@ -173,13 +173,13 @@ DT mematrix<DT>::get(int nr, int nc)
 {
 	if (nc<0 || nc>ncol) 
 	{
-		fprintf(stderr,"mematrix::get: column out of range: %d not in (0,%d)\n",nc,ncol);
-		exit(1);
+		//fprintf(stderr,"mematrix::get: column out of range: %d not in (0,%d)\n",nc,ncol);
+		error("mematrix::get: column out of range");
 	}
 	if (nr <0 || nr>nrow) 
 	{
-		printf("mematrix::get: row out of range: %d not in (0,%d)\n",nr,nrow);
-		exit(1);
+		//printf("mematrix::get: row out of range: %d not in (0,%d)\n",nr,nrow);
+		error("mematrix::get: row out of range");
 	}
 	DT temp = data[nr*ncol+nc];
 	return temp;
@@ -189,13 +189,13 @@ void mematrix<DT>::put(DT value, int nr, int nc)
 {
 	if (nc<0 || nc>ncol) 
 	{
-		fprintf(stderr,"mematrix::put: column out of range: %d not in (0,%d)\n",nc,ncol);
-		exit(1);
+		//fprintf(stderr,"mematrix::put: column out of range: %d not in (0,%d)\n",nc,ncol);
+		error("mematrix::put: column out of range");
 	}
 	if (nr <0 || nr>nrow) 
 	{
-		printf("mematrix::put: row out of range: %d not in (0,%d)\n",nr,nrow);
-		exit(1);
+		//printf("mematrix::put: row out of range: %d not in (0,%d)\n",nr,nrow);
+		error("mematrix::put: row out of range");
 	}
 	data[nr*ncol+nc] = value;
 }
@@ -204,8 +204,8 @@ DT mematrix<DT>::column_mean(int nc)
 {
 	if (nc>= ncol || nc <0)
 	{
-		fprintf(stderr,"colmM bad column\n");
-		exit(1);
+		//fprintf(stderr,"colmM bad column\n");
+		error("colmM bad column");
 	}
 	DT out = 0.0;
 	for (int i =0;i<nrow;i++) out+= DT(data[i*ncol+nc]);
@@ -215,6 +215,7 @@ DT mematrix<DT>::column_mean(int nc)
 template <class DT> 
 void mematrix<DT>::print(void)
 {
+	/**
 	cout << "nrow=" << nrow << "; ncol=" << ncol << "; nelements=" << nelements << "\n";
 	for (int i=0;i<nrow;i++) {
 		cout << "nr=" << i << ":\t";
@@ -222,14 +223,16 @@ void mematrix<DT>::print(void)
 			cout << data[i*ncol+j] << "\t";
 		cout << "\n";
 	}
+	**/
+	Rprintf("mematrix::print called... but not defined :(\n");
 }
 template <class DT> 
 void mematrix<DT>::delete_column(int delcol)
 {
 	if (delcol > ncol || delcol < 0) 
 	{
-		fprintf(stderr,"mematrix::delete_column: column out of range\n");
-		exit(1);
+		//fprintf(stderr,"mematrix::delete_column: column out of range\n");
+		error("mematrix::delete_column: column out of range");
 	}
 	mematrix<DT> temp = *this;
 	if (nelements>0) delete [] data;
@@ -238,9 +241,9 @@ void mematrix<DT>::delete_column(int delcol)
 	data = new (nothrow) DT [ncol*nrow];
 	if (!data) 
 	{
-		fprintf(stderr,"mematrix::delete_column: cannot allocate memory (%d,%d)\n",nrow,ncol);
+		//fprintf(stderr,"mematrix::delete_column: cannot allocate memory (%d,%d)\n",nrow,ncol);
 		delete [] data;
-		exit(1);
+		error("mematrix::delete_column: cannot allocate memory");
 	}
 	int newcol=0;
 	for (int nr=0;nr<temp.nrow;nr++) {
@@ -255,8 +258,8 @@ void mematrix<DT>::delete_row(int delrow)
 {
 	if (delrow > nrow || delrow < 0) 
 	{
-		fprintf(stderr,"mematrix::delete_row: row out of range\n");
-		exit(1);
+		//fprintf(stderr,"mematrix::delete_row: row out of range\n");
+		error("mematrix::delete_row: row out of range");
 	}
 	mematrix<DT> temp = *this;
 	if (nelements>0) delete [] data;
@@ -265,9 +268,9 @@ void mematrix<DT>::delete_row(int delrow)
 	data = new (nothrow) DT [ncol*nrow];
 	if (!data) 
 	{
-		fprintf(stderr,"mematrix::delete_row: cannot allocate memory (%d,%d)\n",nrow,ncol);
+		//fprintf(stderr,"mematrix::delete_row: cannot allocate memory (%d,%d)\n",nrow,ncol);
 		delete [] data;
-		exit(1);
+		error("mematrix::delete_row: cannot allocate memory ");
 	}
 	int newrow=0;
 	for (int nc=0;nc<temp.ncol;nc++) {
@@ -296,8 +299,8 @@ mematrix<DT> reorder(mematrix <DT> &M, mematrix <int> order)
 {
 	if (M.nrow != order.nrow)
 	{
-		fprintf(stderr,"reorder: M & order have differet # of rows\n");
-		exit(1);
+		//fprintf(stderr,"reorder: M & order have differet # of rows\n");
+		error("reorder: M & order have differet # of rows");
 	}
 	mematrix<DT> temp(M.nrow,M.ncol);
 	for (int i=0;i<temp.nrow;i++)
@@ -311,8 +314,8 @@ mematrix<DT> productMatrDiag(mematrix <DT> &M, mematrix <DT> &D)
 {
 	if (M.ncol != D.nrow)
 	{
-		fprintf(stderr,"productMatrDiag: wrong dimenstions");
-		exit(1);
+		//fprintf(stderr,"productMatrDiag: wrong dimenstions");
+		error("productMatrDiag: wrong dimenstions");
 	}
 	mematrix<DT> temp(M.nrow,M.ncol);
 	for (int i=0;i<temp.nrow;i++)
@@ -338,8 +341,8 @@ mematrix<DT> invert(mematrix <DT> &M)
   {
 	if (M.ncol != M.nrow) 
 	{
-		fprintf(stderr,"invert: only suare matrices possible\n");
-		exit(1);
+		//fprintf(stderr,"invert: only square matrices possible\n");
+		error("invert: only square matrices possible");
 	}
 	if (M.ncol == 1) 
 	{
@@ -349,8 +352,8 @@ mematrix<DT> invert(mematrix <DT> &M)
 	for (int i=0;i<M.ncol;i++) 
 		if (M.data[i*M.ncol+i]==0) 
 		{
-			fprintf(stderr,"invert: zero elements in diagonal\n");
-			exit(1);
+			//fprintf(stderr,"invert: zero elements in diagonal\n");
+			error("invert: zero elements in diagonal");
 		}
 	int actualsize = M.ncol;
 	int maxsize = M.ncol;

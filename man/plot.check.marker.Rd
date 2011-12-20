@@ -6,7 +6,7 @@
 	\code{\link{check.marker}}
 }
 \usage{
-plot.check.marker(x, y, ...)
+	\method{plot}{check.marker}(x, y, ...)
 }
 \arguments{
   \item{x}{Object of class "check.marker", as returned by \code{\link{check.marker}} 

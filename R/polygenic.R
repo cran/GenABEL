@@ -2,9 +2,9 @@
 #' 
 #' This function maximises the likelihood of the data under polygenic 
 #' model with covariates an reports twice negative maximum likelihood estimates 
-#' and the inverse of variance-covariance matrix at the point of ML. 
+#' and the inverse of the variance-covariance matrix at the point of ML. 
 #' 
-#' One of the major use of this function is to estimate residuals of the 
+#' One of the major uses of this function is to estimate residuals of the 
 #' trait and the inverse of the variance-covariance matrix for 
 #' further use in analysis with \code{\link{mmscore}} and 
 #' \code{\link{grammar}}.
@@ -17,7 +17,7 @@
 #' the residual where both the effect of covariates AND the estimated 
 #' polygenic effect (breeding values) are factored out. This thus 
 #' provides an estimate of the trait value contributed by environment
-#' (or, turning this other way around, the part of trait not explained 
+#' (or, turning this other way around, the part of the trait not explained 
 #' by covariates and by the polygene). Polygenic residuals are estimated 
 #' as
 #' 
@@ -35,21 +35,21 @@
 #' It can also be used for heritability analysis.
 #' If you want to test significance of heritability, 
 #' estimate the model and write down 
-#' the function minimum reported at "h2an" element of the output 
-#' (this is twice negative MaxLikleihood). Then do next round of 
-#' estimation, but set fixh2=0. The difference between you function minima 
-#' gives a test distribued as chi-squared with 1 d.f.
+#' the function minimum reported at the "h2an" element of the output 
+#' (this is twice the negative MaxLikelihood). Then do a next round of 
+#' estimation, but set fixh2=0. The difference between your function minima 
+#' gives a test distributed as chi-squared with 1 d.f.
 #' 
-#' The way to compute the likleihood is partly based on 
+#' The way to compute the likelihood is partly based on 
 #' the paper of Thompson (see refs), namely instead of 
-#' taking inverse of var-cov matrix every time, 
+#' taking the inverse of the var-cov matrix every time, 
 #' eigenvectors of the inverse of G (taken only once) 
 #' are used.
 #' 
 #' 
-#' @param formula Formula describing fixed effects to be used in analysis, e.g. 
+#' @param formula Formula describing fixed effects to be used in the analysis, e.g. 
 #' y ~ a + b means that outcome (y) depends on two covariates, a and b. 
-#' If no covariates used in analysis, skip the right-hand side of the 
+#' If no covariates used in the analysis, skip the right-hand side of the 
 #' equation.
 #' @param kinship.matrix Kinship matrix, as provided by e.g. ibs(,weight="freq"), 
 #' or estimated outside of GenABEL from pedigree data.
@@ -61,28 +61,28 @@
 #' rest of MLEs and var.-cov. matrix.
 #' @param starth2 Starting value for h2 estimate
 #' @param trait.type "gaussian" or "binomial"
-#' @param opt.method "nlm" or "optim". These two use dirrerent optimisation functions. 
-#' We suggest using the default \code{\link{nlm}}, though 
+#' @param opt.method "nlm" or "optim". These two use different optimisation functions. 
+#' We suggest using the default \code{\link{nlm}}, although 
 #' \code{\link{optim}} may give better results in some situations
 #' @param scaleh2 Only relevant when "nlm" optimisation function is used. 
 #' "scaleh2" is the heritability 
-#' scaling parameter, regulating how "big" are parameter changes in h2 with the 
+#' scaling parameter, regulating how "big" are parameter changes in h2 with
 #' respect to changes in other parameters. As other parameters are estimated 
 #' from previous regression, these are expected to change little from the 
 #' initial estimate. The default value of 1000 proved to work rather well under a 
 #' range of conditions.
-#' @param quiet If FALSE (default), details of optimisation process are reported.
+#' @param quiet If FALSE (default), details of optimisation process are reported
 #' @param steptol steptal parameter of "nlm"
 #' @param gradtol gradtol parameter of "nlm" 
 #' @param optimbou fixed effects boundary scale parameter for 'optim'
-#' @param fglschecks additional check for convergance on/off (convergence 
+#' @param fglschecks additional check for convergence on/off (convergence 
 #' between estimates obtained and that from FGLS)
 #' @param maxnfgls number of fgls checks to perform
 #' @param maxdiffgls max difference allowed in fgls checks 
 #' @param patchBasedOnFGLS if FGLS checks not passed, 'patch' fixed 
 #' effect estimates based on FGLS expectation
 #' @param llfun function to compute likelihood (default 'polylik_eigen', also 
-#' avalable -- but not recommeneded -- 'polylik')
+#' available -- but not recommended -- 'polylik')
 #' @param ... Optional arguments to be passed to \code{\link{nlm}} or (\code{\link{optim}}) 
 #' minimisation function
 #' 
@@ -128,16 +128,17 @@
 #' @author Yurii Aulchenko, Gulnara Svischeva
 #' 
 #' @note 
-#' Presence of twins may complicate your analysis. Check kinship matrix for 
+#' Presence of twins may complicate your analysis. Check the kinship matrix for 
 #' singularities, or rather use \code{\link{check.marker}} for identification 
 #' of twin samples. Take special care in interpretation.
 #' 
-#' If a trait (no covarites) is used, make sure that order of IDs in 
+#' If a trait (no covariates) is used, make sure that the order of IDs in the
 #' kinship.matrix is exactly the same as in the outcome
 #' 
 #' Please note that there is alternative to 'polygenic', 
 #' \code{\link{polygenic_hglm}}, which is faster than 
-#' 'polygenic'.
+#' polygenic() with the llfun='polylik' option, but slightly slower than the
+#' default polygenic().
 #' 
 #' @seealso 
 #' \code{\link{polygenic_hglm}},
@@ -148,7 +149,7 @@
 #' # note that procedure runs on CLEAN data
 #' data(ge03d2ex.clean)
 #' gkin <- ibs(ge03d2ex.clean,w="freq")
-#' h2ht <- polygenic(height ~ sex + age,kin=gkin,ge03d2ex.clean)
+#' h2ht <- polygenic(height ~ sex + age, kin=gkin, ge03d2ex.clean)
 #' # estimate of heritability
 #' h2ht$esth2
 #' # other parameters
@@ -158,8 +159,8 @@
 #' # twice maximum log-likelihood
 #' -h2ht$h2an$minimum
 #' 
-#' #for binary trait (experimental)
-#' h2dm <- polygenic(dm2 ~ sex + age,kin=gkin,ge03d2ex.clean,trait="binomial")
+#' # for binary trait (experimental)
+#' h2dm <- polygenic(dm2 ~ sex + age, kin=gkin, ge03d2ex.clean, trait="binomial")
 #' # estimated parameters
 #' h2dm$h2an
 #' 
@@ -168,7 +169,7 @@
 #' 
 "polygenic" <-
 		function(formula,kinship.matrix,data,fixh2,starth2=0.3,trait.type="gaussian",
-				opt.method="nlm",scaleh2=1,quiet=FALSE,
+				opt.method="nlm",scaleh2=1,quiet=FALSE,  
 				steptol=1e-8, gradtol = 1e-8, optimbou = 8, 
 				fglschecks=TRUE,maxnfgls=8,maxdiffgls=1e-4, patchBasedOnFGLS = TRUE, 
 				llfun = "polylik_eigen", ...) {

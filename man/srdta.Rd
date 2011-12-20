@@ -11,7 +11,7 @@
 	analysis. Run demo(srdta) and check tut-srdta.pdf 
 	to see examples of work with this data set. 
 	Original data files used for this set are located at 
-	YOUR\_R\_LIB\_LOCATION/exdata/srphenos.dat (pehnotypes), 
+	YOUR\_R\_LIB\_LOCATION/exdata/srphenos.dat (phenotypes), 
 	srgenos.dat (human-readable genotypes) and srgenos.raw 
 	(genotypes in internal format)}
 \usage{data(srdta)}

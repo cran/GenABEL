@@ -6,7 +6,7 @@
 	to "double"
 }
 \usage{
-	as.double.snp.data(x, ...)
+	\method{as.double}{snp.data}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{snp.data-class}}}

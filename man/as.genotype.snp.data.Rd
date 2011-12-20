@@ -6,7 +6,7 @@
 	to "genotype" data frame
 }
 \usage{
-	as.genotype.snp.data(x, ...)
+	\method{as.genotype}{snp.data}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{snp.data-class}}}

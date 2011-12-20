@@ -295,7 +295,7 @@ extern "C" {
 
 		try {
 			p = new FileVector(filename,cachesizeMb,readonly);
-			cout << "open_FileMatrix_R, ptr = " << (void*)p << endl;
+			//cout << "open_FileMatrix_R, ptr = " << (void*)p << endl;
 		} catch (int errcode) {
 			return R_NilValue;
 		}
@@ -612,7 +612,7 @@ extern "C" {
 	*             1 -- copy values from @ptr to @values...
 	*/
 	SEXP assignDoubleMatrix(SEXP ptr, SEXP obsIndexes, SEXP varIndexes, SEXP values, SEXP direction){
-		flush(cout);
+		//flush(cout);
 		
 	    unsigned long varNum, obsNum, obsIndexNum, varIndexNum;
 
@@ -680,7 +680,7 @@ extern "C" {
 		PROTECT(ret = allocVector(LGLSXP, 1));
 		LOGICAL(ret)[0] = TRUE;
 		UNPROTECT(1);
-		flush(cout);
+		//flush(cout);
 		return ret;
 	}
 

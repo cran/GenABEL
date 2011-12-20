@@ -1,22 +1,30 @@
 "mmscore" <-
-function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,
-		bcast=10,clambda=TRUE,propPs=1.0) {
-  	if (is(data,"gwaa.data")) 
+		function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,
+				bcast=10,clambda=TRUE,propPs=1.0,cppFun="new") {
+	if (is(data,"gwaa.data")) 
 	{
 		checkphengen(data)
 		data <- data@gtdata
 	}
-  	if (!is(data,"snp.data")) {
+	if (!is(data,"snp.data")) {
 		stop("wrong data class: should be gwaa.data or snp.data")
-  	}
+	}
 	if (class(h2object) != "polygenic") stop("h2object must be of polygenic-class")
 	if (!missing(snpsubset)) data <- data[,snpsubset]
 	if (!missing(idsubset)) data <- data[idsubset,]
 	if (missing(strata)) {nstra=1; strata <- rep(0,data@nids)}
-
+	
 	if (length(strata)!=data@nids) stop("Strata variable and the data do not match in length")
 	if (any(is.na(strata))) stop("Strata variable contains NAs")
-
+	
+	cppFunOptions <- c("old","new")
+	fMatch <- match(cppFun,cppFunOptions,nomatch=0)
+	if (fMatch==0) {
+		stop(paste("cppFun must be one of",cppFunOptions))
+	} else {
+		calledFun = c("mmscore_20090127","mmscore_20110916")[fMatch]
+	}
+	
 	tmeas <- h2object$measuredIDs
 	resid <- h2object$residualY
 	if (any(tmeas == FALSE)) {
@@ -35,20 +43,20 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,
 		rm(tstr)
 	}
 	nstra <- length(levels(as.factor(strata)))
-
+	
 	lenn <- data@nsnps;
 	out <- list()
 	for (j in c(1:(times+1*(times>1)))) {
 		if (j>1) resid <- sample(resid,replace=FALSE)
-		chi2 <- .C("mmscore_20090127",as.raw(data@gtps),as.double(resid),as.double(h2object$InvSigma),as.integer(data@nids),as.integer(data@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(7*data@nsnps), PACKAGE="GenABEL")$chi2
+		chi2 <- .C(calledFun,as.raw(data@gtps),as.double(resid),as.double(h2object$InvSigma),as.integer(data@nids),as.integer(data@nsnps), as.integer(nstra), as.integer(strata), chi2 = double(7*data@nsnps), PACKAGE="GenABEL")$chi2
 		if (any(data@chromosome=="X")) {
-		  ogX <- data[,data@chromosome=="X"]
-		  sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
-		  chi2X <- .C("mmscore_20090127",as.raw(ogX@gtps),as.double(resid),as.double(h2object$InvSigma),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(7*ogX@nsnps), PACKAGE="GenABEL")$chi2
-		  revec <- (data@chromosome=="X")
-		  revec <- rep(revec,6)
-		  chi2 <- replace(chi2,revec,chi2X)
-		  rm(ogX,chi2X,revec);gc(verbose=FALSE)
+			ogX <- data[,data@chromosome=="X"]
+			sxstra <- strata; sxstra[ogX@male==1] <- strata[ogX@male==1]+nstra
+			chi2X <- .C(calledFun,as.raw(ogX@gtps),as.double(resid),as.double(h2object$InvSigma),as.integer(ogX@nids),as.integer(ogX@nsnps), as.integer(nstra*2), as.integer(sxstra), chi2 = double(7*ogX@nsnps), PACKAGE="GenABEL")$chi2
+			revec <- (data@chromosome=="X")
+			revec <- rep(revec,6)
+			chi2 <- replace(chi2,revec,chi2X)
+			rm(ogX,chi2X,revec);gc(verbose=FALSE)
 		}
 		if (j == 1) {
 			chi2.1df <- chi2[1:lenn];
@@ -105,7 +113,7 @@ function(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,
 		}
 	}
 	if (times > bcast) cat("\n")
-
+	
 	if (times>1) {
 		P1df <- pr.1df/times
 		P1df <- replace(P1df,(P1df==0),1/(1+times))

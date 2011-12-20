@@ -6,7 +6,7 @@
 	to "character"
 }
 \usage{
-	as.character.snp.coding(x, ...)
+	\method{as.character}{snp.coding}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{snp.coding-class}}}

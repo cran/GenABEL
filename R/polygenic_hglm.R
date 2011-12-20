@@ -127,8 +127,16 @@
 	relmat <- relmat*2.0
 	s <- svd(relmat)
 	L <- s$u %*% diag(sqrt(s$d))
+	#res_hglm <- try( hglm(y = y, X = desmat, Z = L, family = family, conv = conv, maxit = maxit, ... ) )
 	res_hglm <- hglm(y = y, X = desmat, Z = L, family = family, conv = conv, maxit = maxit, ... )
 	#sum_res_hglm <- summary(res_hglm)
+	
+	#if (is(try(tmp <- res_hglm$fixef),"try-error")) {
+	#	warning("HGLM failed")
+	#	return(res_hglm)
+	#}
+	#if (length(names(res_hglm$fixef))<1) 
+	#	names(res_hglm$fixef) <- paste("fe",1:length(res_hglm$fixef),sep="")
 	
 	out <- list()
 	
@@ -140,7 +148,12 @@
 	out$h2an$estimate <- c(res_hglm$fixef,out$esth2, tVar)
 	names(out$h2an$estimate)[(length(out$h2an$estimate) - 1):(length(out$h2an$estimate))] <- 
 			c("h2","totalVar")
-	out$h2an$se <- c(res_hglm$SeFe, NA, NA)
+	if (is.null(res_hglm$SeFe)) {
+		warning("Convergence failure HGLM!")
+		out$h2an$se <- rep(NA,length(res_hglm$fixef)+2)
+	} else {
+		out$h2an$se <- c(res_hglm$SeFe, NA, NA)
+	}
 	names(out$h2an$se) <- 
 			c(names(res_hglm$fixef), "h2","totalVar")
 	out$pgresidualY <- rep(NA, length(mids))

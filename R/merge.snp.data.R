@@ -141,6 +141,14 @@ monos <- function(data) {
 }
 #x_filtered_mono_x_not_mono_y <- which(monos(coding(x)[which_snp_intersect_in_x]) & 
 #				!monos(coding(y)[which_snp_intersect_in_y]))
+#print(which_snp_intersect_in_y)
+#print(coding(y))
+#print(coding(y)[which_snp_intersect_in_y])
+#print(!monos(coding(y)[which_snp_intersect_in_y]))
+#
+# do this only if there is any intersection between SNPs
+#
+if (length(which_snp_intersect_in_y)>0 || length(which_snp_intersect_in_x)>0) {
 if_mono_x_not_mono_y <- monos(coding(x)[which_snp_intersect_in_x]) & 
 				!monos(coding(y)[which_snp_intersect_in_y])
 which_mono_x_not_mono_y <- which_snp_intersect_in_x[if_mono_x_not_mono_y]
@@ -199,6 +207,7 @@ for (iii in which_mono_y_not_mono_x) {
 	coding(y)[iii] <- newC
 #	print(newC)
 }
+}
 ##### END taking care of monomorphics ###################
 
 if(intersected_snps_only) 
@@ -231,7 +240,8 @@ if(length(levels(chromosome_logic_vec_factor)) > 1)
 #	stop("For intersected SNPs several values in chromosome vector for x is not concur with values in y. Check your data sets.\n") 
 	}
 
-if(length(levels(chromosome_logic_vec_factor)) == 0)
+anyIntersectingSNPs <- !(length(levels(chromosome_logic_vec_factor)) == 0)
+if(!anyIntersectingSNPs)
 	{
 	cat("There are no intersecting SNPs\n")
 	if(intersected_snps_only) return(list(data=NULL, id=NULL, snp=NULL))

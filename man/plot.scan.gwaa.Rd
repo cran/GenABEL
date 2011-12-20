@@ -5,8 +5,8 @@
 Plots results of GWA analysis
 }
 \usage{
-plot.scan.gwaa(x, y, ..., df=1, ystart=0, col=c("blue","green"), 
-	sort=TRUE, ylim, delta = 1 , main = getcall(x))
+	\method{plot}{scan.gwaa}(x, y, ..., df=1, ystart=0, col=c("blue","green"), 
+		sort=TRUE, ylim, delta = 1 , main = getcall(x))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

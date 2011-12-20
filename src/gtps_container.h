@@ -18,7 +18,7 @@
 #ifndef SMV_GTPS_CONTAINER_H
 #define SMV_GTPS_CONTAINER_H
 
-
+#include <R.h>
 
 #include<iostream>
 #include<vector>

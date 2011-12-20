@@ -6,7 +6,7 @@
 	to "character"
 }
 \usage{
-	as.character.snp.strand(x, ...)
+	\method{as.character}{snp.strand}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{snp.strand-class}}}

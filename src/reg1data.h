@@ -86,8 +86,8 @@ public:
 		ncov = regdat.ncov;
 		if (regdat.noutcomes != 2)
 		{
-			fprintf(stderr,"coxph_data: number of outcomes should be 2 (now: %d)\n",regdat.noutcomes);
-			exit(1);
+			//fprintf(stderr,"coxph_data: number of outcomes should be 2 (now: %d)\n",regdat.noutcomes);
+			error("coxph_data: number of outcomes should be 2");
 		}
 		X.reinit(nids,ncov);		
 		stime.reinit(nids,1);
@@ -102,8 +102,8 @@ public:
 			sstat[i] = int((regdat.Y).get(i,1));
 			if (sstat[i] != 1 & sstat[i]!=0) 
 			{
-				fprintf(stderr,"coxph_data: status not 0/1 (right order: id, fuptime, status ...)\n");
-				exit(1);
+				//fprintf(stderr,"coxph_data: status not 0/1 (right order: id, fuptime, status ...)\n");
+				error("coxph_data: status not 0/1 (right order: id, fuptime, status ...)");
 			}
 		}
 		for (int j=0;j<ncov;j++) 
@@ -135,8 +135,8 @@ public:
 				}
 			if (passed != 1) 
 			{
-				fprintf(stderr,"can not recover element %d\n",i);
-				exit(1);
+				//fprintf(stderr,"can not recover element %d\n",i);
+				error("can not recover element");
 			}
 		}
 		delete [] tmptime;

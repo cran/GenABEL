@@ -53,7 +53,7 @@ extern "C" {
 
 		try {
 			p = new FilteredMatrix(*abstractMatrix);
-			cout << "create_FilteredMatrixFromAbstractMatrix_R = " << (void*)p << endl; 
+			//cout << "create_FilteredMatrixFromAbstractMatrix_R = " << (void*)p << endl;
 		} catch (int errcode) {
 			return R_NilValue;
 		}
@@ -76,7 +76,7 @@ extern "C" {
 
 		try {
 			p = new FilteredMatrix(*filteredMatrix);
-			cout << "create_FilteredMatrixFromFilteredMatrix_R = " << (void*)p << endl; 
+			//cout << "create_FilteredMatrixFromFilteredMatrix_R = " << (void*)p << endl;
 		} catch (int errcode) {
 			return R_NilValue;
 		}

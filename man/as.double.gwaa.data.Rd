@@ -6,7 +6,7 @@
 	to "double"
 }
 \usage{
-	as.double.gwaa.data(x, ...)
+	\method{as.double}{gwaa.data}(x, ...)
 }
 \arguments{
   \item{x}{An object of \code{\link{gwaa.data-class}}}
