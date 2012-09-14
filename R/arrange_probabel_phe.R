@@ -33,7 +33,7 @@ arrange_probabel_phe <- function(modelterms,phedata,gendata,file="probabel.PHE")
 {
 	if (class(phedata) == "gwaa.phedata") phedata <- phdata(phedata)
 	else if (is.character(phedata)) 
-		phedata <- read.table(phedata,head=T,strings=F)	
+		phedata <- read.table(phedata,header=TRUE,stringsAsFactors=FALSE)	
 	else if (class(phedata) != "data.frame" && class(phedata) != "matrix")
 		stop("phedata should be of class 'gwaa.phedata', 'data.frame', or 'matrix'")
 	

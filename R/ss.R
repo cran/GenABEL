@@ -366,7 +366,7 @@ setMethod(
 			}
 			if (!is.null(lambda(object)) & !any(names(tmp)=="Pc1df")) {
 				chi2.1df_corr <- tmp$chi2.1df/lambda(object)$estimate
-				tmp$Pc1df <- pchisq(chi2.1df_corr, df=1, low=FALSE)
+				tmp$Pc1df <- pchisq(chi2.1df_corr, df=1, lower.tail=FALSE)
 			}
 			return(tmp)
 		}

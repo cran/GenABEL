@@ -55,7 +55,8 @@ data(srdta)
 a<-ccfast("bt",data=srdta,snps=c(500:800))
 plot(a)
 # this does not make sense, as the whole experiment must be analysed, not a small region!
-b<-emp.ccfast("bt",data=srdta,snps=c(500:800),bcast=10)
+# also, times = 20 is way too small (should be at least 200)
+b<-emp.ccfast("bt",data=srdta,snps=c(500:800),bcast=10, times = 20)
 plot(b)
 # compare qvalues and empirical P
 qv<-qvaluebh95(a[,"P1df"])$qval

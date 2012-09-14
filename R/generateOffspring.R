@@ -59,6 +59,6 @@ generateOffspring <- function(g1,g2,q=NULL) {
 	}
 # generate offspring genotypes
 	g1g2 <- t(matrix(c(g1+1,g2+1),ncol=2))
-	res <- apply(g1g2,MAR=2,FUN=genSOG)
+	res <- apply(g1g2,MARGIN=2,FUN=genSOG)
 	res
 }

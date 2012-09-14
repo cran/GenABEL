@@ -1,3 +1,40 @@
+***  v. 1.7-2 (2012.10.14)
+
+(2012.09.14, YA)  
+
+Changes in DESCRIPTION and version
+
+(2012.08.29, YA)
+
+Small changes related to CRAN release of 1.7-1; this release is to be 
+updated to 1.7-2 as soon as the Grammar-Gamma paper is published and 
+some feedback is collected for the 1.7-1
+
+(2012.08.15, YA)
+
+Small updates to documentation, verifying that checks are passed. 
+Many NOTEs about use of partial arguments - something to fix 
+eventually. 
+
+(2012.08.09, YT)
+
+Add new function GC (Genomic control for non-additive models) and GC_ovdom fot overdominant model.
+Update some functions.
+
+(2012.07.06, YT)
+
+Removed documentation file grammar.old.Rd as obsolete
+Add new function PGC (Polynomial genomic control for non-additive models)
+
+*** v. 1.7-1 (2012.04.27)
+
+Replaced 'grammar' function with new one, allowing 'raw', 'gc' 
+and 'gamma' varieties of the method.
+
+Added option weight = "eVar" to 'ibs'. This uses empirical variance of 
+genotypes when estimating kinship matrix. This is useful when working with 
+such data as Arabidopsis.  
+
 *** v. 1.7-0 (2011.12.20)
 
 Addressed bug [#1383] (message about upgrade on loading the library 
@@ -324,6 +361,7 @@ Default formetascore's argument transform set to "no"
 New function "var.meta" added. 
 Function is intended for pooling (meta-analysing) trait means for 
 different genotypes separately.Input files have to be like in example 
+
 below (plink generate this kind of files). At the end you have one file 
 in same format but with pooled MEANs and SDs
 

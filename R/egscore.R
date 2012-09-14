@@ -97,7 +97,7 @@ function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,
 					lambda$se <- NA
 				} else {
 					if (lenn<100) warning("Number of observations < 100, Lambda estimate is unreliable")
-					lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
+					lambda <- estlambda(chi2.1df,plot=FALSE,proportion=propPs)
 					if (lambda$estimate<1.0 && clambda==TRUE) {
 						warning("Lambda estimated < 1, set to 1")
 						lambda$estimate <- 1.0
@@ -147,9 +147,9 @@ function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,
 		Pc1df <- pr.c1df/times
 		Pc1df <- replace(Pc1df,(Pc1df==0),1/(1+times))
 	} else {
-		P1df <- pchisq(chi2.1df,1,lower=F)
-		P2df <- pchisq(chi2.2df,actdf,lower=F)
-		Pc1df <- pchisq(chi2.c1df,1,lower=F)
+		P1df <- pchisq(chi2.1df,1,lower.tail=FALSE)
+		P2df <- pchisq(chi2.2df,actdf,lower.tail=FALSE)
+		Pc1df <- pchisq(chi2.c1df,1,lower.tail=FALSE)
 	}
 	#out$lambda <- lambda
 	#out$effB <- effB

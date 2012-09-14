@@ -63,7 +63,8 @@ data(srdta)
 a<-qtscore(qt3~age+sex,data=srdta,snps=c(1:200))
 plot(a)
 # this does not make sense, as the whole experiment must be analysed, not a small region!
-b<-emp.qtscore(qt3~age+sex,data=srdta,snps=c(1:200))
+# also, times = 20 is way too small (should be at least 200)
+b<-emp.qtscore(qt3~age+sex,data=srdta,snps=c(1:200), times = 20)
 plot(b)
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

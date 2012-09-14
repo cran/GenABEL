@@ -54,8 +54,10 @@ is in matrix format as these P-values are generated for each pair of SNPs in tur
 	\code{\link{scan.haplo.2D}}
 }
 \examples{
+\dontrun{
 data(srdta)
 a <- scan.glm.2D("bt~sex+age+CRSNP",family=binomial(),data=srdta,snps=(1:10),bcast=2)
 plot(a)
+}
 }
 \keyword{htest}% at least one, from doc/KEYWORDS

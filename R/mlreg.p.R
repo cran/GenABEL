@@ -91,7 +91,9 @@ function(formula,data,snpsubset,idsubset,gtmode="additive",trait.type="guess")
 	rownames(chi2) <- gtdata@snpnames
 	chi2[abs(chi2+999.9)<1.e-6] <- NA
 	chi2.1df <- (chi2$beta/chi2$sebeta)^2
-	out <- data.frame(snpnames=gtdata@snpnames,chromosome=gtdata@chromosome,map=gtdata@map,N=chi2$N,effB=chi2$beta,se.effB=chi2$sebeta,chi2.1df=chi2.1df,P1df=pchisq(chi2.1df,1,lower=F),stringsAsFactors = FALSE)
+	out <- data.frame(snpnames=gtdata@snpnames,chromosome=gtdata@chromosome,map=gtdata@map,
+			N=chi2$N,effB=chi2$beta,se.effB=chi2$sebeta,chi2.1df=chi2.1df,
+			P1df=pchisq(chi2.1df,1,lower.tail=F),stringsAsFactors = FALSE)
 #	class(out) <- "scan.gwaa"
 	out
 }

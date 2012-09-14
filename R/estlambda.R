@@ -54,7 +54,7 @@
 #			warning(paste("Some probabilities < 1.e-16; set to 1.e-16"))
 #			data[lt16] <- 1.e-16
 #		}
-		data <- qchisq(data,1,low=FALSE)
+		data <- qchisq(data,1,lower.tail=FALSE)
 	}
 	if (filter) 
 	{

@@ -3,7 +3,7 @@ function(infile,outfile,bcast=10000) {
 	ifile <- file(infile,"r")
 	ofile <- file(outfile,"w")
 	header <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE)
-	vver <- grep(x=header,pat="version")
+	vver <- grep(x=header,pattern="version")
 	if (length(vver)>0) {ver <- as.numeric(header[vver+1]);} else {ver <- 0;}
 	if (is.na(ver)) warning("Incorrect data format version number")
 	if (ver > 0) {ids <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE);}

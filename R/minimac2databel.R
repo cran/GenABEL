@@ -1,4 +1,3 @@
-#'
 #' converts Minimac-imputed files to DatABEL (filevector) format
 #'
 #' This function converts Minimac-imputed files to \code{DatABEL} (filevector) format.

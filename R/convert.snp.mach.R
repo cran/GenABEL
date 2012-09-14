@@ -7,14 +7,14 @@
 	cat("****************************************\n")
 	
 	cat("Converting data to raw format...\n")
-	convert.snp.ped(pedf=pedfile,mapf=mapfile,outf=outfile,format="mach", wslash=T, strand=strand, ... )
+	convert.snp.ped(pedfile=pedfile,mapfile=mapfile,outfile=outfile,format="mach", wslash=T, strand=strand, ... )
 	if (quality<=0) {
 		cat("No quality filtering - Done.\n")
     		return(invisible(0))
 	}
 	
 	cat("Reading info-file...\n")
-	info <- read.table(file=infofile,head=T)
+	info <- read.table(file=infofile,header=TRUE)
 	ncols <- dim(info)[2]
 	if (ncols!=7) stop("Wrong number of columns in info-file")
 	nrows <- dim(info)[1]
@@ -23,7 +23,7 @@
 	cat("Loading raw data...\n")
 	ifile <- file(outfile,"r")
 	header <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE)
-	vver <- grep(x=header,pat="version")
+	vver <- grep(x=header,pattern="version")
 	if (length(vver)>0) {ver <- as.numeric(header[vver+1]);} else {ver <- 0;}
 	if (is.na(ver)) warning("Incorrect data format version number")
 	if (ver > 0) {ids <- scan(file=ifile,what=character(),nlines=1,quiet=TRUE);}
@@ -67,7 +67,7 @@
 	npsd<-table(pass)["FALSE"]
 	cat("SNP filtering done --",psd,"passed quality threshold,",npsd,"did not pass...\n")
 	cat("Writing data...\n")
-	save.snp.data(a,genof=outfile,human=FALSE)
+	save.snp.data(a,genofile=outfile,human=FALSE)
 	
     	return(invisible(0))
 }

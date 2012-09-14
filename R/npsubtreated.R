@@ -12,7 +12,7 @@
 	
 	if (increase) x1$y.obs <- (-1)*x1$y.obs
 
-	ord <- sort.int(x1$y.obs,dec=T,index=T)$ix
+	ord <- sort.int(x1$y.obs,decreasing=T,index.return=T)$ix
 	x1 <- x1[ord,]
 	subtr <- mean(x1$y.obs)
 	x1$y.1 <- x1$y.obs - subtr

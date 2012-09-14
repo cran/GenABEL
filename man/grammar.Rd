@@ -1,106 +1,102 @@
 \name{grammar}
 \alias{grammar}
-\title{Approximate score test for association in related people}
-\description{
-Fast approximate score test for association between a trait and genetic polymorphism, 
-in samples of related individuals. When used with argument "times=1", it is equivalent to 
-running \code{\link{qtscore}} on "environmental residuals" from \code{\link{polygenic}}.
-However, it does not produce correct results with permutations, because the raw 
-trait values, which are not exchangeable, are permuted. Use \code{\link{qtscore}} 
-on "environmental residuals" when you want to have empirical GW significance with GRAMMAR 
-method.
-}
+\title{GRAMMAR test for association in samples with genetic structure}
 \usage{
-grammar(h2object,data,snpsubset,idsubset,strata,times=1,quiet=FALSE,bcast=10,clambda=FALSE,propPs=1.0)
+  grammar(polyObject, data,
+    method = c("gamma", "gc", "raw"), propPs = 1, ...)
 }
 \arguments{
-  \item{h2object}{An object returned by \code{\link{polygenic}} polygenic mixed model analysis 
-	routine. The sub-objects used are measuredIDs, residualY, h2an\$estimates (last element, 
-	total variance, only), and InvSigma. 
-	One can supply grammar with a fake h2object, containing these list elements. 
-	}
-  \item{data}{An object of \code{\link{gwaa.data-class}}}
-  \item{snpsubset}{Index, character or logical vector with subset of SNPs to run analysis on. 
-		If missing, all SNPs from \code{data} are used for analysis.}
-  \item{idsubset}{Index, character or logical vector with subset of IDs to run analysis on. 
-		If missing, all people from \code{data/cc} are used for analysis.}
-  \item{strata}{Stratification variable. If provieded, scores are computed within strata and 
-		then added up.}
-  \item{times}{If more then one, the number of replicas to be used in derivation of 
-		empirical genome-wide significance. NOTE: do not use times > 1 
-		unless you are really sure you understand what you are doing!
-		}
-  \item{quiet}{do not print warning messages}
-  \item{bcast}{If the argument times > 1, progress is reported once in bcast replicas}
-  \item{clambda}{If inflation facor Lambda is estimated as lower then one, this parameter 
-		controls if the original P1df (clambda=TRUE) to be reported in Pc1df, 
-		or the original 1df statistics is to be multiplied onto this "deflation" 
-		factor (clambda=FALSE). With GRAMMAR, Lambda is expected ot be less than 1.
-		If a numeric value is provided, it is used as a correction factor.}
-  \item{propPs}{proportion of non-corrected P-values used to estimate the inflation factor Lambda,
-		passed directly to the \code{\link{estlambda}}}
-}
-\details{
-	Approximate score test is performed using the formula
+  \item{polyObject}{object returned by
+  \code{\link{polygenic}} function}
 
-	\deqn{
-	\sigma^4 \frac{((G-E[G]) V^{-1} residualY)^2}{(G-E[G]) (G-E[G])}
-	}{
-	sigma^4 (((G-E[G]) V^(-1) residualY)^2)/((G-E[G]) (G-E[G]))
-	}
+  \item{data}{object of \code{\link{gwaa.data-class}}}
 
-	where $sigma^4$ is the square of the residual 
-	variance, $G$ is the vector of genotypes (coded 0, 1, 2) and $E[G]$ is 
-	a vector of (strata-specific) mean genotypic values; 
-	\eqn{V^{-1}}{V^(-1)} 
-	is the 
-	InvSigma and $residualY$ are residuals from the trait analysis 
-	with \code{\link{polygenic}} procedure.
+  \item{method}{to be used, one of 'gamma','gc', or 'raw'}
 
-	Compared to score test implemented in \code{\link{mmscore}}, grammar 
-	test is faster and computation time grows only linearly with the 
-	number of subjects (with \code{\link{mmscore}} this relation is 
-	quadratic). While raw P1df from grammar are not quite correct, 
-	the GC p-values correspond very closely to these from the \code{\link{mmscore}}.
+  \item{propPs}{proportion of non-corrected P-values used
+  to estimate the inflation factor Lambda, passed directly
+  to the \code{\link{estlambda}}}
+
+  \item{...}{arguments passed to the function used for
+  computations, (\code{\link{qtscore}})}
 }
 \value{
-  Object of class \code{\link{scan.gwaa-class}}; only 1 d.f. test is 
-  implemented currently.
+  Object of scan.gwaa-class
 }
-\references{
-Aulchenko YS, de Koning DJ, Haley C. Genomewide rapid association using mixed model 
-and regression: a fast and simple method for genome-wide pedigree-based quantitative 
-trait loci association analysis. Genetics. 2007 177(1):577-85.
+\description{
+  Fast approximate test for association between a trait and
+  genetic polymorphism, in samples with genetic
+  sub-structure (e.g. relatives). The function implements
+  several varieties of GRAMMAR ('gamma','gc', and 'raw').
+}
+\details{
+  With 'raw' argument, the original GRAMMAR (Aulchenko et
+  al., 2007) is implemented. This method is conservative
+  and generates biased estimates of regression
+  coefficients.
 
-Amin N, van Duijn CM, Aulchenko YS. A genomic background based method for 
-association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274. 
-}
-\author{Yurii Aulchenko}
-%\note{}
-\seealso{
-\code{\link{grammar}},
-\code{\link{qtscore}},
-\code{\link{plot.scan.gwaa}},
-\code{\link{scan.gwaa-class}}
+  With 'gc' argument, the GRAMMAR-GC (Amin et al., 2007) is
+  implemented. This method solves conservativity of the
+  test, but the Genomic Control (GC) lambda is by
+  definition "1" and can not serve as an indicator of
+  goodness of the model; also, the estimates of regression
+  coefficients are biased (the same as in 'raw' GRAMMAR).
+
+  GRAMMAR-Gamma (default 'gamma' argument) solves these
+  problems, producing correct distribution of the test
+  statistic, interpretable value of GC Lambda, and unbiased
+  estimates of the regression coefficients. All together,
+  the default 'gamma' method is recommended for use.
 }
 \examples{
-# ge03d2.clean is rather bad data set to demonstrate grammar, 
-# because this is a population-based study
+# Using clean ge03d2 data
 data(ge03d2.clean)
-#take half for speed
-ge03d2.clean <- ge03d2.clean[1:100,]
-gkin <- ibs(ge03d2.clean,w="freq")
+#take small piece for speed
+ge03d2.clean <- ge03d2.clean[1:200,]
+# estimate genomic kinship
+gkin <- ibs(ge03d2.clean[,sample(autosomal(ge03d2.clean),1000)],w="freq")
+# perform polygneic analysis
 h2ht <- polygenic(height ~ sex + age,kin=gkin,ge03d2.clean)
 h2ht$est
-# can use "grammar", but ...
-a <- grammar(h2ht,data=ge03d2.clean)
-# ... use rather qtscore (note clam=FALSE), which is a better alternative for the same thing
-a <- qtscore(h2ht$pgres,data=ge03d2.clean,clam=FALSE)
-# compare to GC:
-b <- qtscore(height ~ sex + age,data=ge03d2.clean)
-plot(b,df="Pc1df")
-add.plot(a,df="Pc1df")
-# relatively large difference is due to high heritability
-# note that locus at chromosome 2 should indeed be there...
+# compute mmscore stats
+mm <- mmscore(h2ht,data=ge03d2.clean)
+# compute grammar-gc
+grGc <- grammar(h2ht,data=ge03d2.clean,method="gc")
+#compute grammar-gamma
+grGamma <- grammar(h2ht,data=ge03d2.clean,method="gamma")
+# compare lambdas
+lambda(mm)
+estlambda(mm[,"chi2.1df"])
+lambda(grGamma)
+estlambda(grGamma[,"chi2.1df"])
+lambda(grGc)
+estlambda(grGc[,"chi2.1df"])
+#compare top results
+summary(mm)
+summary(grGamma)
+summary(grGc)
 }
-\keyword{htest}% at least one, from doc/KEYWORDS
+\author{
+  Gulnara Svisheva, Yurii Aulchenko
+}
+\references{
+  GRAMMAR-Raw: Aulchenko YS, de Koning DJ, Haley C.
+  Genomewide rapid association using mixed model and
+  regression: a fast and simple method for genomewide
+  pedigree-based quantitative trait loci association
+  analysis. Genetics. 2007 Sep;177(1):577-85.
+
+  GRAMMAR-GC: Amin N, van Duijn CM, Aulchenko YS. A genomic
+  background based method for association analysis in
+  related individuals. PLoS One. 2007 Dec 5;2(12):e1274.
+
+  GRAMMAR-Gamma: Svisheva GR, Axenovich TI, Belonogova MN,
+  van Duijn CM, Aulchenko YS. Nature Genetics. 2012
+  (http://dx.doi.org/10.1038/ng.2410)
+}
+\seealso{
+  \code{\link{polygenic}}, \code{\link{mmscore}},
+  \code{\link{qtscore}}
+}
+\keyword{htest}
+

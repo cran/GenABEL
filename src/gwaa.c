@@ -72,7 +72,7 @@ void temp(char *indata, int *Nids, int *g) {
 	for (i=0;i<nids;i++) printf("%i ",g[i]);
 	printf("\n");
 }
-*/
+ */
 
 void get_snps_many(char *a, int *Nsnps, int *Nrows, int *b) {
 	int i,j,m,idx=0;
@@ -960,7 +960,7 @@ void mmscore_20110916(char *gdata, double *pheno, double *invS, int *Nids, int *
 				svec[i] += gtctr[j]*invS[offS+j];
 			}
 		}
-		**/
+		 **/
 		for (i=0;i<nids;i++) svec[i] = 0.;
 
 		for (i=0;i<nids;i++) {
@@ -1188,13 +1188,13 @@ void mmscore_20110915_nostrat(char *gdata, double *pheno, double *invS, int *Nid
 		gtOffs[0]=0;gtOffs[1]=nids*nids;gtOffs[2]=nids*nids*2;gtOffs[3]=nids*nids*3;
 		for (i=0;i<nids;i++) {
 			svec[i] = 0.;
-//			double * offS = &invS[nids*i];
+			//			double * offS = &invS[nids*i];
 			int offS = nids*i;
 			for (j=0;j<nids;j++) {
-//				svec[i] += gtctr[j]*offS[j];
+				//				svec[i] += gtctr[j]*offS[j];
 				svec[i] += gtctr[j]*invS[offS+j];
-//				svec[i] += gtctr[j]*invS[nids*i+j];
-//				svec[i] += OmegaX[offS+j+gtOffs[gt[j]]];
+				//				svec[i] += gtctr[j]*invS[nids*i+j];
+				//				svec[i] += OmegaX[offS+j+gtOffs[gt[j]]];
 			}
 			sumYSumGOmega += pheno[i]*svec[i];
 			sumGSumGOmega += gtctr[i]*svec[i];
@@ -1480,7 +1480,8 @@ void ibs(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Op
 }
 
 
-void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, unsigned int *Option, double *out) {
+void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps,
+		double *freqs, unsigned int *Option, double *out) {
 	unsigned int i,j,m,idx;
 	unsigned int nids = (*Nids);
 	unsigned int nsnps = (*Nsnps);
@@ -1492,7 +1493,10 @@ void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs
 	char str;
 	unsigned int nbytes;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
+
+	// loop over all SNPs
 	for (m=0;m<nsnps;m++) {
+		// extract genotypes for particular SNP in 'gt'
 		idx = 0;
 		for (i=0;i<nbytes;i++) {
 			str = indata[m*nbytes + i];
@@ -1502,8 +1506,9 @@ void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs
 				if (idx>=nids) {idx=0;break;}
 			}
 		}
+
 		noninf=0;
-		if (option == 1) {
+		if (option == 1 || option == 3) { // weight = freq
 			//			count[0]=count[1]=count[2]=count[3]=sumgt=0;
 			//			for (i=0;i<nids;i++) count[gt[i]]++;
 			//			sumgt = count[1]+count[2]+count[3];
@@ -1515,14 +1520,39 @@ void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs
 			if (p < 1.e-16 || q < 1.e-16) {
 				noninf=1;
 			} else {
-				den = 1./(p*q);
+
 				centgt[0] = 0.;
 				centgt[1] = 0.-p;
 				centgt[2] = .5-p;
 				centgt[3] = 1.-p;
+
+				if (option == 1) {
+					// use HWE assumption
+					den = 1./(p*q);
+				} else if (option == 3) {
+					// compute empirical variance
+					// note this option will give wrong results in parallel
+					// implementation
+					// in good way varG should be pre-computed and passed in
+					// manner similar to 'p's
+					double meanG = 0., nMeasured=0., ssG = 0., varG = 0., qGt;
+					for (int iii = 0;iii<nids;iii++)
+						if ( gt[iii] != 0) {
+							qGt = centgt[ gt[iii] ];
+							nMeasured += 1.0;
+							meanG += qGt;
+							ssG += qGt*qGt;
+						}
+					meanG /= nMeasured;
+					varG = ssG/nMeasured - meanG*meanG;
+					den = 1./(2.*varG);
+				} else {
+					Rprintf("Can not be!");
+				}
 				for (i=0;i<4;i++) for (j=0;j<4;j++) ibssum[i][j] = centgt[i]*centgt[j]*den; 
 			}
 		}
+
 		for (i=0;i<(nids-1);i++)
 			for (j=(i+1);j<nids;j++) {
 				if (gt[i]!=0 && gt[j]!=0 && !noninf) {
@@ -1531,6 +1561,9 @@ void ibsnew(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs
 				}
 			}
 	}
+	// finished loop over all SNPs
+
+	// go over all elements and divide by the number of informative markers
 	for (i=0;i<(nids-1);i++)
 		for (j=(i+1);j<nids;j++) {
 			if (out[i*nids+j]>0)

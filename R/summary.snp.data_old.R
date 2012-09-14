@@ -4,7 +4,7 @@
 		res <- .C("snp_summary_exhwe",as.raw(object@gtps),as.integer(object@nids),as.integer(object@nsnps), out = double(object@nsnps*9), PACKAGE="GenABEL")$out
 		dim(res) <- c(object@nsnps,9)
 		res <- as.data.frame(res)
-		res[,9] <- pchisq(res[,9],1,lower=F)
+		res[,9] <- pchisq(res[,9],1,lower.tail=F)
 # X-chromosome
 		if (any(object@chromosome == "X")) {
 		  vec <- (object@chromosome == "X")
@@ -13,7 +13,7 @@
 		    resX <- .C("snp_summary_exhwe",as.raw(oX@gtps),as.integer(oX@nids),as.integer(oX@nsnps), out = double(oX@nsnps*9), PACKAGE="GenABEL")$out
 		    res[vec,7] <- resX[(oX@nsnps*6+1):(oX@nsnps*7)]
 		    res[vec,8] <- resX[(oX@nsnps*7+1):(oX@nsnps*8)]
-		    res[vec,9] <- pchisq(resX[(oX@nsnps*8+1):(oX@nsnps*9)],1,lower=F)
+		    res[vec,9] <- pchisq(resX[(oX@nsnps*8+1):(oX@nsnps*9)],1,lower.tail=F)
 		    rm(oX,vec,resX);gc(verbose=FALSE)
 		  } else {
 		    res[vec,7] <- rep(1,sum(vec))

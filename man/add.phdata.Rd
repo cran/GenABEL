@@ -1,35 +1,43 @@
 \name{add.phdata}
 \alias{add.phdata}
-\title{Adds phenotypic variables to gwaa...}
-\usage{add.phdata(data, newphdata, name)}
-\description{Adds phenotypic variables to gwaa.data object}
-\details{Adds phenotypic variables to \code{phdata} part 
-of an \code{\link{gwaa.data-class}} object
+\title{Adds phenotypic variables to gwaa.data object}
+\usage{
+  add.phdata(data, newphdata, name)
+}
+\arguments{
+  \item{data}{an object of \code{\link{gwaa.data-class}}}
 
-If "newphdata" is a data frame, it is simply merged to 
-the \code{phdata} part of the "data", and is sorted 
-according to the right order. In this case,  
-The "newphdata" frame should contain single variable 
-named "id", preferably of "character" class. It may 
-contain "sex" variable, but that will be re-named 
-to avoid duplication with the default sex variable
-presented in \code{phdata}.
+  \item{newphdata}{data frame or a vector with new
+  phenotypic data}
 
-If 'newphdata' is a vector, it should be of the 
-same length as the number of people in the 'data' 
-and is assumed to have the same order. In this case,
-you also need to supply the name of the new phenotype 
-via the 'name' argument}
-\value{An (updated) object of \code{\link{gwaa.data-class}}}
-\author{Yurii Aulchenko}
-\seealso{\code{\link{merge.gwaa.data}} \code{\link{merge.snp.data}}}
-\keyword{manip}
-\arguments{\item{data}{an object of \code{\link{gwaa.data-class}}}
-\item{newphdata}{data frame or a vector with new 
-phenotypic data}
-\item{name}{if 'newphdata' is a vector, the name
-of new variable should be specified in 'name'}}
-\examples{data(srdta)
+  \item{name}{if 'newphdata' is a vector, the name of new
+  variable should be specified in 'name'}
+}
+\value{
+  An (updated) object of \code{\link{gwaa.data-class}}
+}
+\description{
+  Adds phenotypic variables to \code{phdata} part of an
+  \code{\link{gwaa.data-class}} object
+}
+\details{
+  If "newphdata" is a data frame, it is simply merged to
+  the \code{phdata} part of the "data", and is sorted
+  according to the right order. In this case, The
+  "newphdata" frame should contain single variable named
+  "id", preferably of "character" class. It may contain
+  "sex" variable, but that will be re-named to avoid
+  duplication with the default sex variable presented in
+  \code{phdata}.
+
+  If 'newphdata' is a vector, it should be of the same
+  length as the number of people in the 'data' and is
+  assumed to have the same order. In this case, you also
+  need to supply the name of the new phenotype via the
+  'name' argument
+}
+\examples{
+data(srdta)
 # take a small subset for this example
 srdta <- srdta[1:10,1:5]
 srdta
@@ -48,4 +56,14 @@ x <- data.frame(id=ids,newtra1=newtra1,newtra2=newtra2)
 x
 # now add this new trait to the data
 srdta1 <- add.phdata(srdta,x)
-srdta1}
+srdta1
+}
+\author{
+  Yurii Aulchenko
+}
+\seealso{
+  \code{\link{merge.gwaa.data}}
+  \code{\link{merge.snp.data}}
+}
+\keyword{manip}
+

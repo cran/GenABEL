@@ -70,7 +70,7 @@ scans. Am J Hum Genet. 2007 Nov;81(5):913-26.
 \code{\link{scan.gwaa-class}}
 }
 \examples{
-# ge03d2 is rather bad data set to demonstrate grammar, 
+# ge03d2 is rather bad data set to demonstrate, 
 # because this is a population-based study
 data(ge03d2.clean)
 #take half for speed

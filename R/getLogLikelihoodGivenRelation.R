@@ -68,7 +68,7 @@ getLogLikelihoodGivenRelation <- function(bGenotype1,bGenotype2,TransitionMatrix
 			bGenotype1[2,] * TransitionMatrix[2,3,] + 
 			bGenotype1[3,] * TransitionMatrix[3,3,]
 	x <- mm * bGenotype2
-	x <- apply(x,FUN=sum,MAR=2)
+	x <- apply(x,FUN=sum,MARGIN=2)
 	out <- list(locusLik = x, logLik = sum(log(x)))
 	out
 }

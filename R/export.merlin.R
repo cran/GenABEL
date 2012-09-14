@@ -72,21 +72,21 @@
 		inf <- rbind(inf0,inf)
 	}
 	if (!is.null(datafile)) {
-		write.table(inf,file=datafile,col.n=FALSE,row.n=FALSE,quote=FALSE)
+		write.table(inf,file=datafile,col.names=FALSE,row.names=FALSE,quote=FALSE)
 	}
 	if (format=="merlin") {
 		map <- data.frame(chromosome=as.character(data@gtdata@chromosome),markername=data@gtdata@snpnames,position=data@gtdata@map)
-		write.table(map,file=mapfile,col.n=TRUE,row.n=FALSE,quote=FALSE)
+		write.table(map,file=mapfile,col.names=TRUE,row.names=FALSE,quote=FALSE)
 	} else if (format=="plink") {
 		map <- data.frame(chromosome=as.character(chromosome(data)),
 				markername=snpnames(data),gpos=0,position=map(data))
-		write.table(map,file=mapfile,col.n=FALSE,row.n=FALSE,quote=FALSE)
+		write.table(map,file=mapfile,col.names=FALSE,row.names=FALSE,quote=FALSE)
 	} else {
 		stop("non-formalized format")
 	}
 	if (extendedmap) {
 		map <- data.frame(chromosome=as.character(data@gtdata@chromosome),markername=data@gtdata@snpnames,position=data@gtdata@map,strand=as.character(data@gtdata@strand),coding=as.character(data@gtdata@coding))
-		write.table(map,file=paste(mapfile,".ext",sep=""),col.n=TRUE,row.n=FALSE,quote=FALSE)
+		write.table(map,file=paste(mapfile,".ext",sep=""),col.names=TRUE,row.names=FALSE,quote=FALSE)
 	}
 }
 
@@ -108,7 +108,7 @@ dump.piece <- function(data,fromid,toid,traits,pedfile,append,format="merlin") {
 	} else {
 		x <- data.frame(seq(fromid,toid),ids,rep(0,nids),rep(0,nids),sx,x)
 	}
-	write.table(x,file=pedfile,col.n=FALSE,row.n=FALSE,quote=FALSE,append=append,sep=" ")
+	write.table(x,file=pedfile,col.names=FALSE,row.names=FALSE,quote=FALSE,append=append,sep=" ")
 }
 
 dump.piece.New <- function(data,fromid,toid,traits,pedfile,append,format="merlin") {

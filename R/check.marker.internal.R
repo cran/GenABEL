@@ -107,7 +107,7 @@ function(data, snpsubset, idsubset,
 	Zhet <- (het-mh)/sdh; 
 	sigZ <- sign(Zhet)
 	Zhet <- Zhet*Zhet
-	Zhet <- (pchisq(Zhet,1,lower=F))
+	Zhet <- (pchisq(Zhet,1,lower.tail=F))
 	Zhet[is.na(Zhet)] <- 1
 	if (qoption == "storey") {
 		qobj <- qvalue(Zhet,fdr.level=(het.fdr*2.0))
@@ -183,7 +183,7 @@ function(data, snpsubset, idsubset,
 #Chi2 for the ones out of HWE, sorted
 	out$Pex.nohwe <- Pexact[match(out$nohwe,data@snpnames)]
 #	cat("Pex.nohwe: ",out$Pex.nohwe,"\n")
-	idx <- sort(out$Pex.nohwe,dec=FALSE,ind=TRUE)$ix
+	idx <- sort(out$Pex.nohwe,decreasing=FALSE,ind=TRUE)$ix
 	out$nohwe <- out$nohwe[idx]
 #	cat("nohwe: ",out$nohwe,"\n")
 	out$Pex.nohwe <- out$Pex.nohwe[idx]

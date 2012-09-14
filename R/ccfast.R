@@ -47,7 +47,7 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,pro
 				if (is.numeric(clambda)) {
 					chi2.c1df <- chi2.1df/clambda;
 				} else {
-					lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
+					lambda <- estlambda(chi2.1df,plot=FALSE,proportion=propPs)
 					def <- 1/lambda$estimate
 					if (def > 1 && clambda) {
 						chi2.c1df <- chi2.1df;
@@ -83,9 +83,9 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,pro
 		Pc1df <- pr.c1df/times
 		Pc1df <- replace(Pc1df,(Pc1df==0),1/(1+times))
 	} else {
-		P1df <- pchisq(chi2.1df,1,lower=F)
-		P2df <- pchisq(chi2.2df,actdf,lower=F)
-		Pc1df <- pchisq(chi2.c1df,1,lower=F)
+		P1df <- pchisq(chi2.1df,1,lower.tail=FALSE)
+		P2df <- pchisq(chi2.2df,actdf,lower.tail=FALSE)
+		Pc1df <- pchisq(chi2.c1df,1,lower.tail=FALSE)
 	}
 	#out$lambda <- lambda
 	#out$effB <- effB

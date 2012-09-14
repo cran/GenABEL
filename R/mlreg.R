@@ -101,9 +101,9 @@ function(formula,data,gtmode="additive",trait.type="guess",propPs=1.0)
 	se.effB <- chi2$sebeta
 	chi2.1df <- (chi2$beta/chi2$sebeta)^2
 	#out$lambda <- estlambda(out$chi2.1df,plot=F,prop=propPs)
-	P1df <- pchisq(chi2.1df,1,lower=F)
-	lambda <- estlambda(chi2.1df,plot=F,prop=propPs)
-	Pc1df <- pchisq(chi2.1df/lambda$est,1,lower=F)
+	P1df <- pchisq(chi2.1df,1,lower.tail=F)
+	lambda <- estlambda(chi2.1df,plot=F,proportion=propPs)
+	Pc1df <- pchisq(chi2.1df/lambda$est,1,lower.tail=F)
 	#out$call <- match.call()
 	#out$trait.type <- posttypes[ttype]
 	#class(out) <- "scan.gwaa"

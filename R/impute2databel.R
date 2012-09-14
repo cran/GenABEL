@@ -4,7 +4,7 @@
 #' this function converts IMPUTE-imputed files to DatABEL (filevector) format
 #' containing estimated dosages. 
 #' After conversion, two files (outfile.fvi and outfile.fvd), corresponding 
-#' to single filevector object, will appear on the disk; 'databel-class' 
+#' to a single filevector object, will appear on the disk; a 'databel-class' 
 #' object connected to these files will be returned to R.
 #' 
 #' @param genofile IMPUTE genotype file name
@@ -119,7 +119,7 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 		temp <- scan(samplefile,what="character",nlines=1,skip=2)
 
 		if((length(l1)!=length(temp)) || (length(temp)!=length(l2))){
-            warning("Wrong number of words in sample file's header.");
+            warning("Wrong number of words in sample file header.");
 		}		
 
 		samnames <- scan(samplefile,what="character",skip=2)

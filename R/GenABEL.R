@@ -142,8 +142,6 @@
 #' \code{\link{plot.scan.gwaa}},
 #' \code{\link{plot.check.marker}}.
 #' 
-#' @aliases GenABEL-package GenABEL
-#' 
 #' @author Yurii Aulchenko et al. 
 #' (see help pages for specific functions)
 #' 
@@ -208,5 +206,10 @@
 #' demo(srdtawin)
 #' }
 #'
-
-"GenABEL-package" <- function() {}
+#' @name GenABEL
+#' @docType package
+#' @title GWAS in R
+#' @aliases GenABEL genabel
+#' @keywords package
+#'
+NULL

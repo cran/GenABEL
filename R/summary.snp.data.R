@@ -48,7 +48,7 @@
 	
 	#dim(res) <- c(object@nsnps,9)
 	#res <- as.data.frame(res)
-	res[,9] <- pchisq(res[,9],1,lower=F)
+	res[,9] <- pchisq(res[,9],1,lower.tail=F)
 # X-chromosome
 	if (any(chromosome(object) == "X")) {
 		vec <- (chromosome(object) == "X")
@@ -66,7 +66,7 @@
 					as.integer(1),999)			
 			res[vec,7] <- resX[(nsnps(oX)*6+1):(nsnps(oX)*7)]
 			res[vec,8] <- resX[(nsnps(oX)*7+1):(nsnps(oX)*8)]
-			res[vec,9] <- pchisq(resX[(nsnps(oX)*8+1):(nsnps(oX)*9)],1,lower=F)
+			res[vec,9] <- pchisq(resX[(nsnps(oX)*8+1):(nsnps(oX)*9)],1,lower.tail=F)
 			rm(oX,vec,resX);gc(verbose=FALSE)
 		} else {
 			res[vec,7] <- rep(1,sum(vec))

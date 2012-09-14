@@ -44,7 +44,7 @@ to import strand info)
 }
 \examples{
 \dontrun{
-load(srdta)
+data(srdta)
 export.impute(srdta[1:50,1:3])
 }
 }

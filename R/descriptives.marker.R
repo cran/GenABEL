@@ -29,10 +29,10 @@ function(data,snpsubset,idsubset,file,mafc,hwec,snpc,idcc,digits = 3) {
 	mhet <- mean(s[,"Het"],na.rm=T)
 	sdhet <- sd(s[,"Het"],na.rm=T)
 	rm(s);gc(verbose=FALSE)
-	out[["Minor allele frequency distribution"]] <- catable(maf,cat=mafc,digits=digits)
-	out[["Cumulative distr. of number of SNPs out of HWE, at different alpha"]] <- catable(hwe,cat=hwec,cumulative=TRUE,digits=digits)
-	out[["Distribution of proportion of successful genotypes (per person)"]] <- catable(ill,cat=idcc,digits=digits)
-	out[["Distribution of proportion of successful genotypes (per SNP)"]] <- catable(cll,cat=snpc,digits=digits)
+	out[["Minor allele frequency distribution"]] <- catable(maf,categories=mafc,digits=digits)
+	out[["Cumulative distr. of number of SNPs out of HWE, at different alpha"]] <- catable(hwe,categories=hwec,cumulative=TRUE,digits=digits)
+	out[["Distribution of proportion of successful genotypes (per person)"]] <- catable(ill,categories=idcc,digits=digits)
+	out[["Distribution of proportion of successful genotypes (per SNP)"]] <- catable(cll,categories=snpc,digits=digits)
 	out[["Mean heterozygosity for a SNP"]] <- smh
 	out[["Standard deviation of the mean heterozygosity for a SNP"]] <- ssdh
 	out[["Mean heterozygosity for a person"]] <- mhet

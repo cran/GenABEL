@@ -85,7 +85,7 @@ blurGenotype <- function(g,q=NULL,epsilon=0.01) {
 		out
 	}
 # blur genotypes
-	gx3 <- apply(g,MAR=2,FUN=getNondegenerate,delta=delta)
+	gx3 <- apply(g,MARGIN=2,FUN=getNondegenerate,delta=delta)
 # apply HWE to missing
 	if (!is.null(q)) 
 		gx3[,is.na(g)] <- setToHWE(q[is.na(g)])

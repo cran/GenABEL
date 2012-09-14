@@ -23,7 +23,8 @@
 #' 
 #' @author Yurii Aulchenko
 #'
-checkPackageVersionOnCRAN <- function(packageName,baseUrlCRAN="http://cran.r-project.org/web/packages/", timeout = 10)
+checkPackageVersionOnCRAN <- function(packageName,baseUrlCRAN="http://cran.r-project.org/web/packages/", 
+		timeout = 5)
 {
 	# change default timout
 	svtmo <- options("timeout")

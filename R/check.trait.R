@@ -28,7 +28,7 @@ function (trait,data,fdrate=0.05,graph=TRUE,binshow=FALSE,qoption="bh95") {
 		tt <- tra[seq(1:(length(tra)-1))]
 	muj <- mean(tt,na.rm=TRUE)
 	rvarj <- 1./var(tt,na.rm=TRUE)
-	Pv[j] = pchisq((tra[j]-muj)*(tra[j]-muj)*rvarj,1,lower=F)
+	Pv[j] = pchisq((tra[j]-muj)*(tra[j]-muj)*rvarj,1,lower.tail = FALSE)
 	}
      }
     cat("--------------------------------\n")
@@ -36,7 +36,7 @@ function (trait,data,fdrate=0.05,graph=TRUE,binshow=FALSE,qoption="bh95") {
     cat("Missing:",sum(is.na(get(trait[i]))),"(",100*sum(is.na(get(trait[i])))/length(get(trait[i])),"%)\n");
     cat("Mean =",mean(get(trait[i]),na.rm=TRUE),"; s.d. =",sqrt(var(get(trait[i]),na.rm=TRUE)),"\n");
     if (min(Pv,na.rm=TRUE)<fdrate) {
-      qobj<-qvaluebh95(Pv,fdr = fdrate)
+      qobj<-qvaluebh95(Pv,fdrate = fdrate)
       if (sum(qobj$signif)>=1) {
         cat("Outliers discovered for trait",trait[i],":\n");
         cat(data$id[qobj$signif])

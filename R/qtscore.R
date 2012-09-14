@@ -254,7 +254,7 @@
 					lambda$se <- NA
 				} else {
 					if (lenn<100) warning("Number of observations < 100, Lambda estimate is unreliable")
-					lambda <- estlambda(chi2.1df,plot=FALSE,prop=propPs)
+					lambda <- estlambda(chi2.1df,plot=FALSE,proportion=propPs)
 					if (lambda$estimate<1.0 && clambda==TRUE) {
 						warning("Lambda estimated < 1, set to 1")
 						lambda$estimate <- 1.0
@@ -277,8 +277,8 @@
 			chi2.c1df <- chi2.1df/lambda$estimate
 			
 			if (is.logical(clambda)) {
-				lambda$iz0 <- estlambda(z0*z0,plot=FALSE,prop=propPs)$estimate 
-				lambda$iz2 <- estlambda(z2*z2,plot=FALSE,prop=propPs)$estimate
+				lambda$iz0 <- estlambda(z0*z0,plot=FALSE,proportion=propPs)$estimate 
+				lambda$iz2 <- estlambda(z2*z2,plot=FALSE,proportion=propPs)$estimate
 				if (clambda && lambda$iz0<1.0) {warning("z0 lambda < 1, set to 1");lambda$iz0<-1.0}
 				if (clambda && lambda$iz2<1.0) {warning("z2 lambda < 1, set to 1");lambda$iz2<-1.0}
 				chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0*lambda$iz2)))/(1.- rho*rho)
@@ -331,8 +331,8 @@
 		#out$Pc2df <- pr.c2df/times
 		#out$Pc2df <- replace(out$Pc2df,(out$Pc2df==0),1/(1+times))
 	} else {
-		P1df <- pchisq(chi2.1df,1,lower=F)
-		P2df <- pchisq(chi2.2df,actdf,lower=F)
+		P1df <- pchisq(chi2.1df,1,lower.tail=F)
+		P2df <- pchisq(chi2.2df,actdf,lower.tail=F)
 		Pc1df <- NULL
 		#out$Pc1df <- pchisq(chi2.c1df,1,lower=F)
 		#out$Pc2df <- pchisq(chi2.c2df,2,lower=F)
