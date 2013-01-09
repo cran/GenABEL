@@ -83,6 +83,11 @@
 #' effect estimates based on FGLS expectation
 #' @param llfun function to compute likelihood (default 'polylik_eigen', also 
 #' available -- but not recommended -- 'polylik')
+#' @param eigenOfRel results of eigen(relationship matrix = 2*kinship.matrix).  
+#' Passing this can decrease computational time substantially if multiple traits 
+#' are analysed using the same kinship matrix. This option will not work if any 
+#' NA's are found in the trait and/or covariates and if the dimensions of the 
+#' 'eigen'-object, trait, covariates, kinship do not match. 
 #' @param ... Optional arguments to be passed to \code{\link{nlm}} or (\code{\link{optim}}) 
 #' minimisation function
 #' 
@@ -172,7 +177,7 @@
 				opt.method="nlm",scaleh2=1,quiet=FALSE,  
 				steptol=1e-8, gradtol = 1e-8, optimbou = 8, 
 				fglschecks=TRUE,maxnfgls=8,maxdiffgls=1e-4, patchBasedOnFGLS = TRUE, 
-				llfun = "polylik_eigen", ...) {
+				llfun = "polylik_eigen", eigenOfRel, ...) {
 	if (!missing(data)) if (is(data,"gwaa.data")) 
 		{
 			checkphengen(data)
@@ -196,7 +201,11 @@
 	else if (llfun == "polylik") llFUN <- polylik
 	else stop("llfun should be 'polylik' or 'polylik_eigen'")
 	
-	if (!missing(data)) attach(data,pos=2,warn.conflicts=FALSE)
+	if ( is(try(formula,silent=TRUE),"try-error") ) { 
+		formula <- data[[as(match.call()[["formula"]],"character")]] 
+	}
+	
+#	if (!missing(data)) attach(data,pos=2,warn.conflicts=FALSE)
 	
 # beging patch bug #1322 (by Nicola Pirastu)
 	if (is(formula, "formula")){
@@ -276,13 +285,16 @@
 		}
 	}
 	
-	if (!missing(data)) detach(data)
+#	if (!missing(data)) detach(data)
 	tmp <- t(relmat)
 	relmat[upper.tri(relmat)] <- tmp[upper.tri(tmp)]
 	rm(tmp);gc()
 	if (llfun=="polylik") eigres <- eigen(ginv(relmat),symmetric=TRUE)
 	else if (llfun=="polylik_eigen") {
-		eigres <- eigen(relmat,symmetric=TRUE)
+		if (!missing(eigenOfRel))
+			eigres <- eigenOfRel
+		else
+			eigres <- eigen(relmat,symmetric=TRUE)
 		if (any(eigres$values<0)) {
 			#eigres$values <- abs(eigres$values)
 			warning("some eigenvalues <=0, taking ABS for det; try option llfun='polylik'")
@@ -294,6 +306,20 @@
 		flush.console()
 	}
 	iniest <- iniest# + 0.001*iniest
+	
+# check dimensions and no NA if eigenOfRel is specified
+	if (!missing(eigenOfRel)) {
+		if (!(is(eigenOfRel,"list") & all(names(eigenOfRel) == c("values","vectors")) )) 
+			stop('eigenOfRel does not look like and eigen-generated object!')
+		nIds <- length(y)
+		if (dim(desmat)[1] != nIds) stop('dimensions of Y and X do not match')
+		if (dim(relmat)[1] != nIds) stop('dimensions of Y and kinship matrix do not match')
+		if (dim(eigres$vectors)[1] != nIds) stop('dimension 1 of eigen-vectors do not match other data')
+		if (dim(eigres$vectors)[2] != nIds) stop('dimension 2 of eigen-vectors do not match other data')
+		if (length(eigres$values) != nIds) stop('number of eigen-values does not match other data')
+	}
+# END check dimensions and no NA if eigenOfRel is specified
+	
 	
 	
 	convFGLS <- NULL;
@@ -362,7 +388,12 @@
 # 
 #				iSigma <- ginv(h2*relmat + (1-h2)*diag(x=1,ncol=length(y),nrow=length(y)))
 # start new
-				if (llfun=="polylik") eigres <- eigen(relmat,symmetric=TRUE) # ensure eigres contain eigen of RelMat (not Inv(RelMat))
+				if (llfun=="polylik") {
+					if (!missing(eigenOfRel))
+						eigres <- eigenOfRel
+					else
+						eigres <- eigen(relmat,symmetric=TRUE) # ensure eigres contain eigen of RelMat (not Inv(RelMat))
+				}
 				es <- (eigres$value*h2+1.-h2)*parsave[npar]*sdy*sdy
 				iSigma <- (eigres$vec) %*% diag(1./es,ncol=length(es)) %*% t(eigres$vec)
 # END new
@@ -479,7 +510,12 @@
 	if (fglschecks && missing(fixh2)) { 
 		ginvsig <- iSigma # already computed it in FGLS checks
 	} else {
-		if (llfun=="polylik") eigres <- eigen(relmat,symmetric=TRUE) # ensure eigres contain eigen of RelMat (not Inv(RelMat))
+		if (llfun=="polylik") {
+			if (!missing(eigenOfRel))
+				eigres <- eigenOfRel
+			else
+				eigres <- eigen(relmat,symmetric=TRUE) # ensure eigres contain eigen of RelMat (not Inv(RelMat))
+		}
 		es <- tvar*(eigres$value*h2+1.-h2)
 		#print(es[1:5])
 		#print(eigres$vec[1:5,1:5])

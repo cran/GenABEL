@@ -47,3 +47,18 @@ test.polygenic.Bug1322 <- function()
 	nUsedIds0 <- sum(pol0$measuredIDs)
 	checkEquals(nUsedIds1,nUsedIds0)
 }
+
+test.polygenic.eigenOfRel <- function()
+{
+	data(ge03d2.clean)
+	completeIds <- complete.cases(phdata(ge03d2.clean)[,c("height","sex","age")])
+	df <- ge03d2.clean[sample(which(completeIds),250),autosomal(ge03d2.clean)]
+	gkin <- ibs(df,w="freq")
+	pol1 <- polygenic(height~sex+age,df,kin=gkin,quiet=TRUE)
+	gRel <- gkin
+	gRel[upper.tri(gRel)] <- t(gkin)[upper.tri(gkin)]
+	gRel <- gRel*2
+	eigRes <- eigen(gRel)
+	pol2 <- polygenic(height~sex+age,df,kin=gkin,quiet=TRUE,eigenOfRel=eigRes)
+	checkEquals(pol1[which(names(pol1)!="call")],pol2[which(names(pol2)!="call")])
+}

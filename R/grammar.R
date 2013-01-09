@@ -33,18 +33,21 @@
 #' 
 #' @references 
 #' 
-#' GRAMMAR-Raw: Aulchenko YS, de Koning DJ, Haley C. 
+#' GRAMMAR-Raw: 
+#' Aulchenko YS, de Koning DJ, Haley C. 
 #' Genomewide rapid association using mixed model and regression: a fast and 
 #' simple method for genomewide pedigree-based quantitative trait loci 
 #' association analysis. Genetics. 2007 Sep;177(1):577-85.
 #' 
-#' GRAMMAR-GC: Amin N, van Duijn CM, Aulchenko YS. 
+#' GRAMMAR-GC: 
+#' Amin N, van Duijn CM, Aulchenko YS. 
 #' A genomic background based method for association analysis in related individuals.
 #' PLoS One. 2007 Dec 5;2(12):e1274.
 #' 
-#' GRAMMAR-Gamma: Svisheva GR, Axenovich TI, Belonogova MN, van Duijn CM, Aulchenko YS. 
-#' Rapid variance components–based method for whole-genome association analysis. 
-#' Nature Genetics. 2012 (http://dx.doi.org/10.1038/ng.2410)
+#' GRAMMAR-Gamma: 
+#' Svischeva G, Axenovich TI, Belonogova NM, van Duijn CM, Aulchenko YS. 
+#' Rapid variance components-based method for whole-genome association analysis. 
+#' Nature Genetics. 2012 44:1166-1170. doi:10.1038/ng.2410 
 #' 
 #' @examples 
 #' # Using clean ge03d2 data 

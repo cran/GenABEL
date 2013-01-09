@@ -32,8 +32,10 @@ demo(srdta)
 
 # load and work with srdta
 data(srdta)
-mc <- check.marker(data=srdta@gtdata[,1:100],redundant="all",maf=0.01,minconcordance=0.9,fdr=.1,ibs.mrk=0)
+# truncate the data to make the example faster
+srdta <- srdta[seq(from=1,to=nids(srdta),by=2),seq(from=1,to=nsnps(srdta),by=2)]
+mc <- check.marker(data=gtdata(srdta)[,1:100],redundant="all",maf=0.01,minconcordance=0.9,fdr=.1,ibs.mrk=0)
 plot(mc)
-check.trait(names(srdta@phdata),srdta)
+check.trait(names(phdata(srdta)),srdta)
 }
 \keyword{datasets}

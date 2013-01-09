@@ -1,8 +1,8 @@
 Package: GenABEL
 Type: Package
 Title: genome-wide SNP association analysis
-Version: 1.7-2
-Date: 2012-09-14
+Version: 1.7-3
+Date: 2013-01-09
 Author: GenABEL project developers
 Contact: GenABEL project developers <genabel.project@gmail.com>
 Maintainer: Yurii Aulchenko <yurii@bionet.nsc.ru>
@@ -16,6 +16,6 @@ License: GPL (>= 2)
 URL: http://www.genabel.org, http://forum.genabel.org,
         http://genabel.r-forge.r-project.org/
 BugReports: http://r-forge.r-project.org/tracker/?group_id=505
-Packaged: 2012-09-17 11:31:38 UTC; yuryaulchenko
+Packaged: 2013-01-09 19:43:58 UTC; yuryaulchenko
 Repository: CRAN
-Date/Publication: 2012-09-17 14:18:12
+Date/Publication: 2013-01-09 23:13:51

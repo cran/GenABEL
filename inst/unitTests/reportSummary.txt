@@ -1,9 +1,11 @@
-RUNIT TEST PROTOCOL -- Wed Jan 11 19:21:05 2012 
+RUNIT TEST PROTOCOL -- Wed Jan  9 20:36:47 2013 
 *********************************************** 
 Number of test functions: 18 
-Number of errors: 0 
+Number of errors: 1 
 Number of failures: 0 
 
  
 1 Test Suite : 
-GenABEL unit testing - 18 test functions, 0 errors, 0 failures
+GenABEL unit testing - 18 test functions, 1 error, 0 failures
+ERROR in test.impute2databel: Error in .Call("iterator", tmp_fv@data, as.integer(0), as.integer(0),  : 
+  "iterator" not resolved from current namespace (GenABEL)

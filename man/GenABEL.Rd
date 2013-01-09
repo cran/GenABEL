@@ -179,8 +179,10 @@ demo(srdtawin)
   inversion. Biometrics 46, 399-413.
 
   If you used environmental residuals from
-  \code{\link{polygenic}} for \code{\link{qtscore}}, used
-  GRAMMAR and/or GRAMMAS analysis, please cite
+  \code{\link{polygenic}} for \code{\link{qtscore}}, or
+  used \code{\link{grammar}}, please cite
+
+  for original GRAMMAR
 
   Aulchenko YS, de Koning DJ, Haley C. Genomewide rapid
   association using mixed model and regression: a fast and
@@ -188,9 +190,18 @@ demo(srdtawin)
   trait loci association analysis. Genetics. 2007
   177(1):577-85.
 
+  for GRAMMAR-GC
+
   Amin N, van Duijn CM, Aulchenko YS. A genomic background
   based method for association analysis in related
   individuals. PLoS ONE. 2007 Dec 5;2(12):e1274.
+
+  for GRAMMAR-Gamma
+
+  Svischeva G, Axenovich TI, Belonogova NM, van Duijn CM,
+  Aulchenko YS. Rapid variance components-based method for
+  whole-genome association analysis. Nature Genetics. 2012
+  44:1166-1170. doi:10.1038/ng.2410
 
   If you used \code{\link{mmscore}}, please cite
 

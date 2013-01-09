@@ -3,12 +3,12 @@
 \title{Estimate the inflation factor for a distribution of P-values}
 \usage{
   estlambda(data, plot = FALSE, proportion = 1,
-    method = "regression", filter = TRUE, ...)
+    method = "regression", filter = TRUE, df = 1, ...)
 }
 \arguments{
   \item{data}{A vector of reals. If all are <=1, it is
   assumed that this is a vector of P-values, else it is
-  treated as a vector of chi-squares with 1 d.f.}
+  treated as a vector of chi-squares}
 
   \item{plot}{Wether the prot should be presented}
 
@@ -21,6 +21,8 @@
   \item{filter}{if the test statistics with 0-value of
   chi-square should be excluded prior to estimation of
   Lambda}
+
+  \item{df}{Number of degrees of freedom}
 
   \item{...}{arguments passed to \code{\link{plot}}
   function}

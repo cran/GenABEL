@@ -13,7 +13,11 @@ function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,
 	if (length(strata)!=data@gtdata@nids) stop("Strata variable and the data do not match in length")
 	if (any(is.na(strata))) stop("Strata variable contains NAs")
 
-	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
+	if ( is(try(formula,silent=TRUE),"try-error") ) { 
+		formula <- phdata(data)[[as(match.call()[["formula"]],"character")]] 
+	}
+	
+#	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
 	if (is(formula,"formula")) {
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 		y <- model.response(mf)
@@ -30,7 +34,7 @@ function(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,
 	} else {
 		stop("formula argument must be a formula or one of (numeric, integer, double)")
 	}
-	if (!missing(data)) detach(data@phdata)
+#	if (!missing(data)) detach(data@phdata)
 	if (length(strata)!=data@gtdata@nids) stop("Strata variable and the data do not match in length")
 	if (any(is.na(strata))) stop("Strata variable contains NAs")
 	if (any(strata!=0)) {

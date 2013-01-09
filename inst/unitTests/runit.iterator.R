@@ -64,8 +64,3 @@ test.summary_snp_data <- function()
 	gc()
 	unlink("tmp.fv?")
 }
-
-test.qtscore <- function()
-{
-}
-

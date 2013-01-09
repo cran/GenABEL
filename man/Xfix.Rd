@@ -32,6 +32,8 @@ Sets impossible genotypes (e.g. heterozygous male X-linked genotypes) to missing
 }
 \examples{
 data(ge03d2c)
+# truncate the data to make the example faster
+ge03d2c <- ge03d2c[seq(from=1,to=nids(ge03d2c),by=2),seq(from=1,to=nsnps(ge03d2c),by=2)]
 # many errors
 mc0 <- check.marker(ge03d2c)
 # take only people and markers passing QC

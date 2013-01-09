@@ -1,7 +1,7 @@
 #' Genomic control for various model of inheritance using VIF
 #' 
-#' This function estimates the genomic controls
-#' for diffrent model (recessive,dominant,additive etc.),
+#' This function estimates corrected statistic using genomic control
+#' for diffrent models (recessive,dominant,additive etc.),
 #' using VIF. VIF coefficients are estimated
 #' by optimizing diffrent error functions: regress,
 #' median and ks.test.
@@ -13,10 +13,11 @@
 #' @param x Model of inheritance (0 for recessive,0.5 for additive, 1 for dominant)
 #' @param index.filter Indexes for variables that will be use for analisis in data vector
 #' @param n size of the sample
+#' @param proportion The proportion of lowest P (Chi2) to be used when
+#'   estimating the inflation factor Lambda for "regress" method only
 #' @param clust For developers only
 #' @param vart0 For developers only
 #' @param tmp For developers only
-#' @param min.p For developers only
 #' @param CA For developers only
 #' @param p.table For developers only
 #' 
@@ -32,22 +33,23 @@
 #' 
 #' @examples
 #' data(ge03d2)
-#' set.seed(1)
-#' ge03d2 <- ge03d2[sample(1:nids(ge03d2),200),1:1000]
-#' qts=mlreg(phdata(ge03d2)$dm2~1,data=ge03d2,gtmode = "dominant")
-#' chi2.1df=results(qts)$chi2.1df
-#' s=summary(ge03d2)
-#' freq=s$Q.2
-#' result=GC(p=freq,x=1,method = "median",CA=FALSE,data=chi2.1df,n=nids(ge03d2))
+#' # truncate the data to make the example faster
+#' ge03d2 <- ge03d2[seq(from=1,to=nids(ge03d2),by=2),seq(from=1,to=nsnps(ge03d2),by=3)]
+#' qts <- mlreg(dm2~sex,data=ge03d2,gtmode = "dominant")
+#' chi2.1df <- results(qts)$chi2.1df
+#' s <- summary(ge03d2)
+#' freq <- s$Q.2
+#' result <- GC(p=freq,x=1,method = "median",CA=FALSE,data=chi2.1df,n=nids(ge03d2))
 #' 
 #' @keywords htest
 #'
 
-GC = function(data=0,p,x,method = "regress",clust=0,vart0=0,tmp=0,min.p=0.05,CA=FALSE,index.filter=0,n,p.table=0){
+GC = function(data,p,x,method = "regress",n,index.filter=NULL,proportion=1,clust=0,vart0=0,tmp=0,CA=FALSE,p.table=0){
 #
-	if (length(index.filter)<=1){
-			ind.function=(1:length(data))
-		} else ind.function=index.filter
+	if (is.null(index.filter)){
+		ind.function=which(!is.na(data))
+	} else ind.function=index.filter
+	ind.function=ind.function[which(!is.na(data[ind.function]))]
 	#
 	if (!(method=="regress" | method=="median" | method=="ks.test")){
 		print("Error. I do not know this method");
@@ -55,8 +57,6 @@ GC = function(data=0,p,x,method = "regress",clust=0,vart0=0,tmp=0,min.p=0.05,CA=
 	}
 	#
 	if (CA){
-		ololo=min.p
-
 		p.table[1,1,]->p00
 		p.table[1,2,]->p01
 		p.table[1,3,]->p02
@@ -71,7 +71,6 @@ GC = function(data=0,p,x,method = "regress",clust=0,vart0=0,tmp=0,min.p=0.05,CA=
 		p.table[3,2,]->p1
 		p.table[3,3,]->p2
 		p.table[3,4,]->n
-		
 		Zx=0;
 		exeps=0;
 		Dx=(p12-p02)+x*(p11-p01);
@@ -82,7 +81,6 @@ GC = function(data=0,p,x,method = "regress",clust=0,vart0=0,tmp=0,min.p=0.05,CA=
 			Zx[i]=((Dx[i])^2)/(vart); exeps[i]=F}
 			i=i+1;
 		}
-
 		#Zx=CASforVIF(p.table,p,x)
 		inf=which(!is.na(Zx));
 		notinf=which(is.na(Zx));
@@ -139,6 +137,7 @@ GC = function(data=0,p,x,method = "regress",clust=0,vart0=0,tmp=0,min.p=0.05,CA=
 		vector_vif=VIF(p,n,F,K);
 		Zxl=Zx/vector_vif;
 		Zxl=sort(Zxl[ind.function]);
+		Zxl_r=Zxl[1:ntp]
 		if (method=="ks.test"){
 		dMedian=-log(ks.test(Zxl,"pchisq",df=1)$p.value);
 		}
@@ -146,7 +145,7 @@ GC = function(data=0,p,x,method = "regress",clust=0,vart0=0,tmp=0,min.p=0.05,CA=
 		dMedian=abs(qchisq(.5,1)-median(Zxl));
 		}
 		if (method=="regress")
-		{dMedian=sum((Zxl-Chi2)^2);}
+		{dMedian=sum((Zxl_r-Chi2)^2);}
 		#}
 		return(1*dMedian)
 	}
@@ -159,6 +158,7 @@ GC = function(data=0,p,x,method = "regress",clust=0,vart0=0,tmp=0,min.p=0.05,CA=
 		vector_vif=VIF(p,n,F,K);
 		Zxl=Zx/vector_vif;
 		Zxl=sort(Zxl[ind.function]);
+		Zxl_r=Zxl[1:ntp]
 		if (method=="ks.test"){
 		dMedian=-log(ks.test(Zxl,"pchisq",df=1)$p.value);
 		}
@@ -166,45 +166,36 @@ GC = function(data=0,p,x,method = "regress",clust=0,vart0=0,tmp=0,min.p=0.05,CA=
 		dMedian=abs(qchisq(.5,1)-median(Zxl));
 		}
 		if (method=="regress")
-		{dMedian=sum((Zxl-Chi2)^2);}
+		{dMedian=sum((Zxl_r-Chi2)^2);}
 		#}
 		return(1*dMedian)
 	}
 
 	###
-		#Dx=(p12-p02)+x*(p11-p01);
-		F=0.5; K=n[1];
-	#
-	#i=1;
-	#j=0;
-	#	Zx=0;
-	#	while (i<=length(n)){
-	#		vart=((p2[i]+p1[i]*x^2)-(p2[i]+x*p1[i])^2)*((1/n1[i])+(1/n0[i]));
-	#		if (vart==0){j=j+1; Zx[i]=NA;} else{Zx[i]=Dx[i]^2/vart;}
-	#		i=i+1;
-	#	}
+	F=0.5; K=n[1];
 
-
-	#length(Zx)==length(inf)+length(notinf)
-	#N=length(n);
-	#if (j!=0){N=N-j;}
-	N_inf=sum(!is.na(data[ind.function]))
-	Chi2=(0:(N_inf-1))/N_inf;
-	Chi2=qchisq(Chi2,1)
-			#dta <- sort(Zx)
-			#ppp <- ppoints(dta)
-			#Chi2=qchisq(ppp,1);
-
-			#delta=1/N;
-			#x1=0;
-			#i=1;
-			#Chi2=0;
-			#while (i<=N){
-			#	x2=x1+(delta/2);
-			#	Chi2[i]=qchisq(x2,1);
-			#	x1=x1+delta;
-			#	i=i+1;
-			#}
+	#N_inf=sum(!is.na(data[ind.function]))
+	#Chi2=(0:(N_inf-1))/N_inf;
+	#Chi2=qchisq(Chi2,1)
+	data_p <- data[ind.function]
+	if (proportion>1.0 || proportion<=0) 
+		stop("proportion argument should be greater then zero and less than or equal to one")
+	ntp <- round(proportion*length(data_p))
+	if (ntp<1) stop("no valid measurments")
+	if (ntp==1) {
+		warning(paste("One measurment, Lambda = 1 returned"))
+		return(list(estimate=1.0,se=999.99))
+	}
+	if (ntp<10) warning(paste("number of points is too small:",ntp))
+	if (min(data_p)<0) stop("data argument has values <0")
+	if (max(data_p)<=1) {
+		data_p<- qchisq(data_p,1,lower.tail=FALSE)
+	}
+		
+	data_p <- sort(data_p)
+	ppoi <- ppoints(data_p)
+	Chi2 <- sort(qchisq(1-ppoi,1))
+	Chi2 <- Chi2[1:ntp]
 	#####
 	if (clust==1){
 	data.mds0 <- Clust(0)

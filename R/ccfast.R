@@ -8,9 +8,10 @@ function(y,data,snpsubset,idsubset,times=1,quiet=FALSE,bcast=10,clambda=TRUE,pro
 		if (!quiet) cat("X-chromosome data dropped\n")
 	}
 
-	attach(data@phdata,warn.conflicts=FALSE,pos=2)
-	cc <- get(y,pos=2)
-	detach(data@phdata)
+#	attach(data@phdata,warn.conflicts=FALSE,pos=2)
+#	cc <- get(y,pos=2)
+#	detach(data@phdata)
+	cc <- phdata(data)[[y]]
 
         if (length(levels(as.factor(cc)))<2) stop("cc status is monomorphic!") 
         if (length(levels(as.factor(cc)))>2) stop("cc status has more then 2 levels!") 

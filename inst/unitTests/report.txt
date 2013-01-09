@@ -1,12 +1,14 @@
-RUNIT TEST PROTOCOL -- Wed Jan 11 19:21:05 2012 
+RUNIT TEST PROTOCOL -- Wed Jan  9 20:36:47 2013 
 *********************************************** 
 Number of test functions: 18 
-Number of errors: 0 
+Number of errors: 1 
 Number of failures: 0 
 
  
 1 Test Suite : 
-GenABEL unit testing - 18 test functions, 0 errors, 0 failures
+GenABEL unit testing - 18 test functions, 1 error, 0 failures
+ERROR in test.impute2databel: Error in .Call("iterator", tmp_fv@data, as.integer(0), as.integer(0),  : 
+  "iterator" not resolved from current namespace (GenABEL)
 
 
 
@@ -19,51 +21,53 @@ Involved directory:
 /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests 
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.convert.snp.R 
-test.convert.snp: (4 checks) ... OK (1.43 seconds)
+test.convert.snp: (4 checks) ... OK (1.02 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.convert.snp.ped.R 
-test.convert.snp.ped: (0 checks) ... OK (0.02 seconds)
+test.convert.snp.ped: (0 checks) ... OK (0.03 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.descriptives.trait.R 
-test.descriptives.trait: (1 checks) ... OK (0.47 seconds)
+test.descriptives.trait: (1 checks) ... OK (0.43 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.exports.R 
-test.exports: (50 checks) ... OK (1.21 seconds)
+test.exports: (15 checks) ... OK (0.5 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.findRelatives.R 
-test.findRelatives: (10 checks) ... OK (48.28 seconds)
+test.findRelatives: (10 checks) ... OK (46.07 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.impute2xxx.R 
-test.impute2databel: (23 checks) ... OK (3.38 seconds)
+test.impute2databel: ERROR !! 
+Error in .Call("iterator", tmp_fv@data, as.integer(0), as.integer(0),  : 
+  "iterator" not resolved from current namespace (GenABEL)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.impute2xxx_large.R 
-test.impute2xxx_large: (0 checks) ... OK (0.05 seconds)
+test.impute2xxx_large: (0 checks) ... OK (0 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.iterator.R 
-test.qtscore: (0 checks) ... OK (0 seconds)
-test.summary_snp_data: (3 checks) ... OK (38.76 seconds)
+test.summary_snp_data: (3 checks) ... OK (3.68 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.mach2databel.R 
-test.mach2databel: (8 checks) ... OK (1.09 seconds)
+test.mach2databel: (8 checks) ... OK (0.17 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.merge.R 
-test.merge.bug1641: (0 checks) ... OK (0.83 seconds)
-test.merge.bug1676: (2 checks) ... OK (0.27 seconds)
+test.merge.bug1641: (0 checks) ... OK (0.13 seconds)
+test.merge.bug1676: (2 checks) ... OK (0.12 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.mmscore.R 
-test.exports: (1 checks) ... OK (4.09 seconds)
+test.exports: (1 checks) ... OK (0.73 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.polygenic.R 
-test.polygenic.Bug1322: (2 checks) ... OK (2.54 seconds)
+test.polygenic.Bug1322: (2 checks) ... OK (1.27 seconds)
+test.polygenic.eigenOfRel: (1 checks) ... OK (1.51 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.polylik.R 
-test.polylik: (6 checks) ... OK (3.1 seconds)
+test.polylik: (6 checks) ... OK (7.69 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.recodeChromosome.R 
-test.recodeChromosome: (8 checks) ... OK (0.22 seconds)
+test.recodeChromosome: (8 checks) ... OK (0.12 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.sortmap.internal.R 
 test.sortmap.internal.bug1673: (1 checks) ... OK (0 seconds)
 --------------------------- 
 Test file: /Users/yuryaulchenko/eclipse_workspace/genabel/pkg/GenABEL/tests/../inst/unitTests/runit.strandModify.R 
-test.strandModify: (2 checks) ... OK (0.06 seconds)
+test.strandModify: (2 checks) ... OK (0.05 seconds)

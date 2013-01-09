@@ -3,7 +3,8 @@
 \title{Polynomial genomic control}
 \usage{
   PGC(data, method = "regress", p, df, pol.d = 3,
-    plot = TRUE, index.filter = 0, start.corr = FALSE)
+    plot = TRUE, index.filter = NULL, start.corr = FALSE,
+    proportion = 1)
 }
 \arguments{
   \item{data}{Input vector of Chi square statistic}
@@ -24,8 +25,12 @@
   want to make calculations faster}
 
   \item{index.filter}{Index of variables in data vector,
-  that will be used in analysis, if zero - all variables
+  that will be used in analysis if zero - all variables
   will be used}
+
+  \item{proportion}{The proportion of lowest P (Chi2) to be
+  used when estimating the inflation factor Lambda for
+  "regress" method only}
 }
 \value{
   A list with elements \item{data}{Output vector corrected
@@ -39,7 +44,7 @@
 }
 \examples{
 data(ge03d2)
-qts=qtscore(phdata(ge03d2)$dm2, ge03d2)
+qts=qtscore(dm2, ge03d2)
 chi2.1df=results(qts)$chi2.1df
 s=summary(ge03d2)
 MAF=s$Q.2

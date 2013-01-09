@@ -1,6 +1,6 @@
 #' Genomic control for overdimunant model of inheritance using VIF
 #' 
-#' This function estimates the genomic controls
+#' This function estimates the corrected statistic using genomic control
 #' for overdimunant model,
 #' using VIF. VIF coefficients are estimated
 #' by optimizing diffrent error functions: regress,
@@ -12,6 +12,8 @@
 #' @param p Input vector of allele frequencies
 #' @param index.filter Indexes for variables that will be use for analisis in data vector
 #' @param n size of the sample
+#' @param proportion The proportion of lowest P (Chi2) to be used when
+#'   estimating the inflation factor Lambda for "regress" method only
 #' @param clust For developers only
 #' @param vart0 For developers only
 #' @param tmp For developers only
@@ -28,26 +30,23 @@
 #' 
 #' @examples
 #' data(ge03d2)
-#' set.seed(2)
-#' ge03d2 <- ge03d2[sample(1:nids(ge03d2),250),1:1500]
-#' qts=mlreg(phdata(ge03d2)$dm2~1,data=ge03d2,gtmode = "overdominant")
-#' chi2.1df=results(qts)$chi2.1df
-#' s=summary(ge03d2)
-#' freq=s$Q.2
-#' ### donotrun
-#' \dontrun{
-#' result=GC_ovdom(p=freq,method = "median",data=chi2.1df,n=nids(ge03d2))
-#' }
-#' ### end norun
+#' # truncate the data to make the example faster
+#' ge03d2 <- ge03d2[seq(from=1,to=nids(ge03d2),by=2),seq(from=1,to=nsnps(ge03d2),by=3)]
+#' qts <- mlreg(phdata(ge03d2)$dm2~1,data=ge03d2,gtmode = "overdominant")
+#' chi2.1df <- results(qts)$chi2.1df
+#' s <- summary(ge03d2)
+#' freq <- s$Q.2
+#' result <- GC_ovdom(p=freq,method = "median",data=chi2.1df,n=nids(ge03d2))
 #' 
 #' @keywords htest
 #'
 
-GC_ovdom = function(p,method = "regress",clust=0,vart0=0,tmp=0,data=0,index.filter=0,n){
+GC_ovdom = function(data,p,method = "regress",n,index.filter=NULL,proportion=1,clust=0,vart0=0,tmp=0){
 	#
-	if (length(index.filter)<=1){
-			ind.function=(1:length(data))
-		} else ind.function=index.filter
+	if (is.null(index.filter)){
+		ind.function=which(!is.na(data))
+	} else ind.function=index.filter
+	ind.function=ind.function[which(!is.na(data[ind.function]))]
 	#
 	if (!(method=="regress" | method=="median" | method=="ks.test")){
 	print("Error. I do not know this method");
@@ -103,6 +102,7 @@ GC_ovdom = function(p,method = "regress",clust=0,vart0=0,tmp=0,data=0,index.filt
 		vector_vif=VIF(p,n,F,K);
 		Zxl=Zx/vector_vif;
 		Zxl=sort(Zxl[ind.function]);
+		Zxl_r=Zxl[1:ntp]
 		if (method=="ks.test"){
 		dMedian=-log(ks.test(Zxl,"pchisq",df=1)$p.value);
 		}
@@ -110,7 +110,7 @@ GC_ovdom = function(p,method = "regress",clust=0,vart0=0,tmp=0,data=0,index.filt
 		dMedian=abs(qchisq(.5,1)-median(Zxl));
 		}
 		if (method=="regress")
-		{dMedian=sum((Zxl-Chi2)^2);}
+		{dMedian=sum((Zxl_r-Chi2)^2);}
 		#}
 		return(1*dMedian)
 	}
@@ -123,6 +123,7 @@ GC_ovdom = function(p,method = "regress",clust=0,vart0=0,tmp=0,data=0,index.filt
 		vector_vif=VIF(p,n,F,K);
 		Zxl=Zx/vector_vif;
 		Zxl=sort(Zxl[ind.function]);
+		Zxl_r=Zxl[1:ntp]
 		if (method=="ks.test"){
 		dMedian=-log(ks.test(Zxl,"pchisq",df=1)$p.value);
 		}
@@ -130,16 +131,35 @@ GC_ovdom = function(p,method = "regress",clust=0,vart0=0,tmp=0,data=0,index.filt
 		dMedian=abs(qchisq(.5,1)-median(Zxl));
 		}
 		if (method=="regress")
-		{dMedian=sum((Zxl-Chi2)^2);}
+		{dMedian=sum((Zxl_r-Chi2)^2);}
 		#}
 		return(1*dMedian)
 	}
 
 	F=0.5; K=0.2*n[1];
 	
-	N_inf=sum(!is.na(data[ind.function]))
-	Chi2=(0:(N_inf-1))/N_inf;
-	Chi2=qchisq(Chi2,1)
+	#N_inf=sum(!is.na(data[ind.function]))
+	#Chi2=(0:(N_inf-1))/N_inf;
+	#Chi2=qchisq(Chi2,1)
+	data_p <- data[ind.function]
+	if (proportion>1.0 || proportion<=0) 
+		stop("proportion argument should be greater then zero and less than or equal to one")
+	ntp <- round(proportion*length(data_p))
+	if (ntp<1) stop("no valid measurments")
+	if (ntp==1) {
+		warning(paste("One measurment, Lambda = 1 returned"))
+		return(list(estimate=1.0,se=999.99))
+	}
+	if (ntp<10) warning(paste("number of points is too small:",ntp))
+	if (min(data_p)<0) stop("data argument has values <0")
+	if (max(data_p)<=1) {
+		data_p<- qchisq(data_p,1,lower.tail=FALSE)
+	}
+		
+	data_p <- sort(data_p)
+	ppoi <- ppoints(data_p)
+	Chi2 <- sort(qchisq(1-ppoi,1))
+	Chi2 <- Chi2[1:ntp]
 	x=1;
 	
 	if (clust==1){

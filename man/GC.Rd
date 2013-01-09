@@ -2,9 +2,9 @@
 \alias{GC}
 \title{Genomic control for various model of inheritance using VIF}
 \usage{
-  GC(data = 0, p, x, method = "regress", clust = 0,
-    vart0 = 0, tmp = 0, min.p = 0.05, CA = FALSE,
-    index.filter = 0, n, p.table = 0)
+  GC(data, p, x, method = "regress", n,
+    index.filter = NULL, proportion = 1, clust = 0,
+    vart0 = 0, tmp = 0, CA = FALSE, p.table = 0)
 }
 \arguments{
   \item{data}{Input vector of Chi square statistic}
@@ -22,13 +22,15 @@
 
   \item{n}{size of the sample}
 
+  \item{proportion}{The proportion of lowest P (Chi2) to be
+  used when estimating the inflation factor Lambda for
+  "regress" method only}
+
   \item{clust}{For developers only}
 
   \item{vart0}{For developers only}
 
   \item{tmp}{For developers only}
-
-  \item{min.p}{For developers only}
 
   \item{CA}{For developers only}
 
@@ -42,20 +44,21 @@
   \item{K}{K}
 }
 \description{
-  This function estimates the genomic controls for diffrent
-  model (recessive,dominant,additive etc.), using VIF. VIF
-  coefficients are estimated by optimizing diffrent error
-  functions: regress, median and ks.test.
+  This function estimates corrected statistic using genomic
+  control for diffrent models (recessive,dominant,additive
+  etc.), using VIF. VIF coefficients are estimated by
+  optimizing diffrent error functions: regress, median and
+  ks.test.
 }
 \examples{
 data(ge03d2)
-set.seed(1)
-ge03d2 <- ge03d2[sample(1:nids(ge03d2),200),1:1000]
-qts=mlreg(phdata(ge03d2)$dm2~1,data=ge03d2,gtmode = "dominant")
-chi2.1df=results(qts)$chi2.1df
-s=summary(ge03d2)
-freq=s$Q.2
-result=GC(p=freq,x=1,method = "median",CA=FALSE,data=chi2.1df,n=nids(ge03d2))
+# truncate the data to make the example faster
+ge03d2 <- ge03d2[seq(from=1,to=nids(ge03d2),by=2),seq(from=1,to=nsnps(ge03d2),by=3)]
+qts <- mlreg(dm2~sex,data=ge03d2,gtmode = "dominant")
+chi2.1df <- results(qts)$chi2.1df
+s <- summary(ge03d2)
+freq <- s$Q.2
+result <- GC(p=freq,x=1,method = "median",CA=FALSE,data=chi2.1df,n=nids(ge03d2))
 }
 \author{
   Yakov Tsepilov

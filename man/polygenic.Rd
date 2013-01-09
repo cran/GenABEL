@@ -7,7 +7,8 @@
     opt.method = "nlm", scaleh2 = 1, quiet = FALSE,
     steptol = 1e-08, gradtol = 1e-08, optimbou = 8,
     fglschecks = TRUE, maxnfgls = 8, maxdiffgls = 1e-04,
-    patchBasedOnFGLS = TRUE, llfun = "polylik_eigen", ...)
+    patchBasedOnFGLS = TRUE, llfun = "polylik_eigen",
+    eigenOfRel, ...)
 }
 \arguments{
   \item{formula}{Formula describing fixed effects to be
@@ -72,6 +73,14 @@
   \item{llfun}{function to compute likelihood (default
   'polylik_eigen', also available -- but not recommended --
   'polylik')}
+
+  \item{eigenOfRel}{results of eigen(relationship matrix =
+  2*kinship.matrix). Passing this can decrease
+  computational time substantially if multiple traits are
+  analysed using the same kinship matrix. This option will
+  not work if any NA's are found in the trait and/or
+  covariates and if the dimensions of the 'eigen'-object,
+  trait, covariates, kinship do not match.}
 
   \item{...}{Optional arguments to be passed to
   \code{\link{nlm}} or (\code{\link{optim}}) minimisation

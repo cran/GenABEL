@@ -12,7 +12,7 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = TRUE, makemap=FA
 		stop("the column named \"sex\", containing the male identifier was not found in the phenofile")
 #### 2.8.0!
 	v <- version
-	if ((as.numeric(v$major) >= 2) && (as.numeric(v$minor) >= 8.0)) {
+	if ( as.numeric(v$major) > 2 || ((as.numeric(v$major) == 2) && (as.numeric(v$minor) >= 8.0)) ) {
 		a <- table(dta$sex,useNA="ifany")
 	} else {
 		a <- table(dta$sex,exclude=NULL)

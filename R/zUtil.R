@@ -3,9 +3,9 @@ lossFunctionLambdaKS <- function(lambda,chi2values, ... ) {
 	ksT <- ks.test(chi2values/lambda, ... )$stat
 	return( ksT )
 }
-estLambdaKS <- function(chi2values,limits=c(0.5,100)) {
+estLambdaKS <- function(chi2values,limits=c(0.5,100),df=1) {
 	iniLambda <- 1
-	optRes <- optimize(lossFunctionLambdaKS, interval=limits, chi2values=chi2values, "pchisq", 1)
+	optRes <- optimize(lossFunctionLambdaKS, interval=limits, chi2values=chi2values, "pchisq", 1,df=df)
 	return(optRes$minimum)
 }
 chrom.char2num <- function(chrom) {

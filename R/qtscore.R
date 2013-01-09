@@ -102,8 +102,13 @@
 		out <- paste("trait.type argument should be one of",ttargs,"\n")
 		stop(out)
 	}
+
+	if ( is(try(formula,silent=TRUE),"try-error") ) { 
+		formula <- phdata(data)[[as(match.call()[["formula"]],"character")]] 
+	}
+	
 	if (trait.type=="guess") {
-		if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
+#		if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
 		if (is(formula,"formula")) {
 			mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 			y <- model.response(mf)
@@ -115,12 +120,12 @@
 			stop("formula argument must be a formula or one of (numeric, integer, double)")
 		}
 		warning(paste("trait type is guessed as",trait.type))
-		if (!missing(data)) detach(data@phdata)
+#		if (!missing(data)) detach(data@phdata)
 	}
 	if (trait.type=="gaussian") fam <- gaussian()
 	if (trait.type=="binomial") fam <- binomial()
 	
-	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
+#	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
 	if (is(formula,"formula")) {
 		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
 		y <- model.response(mf)
@@ -146,7 +151,7 @@
 	} else {
 		stop("formula argument should be a formula or a numeric vector")
 	}
-	if (!missing(data)) detach(data@phdata)
+#	if (!missing(data)) detach(data@phdata)
 	if (length(strata)!=nids(data)) stop("Strata variable and the data do not match in length")
 	if (any(is.na(strata))) stop("Strata variable contains NAs")
 	if (any(strata!=0)) {
@@ -235,16 +240,16 @@
 			actdf[abs(actdf+999.99)<1.e-8] <- 1.e-16 #NA
 #			out$actdf <- actdf
 			###out$chi2.2df <- chi2.2df
-			z0 <- chi2[(7*lenn+1):(8*lenn)];
-			z0[abs(z0+999.99)<1.e-8] <- 0 #NA
-#			out$z0 <- z0
-			z2 <- chi2[(8*lenn+1):(9*lenn)];
-			z2[abs(z2+999.99)<1.e-8] <- 0 #NA
-#			out$z2 <- z2
-			rho <- chi2[(9*lenn+1):(10*lenn)];
-			rho[abs(rho+999.99)<1.e-8] <- 0 #NA
-#			rho <- abs(rho)
-#			out$rho <- rho
+#			z0 <- chi2[(7*lenn+1):(8*lenn)];
+#			z0[abs(z0+999.99)<1.e-8] <- 0 #NA
+##			out$z0 <- z0
+#			z2 <- chi2[(8*lenn+1):(9*lenn)];
+#			z2[abs(z2+999.99)<1.e-8] <- 0 #NA
+##			out$z2 <- z2
+#			rho <- chi2[(9*lenn+1):(10*lenn)];
+#			rho[abs(rho+999.99)<1.e-8] <- 0 #NA
+##			rho <- abs(rho)
+##			out$rho <- rho
 			
 			lambda <- list()
 			if (is.logical(clambda)) {
@@ -276,21 +281,21 @@
 			}
 			chi2.c1df <- chi2.1df/lambda$estimate
 			
-			if (is.logical(clambda)) {
-				lambda$iz0 <- estlambda(z0*z0,plot=FALSE,proportion=propPs)$estimate 
-				lambda$iz2 <- estlambda(z2*z2,plot=FALSE,proportion=propPs)$estimate
-				if (clambda && lambda$iz0<1.0) {warning("z0 lambda < 1, set to 1");lambda$iz0<-1.0}
-				if (clambda && lambda$iz2<1.0) {warning("z2 lambda < 1, set to 1");lambda$iz2<-1.0}
-				chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0*lambda$iz2)))/(1.- rho*rho)
-			} else {
-				if (is.list(clambda) && !any(is.na(match(c("estimate","iz0","iz2"),names(clambda))))) {
-					chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0*lambda$iz2)))/(1.- rho*rho)
-				} else {
-					lambda$iz0 <- 1.0
-					lambda$iz2 <- 1.0
-					chi2.c2df <- chi2.2df
-				}
-			}
+#			if (is.logical(clambda)) {
+#				lambda$iz0 <- estlambda(z0*z0,plot=FALSE,proportion=propPs)$estimate 
+#				lambda$iz2 <- estlambda(z2*z2,plot=FALSE,proportion=propPs)$estimate
+#				if (clambda && lambda$iz0<1.0) {warning("z0 lambda < 1, set to 1");lambda$iz0<-1.0}
+#				if (clambda && lambda$iz2<1.0) {warning("z2 lambda < 1, set to 1");lambda$iz2<-1.0}
+#				chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0*lambda$iz2)))/(1.- rho*rho)
+#			} else {
+#				if (is.list(clambda) && !any(is.na(match(c("estimate","iz0","iz2"),names(clambda))))) {
+#					chi2.c2df <- (z0*z0/lambda$iz0 + z2*z2/lambda$iz2 - 2.*z0*z2*rho/(sqrt(lambda$iz0*lambda$iz2)))/(1.- rho*rho)
+#				} else {
+#					lambda$iz0 <- 1.0
+#					lambda$iz2 <- 1.0
+#					chi2.c2df <- chi2.2df
+#				}
+#			}
 			effB <- chi2[(3*lenn+1):(lenn*4)]
 			effB[abs(effB+999.99)<1.e-8] <- NA
 			effAB <- chi2[(4*lenn+1):(lenn*5)]
@@ -308,7 +313,7 @@
 			pr.1df <- pr.1df + 1*(chi2.1df < th1)
 			pr.2df <- pr.2df + 1*(chi2.2df < max(chi2[(lenn+1):(2*lenn)]))
 			pr.c1df <- pr.c1df + 1*(chi2.c1df < th1)
-			pr.c2df <- pr.c2df + 1*(chi2.c2df < th1)
+#			pr.c2df <- pr.c2df + 1*(chi2.c2df < th1)
 #			if (!quiet && ((j-1)/bcast == round((j-1)/bcast))) {
 			##				cat("\b\b\b\b\b\b",round((100*(j-1)/times),digits=2),"%",sep="")
 #				cat(" ",round((100*(j-1)/times),digits=2),"%",sep="")

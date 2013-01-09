@@ -11,20 +11,20 @@
 	avrs <- all.vars(as.formula(formula))
 	if (!any(avrs=="CRSNP")) stop("formula must contain CRSNP variable to be replaced with the analysis SNPs")
 	avrs <- avrs[avrs!="CRSNP"]
-	attach(data@phdata,pos=2,warn.conflicts=FALSE)
+#	attach(data@phdata,pos=2,warn.conflicts=FALSE)
 	cov <- NA
 	if (length(avrs)>1) {
-		cov <- get(avrs[2],pos=2)
-		if (length(avrs)>2) for (i in 3:length(avrs)) cov <- cbind(cov,get(avrs[i],pos=2))
+		cov <- phdata(data)[[avrs[2]]]
+		if (length(avrs)>2) for (i in 3:length(avrs)) cov <- cbind(cov,phdata(data)[[avrs[i]]])
 	}
-	tra <- get(avrs[1],pos=2)
+	tra <- phdata(data)[[avrs[1]]]
 	if (missing(trait.type)) {
 		if (length(unique(tra))==2) 
 			trait.type<-"binomial" 
 		else 
 			trait.type<-"gaussian"
 	}
-	detach(data@phdata)
+#	detach(data@phdata)
 	
 	if (length(unique(tra))<2) stop("Trait is monomorphic!") 
 	

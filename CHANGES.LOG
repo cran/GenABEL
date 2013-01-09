@@ -1,3 +1,22 @@
+***  v. 1.7-3 (2013.01.09)
+
+(2013.01.09)
+Commented the parts related to non-additive GC in qtscore
+Removed calls to 'attach' from multiple procedures
+Decrease of running time for long-running examples (GC_ovdom,GC,check.marker,Xfix,srdta)
+
+(2013.01.07)
+Fixing the problem which prevents the package from loading while checking the version on CRAN
+
+(2012.12.03, YA) 
+- Changes in DESCRIPTION and version to denote new working 
+version
+- added argument 'eigenOfRel' to 'polygenic' allowing passing 
+the results of 'eigen' of the relationship matrix instead of the matrix 
+itself (makes much faster evaluation). See unit test test.polygenic.eigenOfRel 
+for use example
+- found out that impute2databel is broken, see bug report [#2418] 
+
 ***  v. 1.7-2 (2012.10.14)
 
 (2012.09.14, YA)  

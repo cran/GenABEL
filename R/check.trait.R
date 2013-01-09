@@ -3,7 +3,8 @@ function (trait,data,fdrate=0.05,graph=TRUE,binshow=FALSE,qoption="bh95") {
   if (!is.data.frame(data)) {
     if (is(data,"gwaa.data")) data <- data@phdata else stop("data should be a data frame or gwaa.data")
   } 
-  attach(data,warn.conflicts=FALSE)
+#  attach(data,warn.conflicts=FALSE)
+	with(data, {
   rmvec <- rep(TRUE,length(trait))
   for (i in 1:length(trait)) 
     if (!is.numeric(get(trait[i]))) {
@@ -70,6 +71,7 @@ function (trait,data,fdrate=0.05,graph=TRUE,binshow=FALSE,qoption="bh95") {
 	}
 	par(spar)
   }
-  detach(data)
+  })
+#  detach(data)
 }
 

@@ -50,7 +50,7 @@ checkPackageVersionOnCRAN <- function(packageName,baseUrlCRAN="http://cran.r-pro
 	# if failed in reading (pageContent is "try-error"), return NULL
 	if (class(pageContent) == "try-error") return(NULL)
 	# parse the page and get string starting with "Package source:"
-	targetLine <- pageContent[grep("Package source:",pageContent)]
+	targetLine <- pageContent[grep("source:",pageContent)]
 	# split the string at "Package_" and ".tar.gz"; the element before the last will contain the version
 	splitPattern <- paste(packageName,"_|.tar.gz",sep="")
 	stringSplit <- strsplit(targetLine,splitPattern)

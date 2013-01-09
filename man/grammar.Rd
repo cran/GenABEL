@@ -90,9 +90,11 @@ summary(grGc)
   background based method for association analysis in
   related individuals. PLoS One. 2007 Dec 5;2(12):e1274.
 
-  GRAMMAR-Gamma: Svisheva GR, Axenovich TI, Belonogova MN,
-  van Duijn CM, Aulchenko YS. Nature Genetics. 2012
-  (http://dx.doi.org/10.1038/ng.2410)
+  GRAMMAR-Gamma: Svischeva G, Axenovich TI, Belonogova NM,
+  van Duijn CM, Aulchenko YS. Rapid variance
+  components-based method for whole-genome association
+  analysis. Nature Genetics. 2012 44:1166-1170.
+  doi:10.1038/ng.2410
 }
 \seealso{
   \code{\link{polygenic}}, \code{\link{mmscore}},

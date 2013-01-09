@@ -9,8 +9,7 @@
 #' 
 #' 
 #' @param data A vector of reals. If all are <=1, it is assumed that this is a
-#'   vector of P-values, else it is treated as a vector of chi-squares with 1
-#'   d.f.
+#'   vector of P-values, else it is treated as a vector of chi-squares
 #' @param plot Wether the prot should be presented
 #' @param proportion The proportion of lowest P (Chi2) to be used when
 #'   estimating the inflation factor Lambda
@@ -18,6 +17,7 @@
 #'   Lambda estimation
 #' @param filter if the test statistics with 0-value of chi-square should be
 #'   excluded prior to estimation of Lambda
+#' @param df Number of degrees of freedom
 #' @param ... arguments passed to \code{\link{plot}} function
 #' @return A list with elements \item{estimate}{Estimate of Lambda}
 #'   \item{se}{Standard error of the estimate}
@@ -36,7 +36,7 @@
 #' lambda(a)
 #' 
 "estlambda" <-
-		function(data,plot = FALSE, proportion=1.0, method="regression", filter=TRUE, ... ) {
+		function(data,plot = FALSE, proportion=1.0, method="regression", filter=TRUE, df=1,... ) {
 	data <- data[which(!is.na(data))]
 	if (proportion>1.0 || proportion<=0) 
 		stop("proportion argument should be greater then zero and less than or equal to one")
@@ -62,7 +62,7 @@
 	}
 	data <- sort(data)
 	ppoi <- ppoints(data)
-	ppoi <- sort(qchisq(1-ppoi,1))
+	ppoi <- sort(qchisq(1-ppoi,df))
 	data <- data[1:ntp]
 	ppoi <- ppoi[1:ntp]
 #	s <- summary(lm(data~offset(ppoi)))$coeff
@@ -74,11 +74,11 @@
 		out$estimate <- s[1,1]
 		out$se <- s[1,2]
 	} else if (method=="median") {
-		out$estimate <- median(data,na.rm=TRUE)/qchisq(0.5,1)
+		out$estimate <- median(data,na.rm=TRUE)/qchisq(0.5,df)
 		out$se <- NA
 	} else if (method=="KS") {
 		limits <- c(0.5,100)
-		out$estimate <- estLambdaKS(data,limits=limits)
+		out$estimate <- estLambdaKS(data,limits=limits,df=df)
 		if ( abs(out$estimate-limits[1])<1e-4 || abs(out$estimate-limits[2])<1e-4 ) 
 			warning("using method='KS' lambda too close to limits, use other method")
 		out$se <- NA

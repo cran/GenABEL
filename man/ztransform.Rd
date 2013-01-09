@@ -43,5 +43,9 @@ Vector containing transformed variable, distributed as standard normal.
 	hist(x)
 	hist(y0)
 	hist(y1)
+	# tests with genetic data
+	data(srdta)
+	Zqt1 <- ztransform(qt1,srdta)
+	Zqt1sexA <- ztransform(qt1~sex,srdta)
 }
 \keyword{utilities}

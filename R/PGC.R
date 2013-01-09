@@ -14,8 +14,10 @@
 #' @param pol.d Polinom degree
 #' @param plot If true, functon makes plot of lambda from allele frequencies
 #' @param start.corr For regress method use it only when you want to make calculations faster
-#' @param index.filter Index of variables in data vector, that will be used in analysis, 
+#' @param index.filter Index of variables in data vector, that will be used in analysis 
 #' if zero - all variables will be used
+#' @param proportion The proportion of lowest P (Chi2) to be used when
+#'   estimating the inflation factor Lambda for "regress" method only
 #' 
 #' @return A list with elements
 #' \item{data}{Output vector corrected Chi square statistic}
@@ -25,7 +27,7 @@
 #' 
 #' @examples
 #' data(ge03d2)
-#' qts=qtscore(phdata(ge03d2)$dm2, ge03d2)
+#' qts=qtscore(dm2, ge03d2)
 #' chi2.1df=results(qts)$chi2.1df
 #' s=summary(ge03d2)
 #' MAF=s$Q.2
@@ -34,10 +36,11 @@
 #' @keywords htest
 #' 
 
-PGC = function(data,method="regress",p,df, pol.d=3, plot=TRUE, index.filter=0,start.corr=FALSE){
-	if (length(index.filter)<=1){
-		ind.function=(1:length(data))
+PGC = function(data,method="regress",p,df, pol.d=3, plot=TRUE, index.filter=NULL,start.corr=FALSE,proportion=1){
+	if (is.null(index.filter)){
+		ind.function=which(!is.na(data))
 	} else ind.function=index.filter
+	ind.function=ind.function[which(!is.na(data[ind.function]))]
     pol.m = function(p, b, pol.d){
         out=0;
         for (i in (1:pol.d)){
@@ -54,7 +57,26 @@ PGC = function(data,method="regress",p,df, pol.d=3, plot=TRUE, index.filter=0,st
      if (start.corr){
           data=data/(1*median(data[ind.function],na.rm=T)/qchisq(.5,df));
     }
-     N=sum(!is.na(data[ind.function]))
+    #N=sum(!is.na(data[ind.function]))
+	data_p <- data[ind.function]
+	if (proportion>1.0 || proportion<=0) 
+		stop("proportion argument should be greater then zero and less than or equal to one")
+	ntp <- round(proportion*length(data_p))
+	if (ntp<1) stop("no valid measurments")
+	if (ntp==1) {
+		warning(paste("One measurment, Lambda = 1 returned"))
+		return(list(estimate=1.0,se=999.99))
+	}
+	if (ntp<10) warning(paste("number of points is too small:",ntp))
+	if (min(data_p)<0) stop("data argument has values <0")
+	if (max(data_p)<=1) {
+		data_p<- qchisq(data_p,1,lower.tail=FALSE)
+	}
+		
+	data_p <- sort(data_p)
+	ppoi <- ppoints(data_p)
+	Chi2 <- sort(qchisq(1-ppoi,df))
+	Chi2 <- Chi2[1:ntp]
      #dta <- sort(data)
      #ppp <- ppoints(dta)
      #Chi2=qchisq(ppp,df);
@@ -69,10 +91,10 @@ PGC = function(data,method="regress",p,df, pol.d=3, plot=TRUE, index.filter=0,st
     #x1=x1+delta;
     #i=i+1;
     #}
-    Chi2=(0:(N-1))/N;
-    Chi2=qchisq(Chi2,df)
-    
-     ppp=seq(from=min(p),to=max(p),length=1000)
+	
+    #Chi2=(0:(N-1))/N;
+    #Chi2=qchisq(Chi2,df)
+    ppp=seq(from=min(p),to=max(p),length=1000)
     #inf=which(!is.na(data))
     f2 = function(b){
         Zx=data
@@ -95,6 +117,7 @@ PGC = function(data,method="regress",p,df, pol.d=3, plot=TRUE, index.filter=0,st
         #}
         Zx=Zx/(pol.m(p,b,pol.d))     
         Zxl=sort(Zx[ind.function])
+		Zxl_r=Zxl[1:ntp]
         if (method=="ks.test"){
 			F=-log(ks.test(Zxl,"pchisq",df=df)$p.value);
         }
@@ -102,7 +125,7 @@ PGC = function(data,method="regress",p,df, pol.d=3, plot=TRUE, index.filter=0,st
 			F=abs(median(Zxl)-qchisq(.5,df))
         }
         if (method=="regress"){
-			F=sum((Zxl-Chi2)^2);
+			F=sum((Zxl_r-Chi2)^2);
         }
         return(F);
     }

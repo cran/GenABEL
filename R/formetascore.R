@@ -2,7 +2,12 @@
 		function(formula,data,stat=qtscore,transform="no",build="unknown",verbosity=1, ...) {
 	if (!is(data,"gwaa.data")) stop("data argument must have gwaa.data-class")
 	checkphengen(data)
-	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
+	
+	if ( is(try(formula,silent=TRUE),"try-error") ) { 
+		formula <- phdata(data)[[as(match.call()[["formula"]],"character")]] 
+	}
+	
+	#	if (!missing(data)) attach(data@phdata,pos=2,warn.conflicts=FALSE)
 	if (is(formula,"polygenic")) {
 		pm <- pmatch("stat",names(match.call()))
 		pm <- (pm[!is.na(pm)])[1]
@@ -24,7 +29,7 @@
 	} else {
 		mids <- which(!is.na(formula))
 	}
-	if (!missing(data)) detach(data@phdata)
+#	if (!missing(data)) detach(data@phdata)
 	if (verbosity<0) stop("verbosity parameter must be positive integer")
 	res <- stat(formula,data,...)
 	sum <- summary(data@gtdata[mids,])
