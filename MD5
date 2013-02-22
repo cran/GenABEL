@@ -1,5 +1,5 @@
-73078cd9202253a77f7f9b83939d7266 *CHANGES.LOG
-9857f175e1cde032d5711ba4613ee7f8 *DESCRIPTION
+278d5879d1b75cfecfb709bd8c97d658 *CHANGES.LOG
+f56ede801b24e0e385f9517ad90f47e8 *DESCRIPTION
 fac7cc3cfac605c07dcc3334a9560d13 *NAMESPACE
 95d5d4859f5f15ce187a8f93e2219b9f *R/GASurv.R
 7290341c02be29981d711380441f9718 *R/GC.R
@@ -22,7 +22,7 @@ fb3ab9d564897472705e22401a85db62 *R/ccfast.new.R
 c4942e2ec8a6ebd100739131c183d3bd *R/check.marker.R
 fe87f94a2a03937345d01aad1b61490a *R/check.marker.internal.R
 a195ec92554459455fa40da06b41af9e *R/check.trait.R
-b01fa3f2e2169f560a8faa96d442be8b *R/checkPackageVersionOnCRAN.R
+0f4adb750a7ad39a7d8064183cdaf785 *R/checkPackageVersionOnCRAN.R
 463f3b530040de41d781d493ae9c0e55 *R/checkphengen.R
 31b95bb7069c44608c16869aeb0a6ead *R/chi2_CG.R
 3ea1ec6ab1a90faceac18d0b84e8851c *R/cocohet.R
@@ -46,7 +46,7 @@ f6fe568bf50e953d08669653567acb5d *R/emp.ccfast.R
 dcb80c3945e2e29f02f08ae1e9237ea5 *R/emp.grammar.R
 f6a4e226283d68221f53658f7d2ff354 *R/emp.mmscore.R
 a927d0630328c682f9666c8095898100 *R/emp.qtscore.R
-03aed154fbe23594a7e0921bf84fc4c1 *R/estlambda.R
+4825a8faf97de03f3f2486e978ecd2d1 *R/estlambda.R
 7e1b3e0c97163589f6b2d0a415389cc8 *R/export.impute.R
 fa57c868bf8cec028826bef78a48edd9 *R/export.merlin.R
 7ef6aee4ab146964b9d7e89570c6ecb6 *R/export.plink.R
@@ -60,7 +60,7 @@ d575484e59128b7924865b52dc6b34e5 *R/formetascore.R
 7865f50ee5eb2003da6538dd120f333a *R/generateOffspring.R
 43eb1c062567ae7292dbab06a8b1ea31 *R/getLogLikelihoodGivenRelation.R
 a090e69295fbc056aadac285a518c585 *R/get_snp_plots.R
-b0eb128ddcb1a71aca5b117754b8eca9 *R/grammar.R
+dd0af5aa2af5e1f6eca7aac770d855af *R/grammar.R
 cc2fedee51846c22876c1287f3ff70c0 *R/grammar.old.R
 2ee8824146a4971f0022dd1d36134aec *R/guessType.R
 fadff4130d0e8dbe662375e554a45d94 *R/hom.R
@@ -68,7 +68,7 @@ fadff4130d0e8dbe662375e554a45d94 *R/hom.R
 9eb17f46ed676718086fcef162e1b08d *R/ibs.R
 5054d084638c4702c54a28a429c5fd84 *R/ibs.old.R
 7348c44bdabf019eadfd18894cd9279d *R/imphetcheck.R
-d48aac451432edbbafb6aacda91cec87 *R/impute2databel.R
+13479eb1ac006d128bce2989f1f8b336 *R/impute2databel.R
 2b5d8fe9495295afe15792b4b4f2146b *R/impute2mach.R
 e2e1f143a4e6c5e45f47d47811cc8dcd *R/load.gwaa.data.R
 19d87aa7854b079c8731abb96d277f1e *R/mach2databel.R
@@ -87,7 +87,7 @@ ca2a5d58a34b8f74e89bd80d575991b1 *R/phdata.R
 58ddf1e528b6c108c3ecb9aaec424651 *R/plot.check.marker.R
 b5921bddfbe2861cd77baddd0c40e4cd *R/plot.scan.gwaa.2D.R
 3736ff6caef003bdab1f14ba24614066 *R/plot.scan.gwaa.R
-ce5657c708deb9e02a9515d67fa738c2 *R/polygenic.R
+31324bd5f73e00733c233a8e481b7032 *R/polygenic.R
 6ef719a24caa23d06e9d903e18a1c50c *R/polygenic_hglm.R
 255a7dbd1473d3c253bbba29cdf1c39b *R/polylik.R
 b49e0d1d616659710ca2df89096a0edd *R/put.snps.R
@@ -122,8 +122,8 @@ fc5c82f8dd56aceab0006c665c8f8ad0 *R/summary.check.marker.R
 1abb92ac6a97b1312133fe6560ba9ec8 *R/summary.snp.data_old.R
 e730fd15d99278c182e479488a79935c *R/update.check.marker.R
 088315d3bdfbfb1ea5929be260217bd0 *R/zUtil.R
-75916945b367e48fd581c05d0c10ec6d *R/ztransform.R
-1c10609dbf553148cb79cff7702bdd53 *R/zzz.R
+49aa20de6f6ecce74550eaa4971b9656 *R/ztransform.R
+37acb36cd35cf0e0c699a16592edb432 *R/zzz.R
 ce4dfc87fc5a4c594cd5450daa68bc2f *TODO
 f7c653af4ae99ad2374fa6302e086a2b *data/datalist
 6eabd3cb5216163d31339f6ed92910a4 *data/ge03d2.RData
@@ -137,7 +137,7 @@ a1a9087e6143c7c1c727387bc7d0e653 *data/srdta.RData
 52e1e55c5c5692a174dceafed4432529 *demo/ge03d2ex.R
 a0e8279aa78d8b9a8b366acf52efad52 *demo/srdta.R
 440a01c15b138d5e058e89ba985fab7c *demo/srdtawin.R
-c700a59b1832537aa34ad683458e5a0a *inst/doc/GenABEL-tutorial.pdf
+b9c28e538e85a62323dd3025c13fc3e7 *inst/doc/GenABEL-tutorial.pdf
 5981dd152baf22de38605a8a915e29e5 *inst/doc/index.html
 90e214a35d5e2e3bddc7859ff1cfd1ca *inst/exdata/chr18.raw
 ef4a166b9e54a3b151ba721dc7f5427e *inst/exdata/map.18
@@ -155,7 +155,7 @@ e4a73800e5b0998beede833bb988ff06 *inst/unitTests/runit.convert.snp.ped.R
 19eb66ed7f6662f1f0b2db91be8ea745 *inst/unitTests/runit.descriptives.trait.R
 33d6bdd7a88f2dc2ef023d881f8e30ca *inst/unitTests/runit.exports.R
 c7f5e93aeec0d75f2ddf08e2a4f293ef *inst/unitTests/runit.findRelatives.R
-5a80d2841c890e30118471342af69930 *inst/unitTests/runit.impute2xxx.R
+1a69896386fa09e4bc0d9505a28940cb *inst/unitTests/runit.impute2xxx.R
 e4f7d2b157b23759e51abef8b0e7f728 *inst/unitTests/runit.impute2xxx_large.R
 796553bd127bb259633dc52a03b72129 *inst/unitTests/runit.iterator.R
 744985ae68d6c7b97bc43cb9357ffba1 *inst/unitTests/runit.mach2databel.R
@@ -198,7 +198,7 @@ fecc51ddd031c40004c9a35a10420557 *man/catable.Rd
 592f8a237a1a670b3c1f01f5174f8514 *man/check.marker-class.Rd
 07fda17c2940dab84ddcd7904e24c3d2 *man/check.marker.Rd
 827e19c0bda2384b6abc2535c51273ac *man/check.trait.Rd
-3b358908217e15f8397ca3eb828f177e *man/checkPackageVersionOnCRAN.Rd
+901926cb50f2939e6da304cbe98350ac *man/checkPackageVersionOnCRAN.Rd
 fada0e72e4664ba5d9a069df003d9000 *man/cocohet.Rd
 fec401e36dd7565347f206ed4969fe21 *man/convert.snp.affymetrix.Rd
 17e5cb066f2c7fd992490e6d55a89812 *man/convert.snp.illumina.Rd

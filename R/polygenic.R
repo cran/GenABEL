@@ -571,6 +571,7 @@
 	a <- sum(log(abs(es))) # logarithm of determinant of sigma as sum of logarithm of eigenvalues
 # end new variant
 	b <- (t(resY) %*% InvSigma_x_residualY)
+# this is -2*lnLikelihood
 	loglik <- a+b
 	out$h2an$minimum <- as.vector(loglik)
 	

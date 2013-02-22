@@ -88,10 +88,12 @@
 	if (method == "gamma") {
 		out <- qtscore(polyObject$pgresidualY,data=data,clambda=TRUE, ... )
 		# correct test and beta values
-		out@results[,"chi2.1df"] <- out[,"chi2.1df"]/polyObject$grammarGamma$Test
-		out@results[,"effB"] <- out[,"chi2.1df"]/polyObject$grammarGamma$Beta
+		out@results[,"chi2.1df"] <- out@results[,"chi2.1df"]/polyObject$grammarGamma$Test
+		out@results[,"effB"] <- out@results[,"effB"]/polyObject$grammarGamma$Beta
+		# re-compute standard errors (c2 = (b/se)^2; se = b/sqrt(c2))
+		out@results[,"se_effB"] <- abs(out@results[,"effB"])/sqrt(out@results[,"chi2.1df"])
 		# recompute p-values
-		out@results[,"P1df"] <- pchisq(out[,"chi2.1df"],df=1,lower.tail=FALSE)
+		out@results[,"P1df"] <- pchisq(out@results[,"chi2.1df"],df=1,lower.tail=FALSE)
 		# recompute Lambda
 		out@lambda <- estlambda(out[,"chi2.1df"],plot=FALSE,proportion=propPs)
 		if (out@lambda$estimate <= 1) {
@@ -109,6 +111,7 @@
 	# set uncorrectet stats to NA to avoid confusion
 	out@results[,"effAB"] <- out@results[,"effBB"] <- out@results[,"chi2.2df"] <- 
 			out@results[,"P2df"] <- NA
+	out@call <- match.call()
 	# return results
 	return(out);
 }

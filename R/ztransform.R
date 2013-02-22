@@ -31,14 +31,16 @@ function(formula,data,family=gaussian) {
 	}
 	
 	if (is(formula,"formula")) {
-		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
+#		mf <- model.frame(formula,data,na.action=na.omit,drop.unused.levels=TRUE)
+		mf <- model.frame(formula,data,na.action=na.pass,drop.unused.levels=TRUE)
+		mids <- complete.cases(mf)
+		mf <- mf[mids,]
 		y <- model.response(mf)
 		desmat <- model.matrix(formula,mf)
 		lmf <- glm.fit(desmat,y,family=family)
 #		if (wasdata) 
 #			mids <- rownames(data) %in% rownames(mf)
 #		else 
-		mids <- complete.cases(desmat,y)
 		resid <- lmf$resid
 #		print(formula)
 	} else if (is(formula,"numeric") || is(formula,"integer") || is(formula,"double")) {

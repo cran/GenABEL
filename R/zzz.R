@@ -4,8 +4,8 @@
 	#pkgDescription <- packageDescription(pkg)
 	#pkgVersion <- pkgDescription$Version
 	#pkgDate <- pkgDescription$Date
-	pkgVersion <- "1.7-3"
-	pkgDate <- "January 09, 2013"
+	pkgVersion <- "1.7-4"
+	pkgDate <- "February 22, 2013"
 	welcomeMessage <- paste(pkg," v. ",pkgVersion," (",pkgDate,") loaded\n",sep="")
 	# check if CRAN version is the same as loaded
 	cranVersion <- try( checkPackageVersionOnCRAN(pkg) )
@@ -24,7 +24,7 @@
 			"http://www.genabel.org/sites/default/files/version_and_news.html"
 	)
 	svtmo <- options("timeout")
-	options("timeout"=10)
+	options("timeout"=2)
 	tryRes1 <- 0; class(tryRes1) <- "try-error"
 	curaddr <- 1
 	while (class(tryRes1) == "try-error" && curaddr <= length(address) ) {

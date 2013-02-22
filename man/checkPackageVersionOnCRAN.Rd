@@ -4,7 +4,7 @@
 \usage{
   checkPackageVersionOnCRAN(packageName,
     baseUrlCRAN = "http://cran.r-project.org/web/packages/",
-    timeout = 5)
+    timeout = 2)
 }
 \arguments{
   \item{packageName}{name of the package to check}

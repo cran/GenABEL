@@ -1,3 +1,17 @@
+***  v. 1.7-4 (2013.02.22)
+
+(2013.02.22)
+replacing SNP with get("SNP") in impute2databel with option 'old' so to avoid 
+CRAN checks complains 
+
+(2013.02.03)
+Fixing bug in 'grammar': when using 'gamma', effects and s.e.s are not re-computed
+(bug reported by Xia Shen)
+
+(2013.01.18)
+Fixing bug in ztransform (if NA is present and formula used, NA's are kicked out)
+Changed the version number
+
 ***  v. 1.7-3 (2013.01.09)
 
 (2013.01.09)

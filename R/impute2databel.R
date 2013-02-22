@@ -73,13 +73,14 @@ impute2databel <- function(genofile,samplefile,outfile,makeprob=TRUE,old=FALSE)
 	#print("before apply2dfo")
 	#print("calling apply2dfo")
 	if (old) {
+#		stop("'old' ways are no longer there...")
 		dosefile <- apply2dfo(dfodata=tmp_fv, anFUN = "makedose", 
-				MAR = 2, procFUN = "pfun",prob=SNP,
+				MAR = 2, procFUN = "pfun",prob=get("SNP"),
 				outclass="databel",
 				outfile=paste(outfile,".dose",sep=""),
 				type="FLOAT",transpose=FALSE)
 		if (makeprob) {
-			warning("makeprob is not possible with 'old' style")
+			stop("makeprob is not possible with 'old' style")
 		}
 	} else {
 		res <- .Call("iterator", tmp_fv@data, as.integer(0), as.integer(0),

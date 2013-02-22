@@ -62,7 +62,7 @@
 	}
 	data <- sort(data)
 	ppoi <- ppoints(data)
-	ppoi <- sort(qchisq(1-ppoi,df))
+	ppoi <- sort(qchisq(ppoi,df=df,lower.tail=FALSE))
 	data <- data[1:ntp]
 	ppoi <- ppoi[1:ntp]
 #	s <- summary(lm(data~offset(ppoi)))$coeff

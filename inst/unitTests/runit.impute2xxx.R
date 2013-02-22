@@ -4,6 +4,7 @@ if(FALSE) {
 	## Not really needed, but can be handy when writing tests
 	library("RUnit")
 	library("GenABEL")
+	library("DatABEL")
 }
 
 ### do not run
@@ -115,3 +116,58 @@ test.impute2databel <- function()
 	
 }
 
+# fixing CRAN NOTE
+#
+test.SNPquoted <- function() {	
+	#library("RUnit")
+	#library("GenABEL")
+	require(DatABEL)
+# generate some random data in "prob" format
+	Nids <- 10
+	Nsnps <- 3
+	q <- runif(Nsnps,min=0.2,max=0.8)
+	PROB0 <- apply(matrix(q,ncol=1),MARGIN=1,FUN=function(x){
+				cBB <- rnorm(Nids,mean=x^2,sd=0.01)
+				cAB <- rnorm(Nids,mean=2*x*(1-x),sd=0.01)
+				cAA <- 1-cBB-cAB
+				cAA <- matrix(cAA,ncol=1)
+				return(c(cAA,cAB,cBB))
+			})
+	PROB <- matrix(NA,ncol=3*Nsnps,nrow=Nids)
+	for (i in 1:Nsnps) {
+		for (j in 1:3) {
+			PROB[,(i-1)*3+j] <- PROB0[c(((j-1)*Nids+1):(j*Nids)),i]
+		}
+	}
+	daProb <- matrix2databel(t(PROB),filename="temp_daProb")
+	
+# conversion functions
+	makedose <- function(prob) {
+		dose <- 2*prob[c(F,F,T)]+prob[c(F,T,F)]
+		bp <- prob[c(T,F,F)]
+		miss <- which(abs(bp)<1e-16 & abs(dose)<1e-16)
+		if (length(miss) > 0 ) dose[miss] <- NA
+		return(dose)
+	}
+	pfun <- function(a) return(a)
+
+	dosefile <- apply2dfo(dfodata=daProb, anFUN = "makedose", 
+			MAR = 2, procFUN = "pfun",prob=get("SNP"),
+			outclass="databel",
+			outfile="temp_myTestDose",
+			type="DOUBLE",transpose=FALSE)
+	
+# check equality
+	DOSE <- matrix(NA,ncol=Nids,nrow=Nsnps)
+	for (i in 1:Nids) for (j in 1:Nsnps) {
+			DOSE[j,i] <- 2*PROB[i,j*3]+PROB[i,j*3-1]
+		}
+	
+	checkEqualsNumeric(DOSE,as(dosefile,"matrix"))
+	
+	rm(dosefile); gc()
+	unlink("temp_myTestDose.fv?")
+	
+	rm(daProb); gc()
+	unlink("temp_daProb.fv?")
+}
