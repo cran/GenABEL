@@ -6,7 +6,8 @@
 	which fall between user-defined categories
 }
 \usage{
-catable(data, categories = c(quantile(data,c(0.01,0.1,0.5,0.9,0.99),na.rm=TRUE)), cumulative = FALSE, na.rm = TRUE, digits = 3)
+catable(data, categories = c(quantile(data,c(0.01,0.1,0.5,0.9,0.99),na.rm=TRUE)), 
+			cumulative = FALSE, na.rm = TRUE, digits = 3)
 }
 \arguments{
   \item{data}{A vector of numerics}

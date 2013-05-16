@@ -7,7 +7,8 @@
 	and presents output as \code{\link{scan.gwaa.2D-class}} object
 }
 \usage{
-scan.haplo.2D(formula, data, snpsubset, idsubset, bcast = 10, simulate=FALSE, trait.type, ...)
+scan.haplo.2D(formula, data, snpsubset, idsubset, bcast = 10, 
+				simulate=FALSE, trait.type, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

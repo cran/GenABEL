@@ -20,14 +20,18 @@ std::string* getGenotype(std::string coding,std::string sep)
 SEXP export_plink(SEXP Ids, SEXP Snpdata, SEXP Nsnps, SEXP NidsTotal, SEXP Coding, SEXP From, SEXP To,
 		SEXP Male, SEXP Traits, SEXP Pedfilename, SEXP Plink, SEXP Append)
 {
+
+	int from = INTEGER(From)[0];
+	int to = INTEGER(To)[0];
 	std::vector<unsigned short int> sex;
+	sex.clear();
 	unsigned short int sx;
-	for(unsigned int i=0;i<((unsigned int) length(Male));i++) {
+	for(unsigned int i=(from - 1);i<to;i++) {
 		sx = INTEGER(Male)[i];
 		if (sx==0) sx=2;
+		//Rprintf("%d %d\n",i,sx);
 		sex.push_back(sx);
 	}
-
 	std::vector<std::string> ids;
 	for(unsigned int i=0;i<((unsigned int) length(Ids));i++)
 		ids.push_back(CHAR(STRING_ELT(Ids,i)));
@@ -38,8 +42,6 @@ SEXP export_plink(SEXP Ids, SEXP Snpdata, SEXP Nsnps, SEXP NidsTotal, SEXP Codin
 
 	//Rprintf("0\n");
 	unsigned int nsnps = INTEGER(Nsnps)[0];
-	int from = INTEGER(From)[0];
-	int to = INTEGER(To)[0];
 	int nids = to - from + 1;
 	int nidsTotal = INTEGER(NidsTotal)[0];
 	int ntraits = INTEGER(Traits)[0];
@@ -55,6 +57,8 @@ SEXP export_plink(SEXP Ids, SEXP Snpdata, SEXP Nsnps, SEXP NidsTotal, SEXP Codin
 
 	//Rprintf("nsnps=%d\n",nsnps);
 	//Rprintf("nids=%d\n",nids);
+	//Rprintf("to=%d\n", to);
+	//Rprintf("from=%d\n", from);
 
 	//char gtMatrix[nids][nsnps];
 	char **gtMatrix = new (std::nothrow) char*[nids];
@@ -90,6 +94,7 @@ SEXP export_plink(SEXP Ids, SEXP Snpdata, SEXP Nsnps, SEXP NidsTotal, SEXP Codin
 	//Rprintf("B\n");
 	for (int i=0;i<nids;i++) {
 		fileWoA << i+from << " " << ids[i] << " 0 0 " << sex[i];
+
 		for (int j=0;j<ntraits;j++) fileWoA << " " << 0;
 		// unwrap genotypes
 		for (unsigned int csnp=0;csnp<nsnps;csnp++) {
@@ -108,6 +113,7 @@ SEXP export_plink(SEXP Ids, SEXP Snpdata, SEXP Nsnps, SEXP NidsTotal, SEXP Codin
 	//for (int i=0;i<10;i++) Rprintf("%d ",sex[i]);
 	//Rprintf("oooo!\n" );
 
+	sex.clear();
 	delete [] gtMatrix;
 	delete [] Genotype;
 	delete [] gtint;

@@ -60,7 +60,7 @@ void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilen
 	///////////////////////
 
 	ifstream tfamfile (tfamfilename[0]);
-	if (tfamfile == NULL) {
+	if (tfamfile.bad()) {
 		error ("could not open file '%s' !",tfamfilename[0]);
 	}
 
@@ -98,7 +98,7 @@ void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilen
 
 
 	ifstream tpedfile (tpedfilename[0]);
-	if (tpedfile == NULL) {
+	if (tpedfile.bad()) {
 		error ("could not open file '%s' !",tpedfilename[0]);
 	}
 
@@ -240,7 +240,7 @@ void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilen
 	const ios_base::fmtflags hex = ios_base::hex;
 
 	ofstream outfile (outfilename[0]);
-	if (outfile == NULL) {
+	if (outfile.bad()) {
 		error ("could not open file '%s' !",outfilename[0]);
 	}
 

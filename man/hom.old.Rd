@@ -67,7 +67,8 @@ data(ge03d2)
 h <- hom(ge03d2[,c(1:100)])
 homsem <- h[,"Hom"]*(1-h[,"Hom"])/h[,"NoMeasured"]
 plot(h[,"Hom"],homsem)
-# wrong analysis: one should use all people (for right frequency) and markers (for right F) available!
+# wrong analysis: one should use all people (for right frequency) 
+# and markers (for right F) available!
 h <- hom(ge03d2[,c(1:10)])
 h
 }

@@ -175,7 +175,7 @@ void gtps_container::set(unsigned id_position, unsigned snp_position, char data)
 //std::cout<<"rearrangement_array["<<i<<"]="<<rearrangement_array[i]<<"\n";
 
 		
-static const char clear_info_for_person[]={63, 207, 243, 252};
+static const  unsigned char clear_info_for_person[]={63, 207, 243, 252};
 		
 //std::cout<<"set: id_position="<<id_position<<", snp_position="<<snp_position<<", data="<<int(data)<<"\n";
 get_our_byte_number_and_local_person_number(id_position, snp_position);

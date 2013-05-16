@@ -86,7 +86,8 @@ convert.snp.affymetrix(dir, map, outfile, skipaffym)
 }
 \examples{
 \dontrun{
-	convert.snp.affymetrix(dir="where_is_our_aff_files", map="map_file", outfile="output.raw", skipaffym=3)
+	convert.snp.affymetrix(dir="where_is_our_aff_files", map="map_file", 
+			outfile="output.raw", skipaffym=3)
 }
 }
 \keyword{IO}

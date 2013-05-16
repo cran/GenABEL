@@ -72,7 +72,7 @@ function(data,begin,end,chromosome) {
 		if (length(end)>1) stop("end must be single number!")
 		if (end < min(data@map)) return(NULL)
 	}
-	if (begin > end) stop("Start-map parameter begin must be more then end-parameter")
+	if (begin > end) stop("Start-map parameter begin must be more than end-parameter")
 	data <- data[,data@snpnames[data@map>=begin & data@map<=end]]
 	out <- data@snpnames
 	out

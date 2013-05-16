@@ -7,7 +7,8 @@
 	\code{\link{scan.gwaa-class}} data object
 }
 \usage{
-scan.haplo(formula, data, snpsubset, idsubset, n.slide = 2, bcast = 10, simulate=FALSE, trait.type, ...)
+scan.haplo(formula, data, snpsubset, idsubset, n.slide = 2, bcast = 10, 
+			simulate=FALSE, trait.type, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

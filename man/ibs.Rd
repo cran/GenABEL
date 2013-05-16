@@ -34,7 +34,9 @@
   the diagonal.
 
   On the diagonal, homozygosity 0.5*(1+inbreeding) is
-  provided.
+  provided with option 'freq'; with option 'eVar' the
+  diagonal is set to 0.5; the diagonal is set to
+  homozygosity with option 'no'.
 
   attr(computedobject,"Var") returns variance (replacing
   the diagonal when the object is used by
@@ -51,8 +53,8 @@
   When weight "freq" is used, IBS for a pair of people i
   and j is computed as
 
-  \deqn{ f_{i,j} = \Sigma_k \frac{(x_{i,k} - p_k) *
-  (x_{j,k} - p_k)}{(p_k * (1 - p_k))} }
+  \deqn{ f_{i,j} = \frac{1}{N} \Sigma_k \frac{(x_{i,k} -
+  p_k) * (x_{j,k} - p_k)}{(p_k * (1 - p_k))} }
 
   where k changes from 1 to N = number of SNPs GW,
   \eqn{x_{i,k}} is a genotype of ith person at the kth SNP,
@@ -61,7 +63,14 @@
   of the kinship coefficient.
 
   With "eVar" option above formula changes by using ( 2 *
-  empirical variance of the genotype ) in the denominator
+  empirical variance of the genotype ) in the denominator.
+  The empirical variance is computed according to the
+  formula
+
+  \deqn{ Var(g_k) = \frac{1}{M} \Sigma_i g_{ik}^2 -
+  E[g_k]^2 }
+
+  where M is the number of people
 
   Only with "freq" option monomorphic SNPs are regarded as
   non-informative.
@@ -71,7 +80,7 @@
 }
 \examples{
 data(ge03d2c)
-set.seed(1)
+set.seed(7)
 # compute IBS based on a random sample of 1000 autosomal marker
 selectedSnps <- sample(autosomal(ge03d2c),1000,replace=FALSE)
 a <- ibs(ge03d2c,snps=selectedSnps)

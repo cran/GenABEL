@@ -62,6 +62,7 @@ unsigned short calcDataSize(unsigned short int type){
 		desize = sizeof(unsigned char);
 		break;
 	  default:
+	        desize = 0;
 		errorLog << "file contains data of unknown type " << type << endl << errorExit;
 	}
 	return desize;

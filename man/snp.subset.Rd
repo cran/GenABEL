@@ -27,7 +27,8 @@ snp.subset(data, snpsubset)
 \examples{
 data(srdta)
 # processing check.marker object
-#mc <- check.marker(data=srdta@gtdata[,1:100],redundant="all",maf=0.01,minconcordance=0.9,fdr=.1,ibs.mrk=0)
+#mc <- check.marker(data=srdta@gtdata[,1:100],redundant="all",maf=0.01,
+# minconcordance=0.9,fdr=.1,ibs.mrk=0)
 mc <- check.marker(data=srdta@gtdata[,1:100],maf=0.01,fdr=.1,ibs.mrk=0)
 summary(mc)
 #plot(mc)

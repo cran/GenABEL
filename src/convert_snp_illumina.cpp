@@ -67,7 +67,7 @@ void convert_snp_illumina (char** filename, char** outfilename, int* Strandid, i
 	for (int i=0;i<ncodes;i++) codeset[i].assign(allele_codes[i]);
 
 	ifstream illfile (filename[0]);
-	if (illfile == NULL) {
+	if (illfile.bad()) {
 		error ("could not open file '%s'!",filename[0]);
 	}
 
@@ -244,7 +244,7 @@ void convert_snp_illumina (char** filename, char** outfilename, int* Strandid, i
 	const ios_base::fmtflags hex = ios_base::hex;
 
 	ofstream outfile (outfilename[0]);
-	if (outfile == NULL) {
+	if (outfile.bad()) {
 		error ("could not open file '%s' !",outfilename[0]);
 	}
 

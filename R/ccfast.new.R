@@ -14,7 +14,7 @@ function(y,data,snpsubset,idsubset,quiet=FALSE) {
 	cc <- phdata(data)[[y]]
 
         if (length(levels(as.factor(cc)))<2) stop("cc status is monomorphic!") 
-        if (length(levels(as.factor(cc)))>2) stop("cc status has more then 2 levels!") 
+        if (length(levels(as.factor(cc)))>2) stop("cc status has more than 2 levels!") 
         if (levels(as.factor(cc))[1] != 0 || levels(as.factor(cc))[2] != 1) stop ("cc is case-control status, with 0 as control and 1 as cases. No 0 and/or 1 found in the data")
 
 	if (any(is.na(cc))) {

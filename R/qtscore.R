@@ -30,7 +30,7 @@
 #' @param strata Stratification variable. If provieded, scores are computed within strata and 
 #' then added up.
 #' @param trait.type "gaussian" or "binomial" or "guess" (later option guesses trait type)
-#' @param times If more then one, the number of replicas to be used in derivation of 
+#' @param times If more than one, the number of replicas to be used in derivation of 
 #' empirical genome-wide significance. See \code{\link{emp.qtscore}}, which
 #' calls qtscore with times>1 for details
 #' @param quiet do not print warning messages

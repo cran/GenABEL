@@ -131,7 +131,7 @@ extern "C" {
 		if (indata) {
 			unsigned int i;
 			for(i=0;i<indataHeight*indataWidth;i++) {
-				if (isnan(indata[i])) gt[i] = 0;
+				if (ISNAN(indata[i])) gt[i] = 0;
 				else gt[i] = 1 + (unsigned int) indata[i];
 				//Rprintf(" %f %d;",indata[i],gt[i]);
 			}

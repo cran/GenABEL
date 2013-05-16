@@ -28,7 +28,7 @@
   \item{trait.type}{"gaussian" or "binomial" or "guess"
   (later option guesses trait type)}
 
-  \item{times}{If more then one, the number of replicas to
+  \item{times}{If more than one, the number of replicas to
   be used in derivation of empirical genome-wide
   significance. See \code{\link{emp.qtscore}}, which calls
   qtscore with times>1 for details}

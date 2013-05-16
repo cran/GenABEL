@@ -6,7 +6,8 @@ Fast score test for association between a trait and genetic polymorphism,
 adjusted for possible stratification by principal components.
 }
 \usage{
-egscore.old(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0) 
+egscore.old(formula,data,snpsubset,idsubset,kinship.matrix,naxes=3,strata,
+				times=1,quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0) 
 }
 \arguments{
   \item{formula}{Formula describing fixed effects to be used in analysis, e.g. 

@@ -10,7 +10,7 @@
 #' When weight "freq" is used, IBS for a pair of people i and j is computed as
 #' 
 #' \deqn{
-#' f_{i,j} = \Sigma_k \frac{(x_{i,k} - p_k) * (x_{j,k} - p_k)}{(p_k * (1 - p_k))}
+#' f_{i,j} = \frac{1}{N} \Sigma_k \frac{(x_{i,k} - p_k) * (x_{j,k} - p_k)}{(p_k * (1 - p_k))}
 #' }
 #' 
 #' where k changes from 1 to N = number of SNPs GW, \eqn{x_{i,k}} is 
@@ -20,7 +20,14 @@
 #' kinship coefficient.
 #' 
 #' With "eVar" option above formula changes by using ( 2 * empirical variance 
-#' of the genotype ) in the denominator
+#' of the genotype ) in the denominator. The empirical variance is computed 
+#' according to the formula 
+#' 
+#' \deqn{
+#' Var(g_k) = \frac{1}{M} \Sigma_i g_{ik}^2 - E[g_k]^2
+#' }
+#' 
+#' where M is the number of people
 #' 
 #' Only with "freq" option monomorphic SNPs are regarded as non-informative.
 #' 
@@ -30,7 +37,9 @@
 #' between a pair below the diagonal and number of SNP genotype  
 #' measured for both members of the pair above the diagonal. 
 #' 
-#' On the diagonal, homozygosity 0.5*(1+inbreeding) is provided.
+#' On the diagonal, homozygosity 0.5*(1+inbreeding) is provided with option 
+#' 'freq';  with option 'eVar' the diagonal is set to 0.5; the diagonal is set 
+#' to homozygosity with option 'no'.  
 #' 
 #' attr(computedobject,"Var") returns variance (replacing the 
 #' diagonal when the object is used by \code{\link{egscore}}
@@ -55,7 +64,7 @@
 #' 
 #' @examples 
 #' data(ge03d2c)
-#' set.seed(1)
+#' set.seed(7)
 #' # compute IBS based on a random sample of 1000 autosomal marker
 #' selectedSnps <- sample(autosomal(ge03d2c),1000,replace=FALSE)
 #' a <- ibs(ge03d2c,snps=selectedSnps)
@@ -118,7 +127,7 @@
 		homodiag <- hom(data)[,"Hom"]
 		option = 0
 	} else if (weight == "freq") {
-		homodiag <- 0.5+(hom(data,snpfreq=snpfreq)[,"F"]/2)
+		homodiag <- 0.5*(1+hom(data,snpfreq=snpfreq)[,"F"])
 		option = 1
 	} else if (weight == "homo") {
 		smr <- summary(data)

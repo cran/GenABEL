@@ -10,11 +10,11 @@ of the genotypes (including missing values).
 }
 \usage{
 check.marker(data, snpsubset, idsubset, callrate = 0.95, 
-		perid.call=0.95, extr.call = 0.1, extr.perid.call = 0.1, het.fdr = 0.01, 
-		ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="both", maf, p.level = -1, fdrate = 0.2, 
-		odds = 1000, hweidsubset, redundant = "no", 
-		minconcordance = 2.0, qoption = "bh95", imphetasmissing = TRUE, XXY.call=0.8,
-		intermediateXF = c(0.5, 0.5)) 
+     perid.call=0.95, extr.call = 0.1, extr.perid.call = 0.1, het.fdr = 0.01, 
+     ibs.threshold = 0.95, ibs.mrk = 2000, ibs.exclude="both", maf, p.level = -1, 
+     fdrate = 0.2, odds = 1000, hweidsubset, redundant = "no", 
+     minconcordance = 2.0, qoption = "bh95", imphetasmissing = TRUE, XXY.call=0.8,
+     intermediateXF = c(0.5, 0.5)) 
 }
 \arguments{
   \item{data}{gwaa.data or snp.data object}
@@ -119,7 +119,8 @@ data(srdta)
 mc <- check.marker(data=srdta,ids=c(1:300),call=.92,perid.call=.92)
 names(mc)
 mc$nohwe
-mc <- check.marker(data=srdta@gtdata[,1:100],call=0.95,perid.call=0.9,maf=0.02,minconcordance=0.9,fdr=0.1,redundant="all",ibs.mrk=0)
+mc <- check.marker(data=srdta@gtdata[,1:100],call=0.95,perid.call=0.9,
+		maf=0.02,minconcordance=0.9,fdr=0.1,redundant="all",ibs.mrk=0)
 summary(mc)
 HWE.show(data=srdta,snps=mc$nohwe)
 plot(mc)

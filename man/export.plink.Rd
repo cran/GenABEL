@@ -3,7 +3,7 @@
 \title{Export GenABEL data in PLINK format}
 \usage{
   export.plink(data, filebasename = "plink",
-    phenotypes = "all", transpose = FALSE,
+    phenotypes = "all", transpose = TRUE,
     export012na = FALSE, ...)
 }
 \arguments{

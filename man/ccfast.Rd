@@ -6,7 +6,8 @@ Fast case-control analysis by computing chi-square test
 from 2x2 (allelic) or 2x3 (genotypic) tables
 }
 \usage{
-ccfast(y, data, snpsubset, idsubset, times=1, quiet=FALSE,bcast=10,clambda=TRUE,propPs=1.0)
+ccfast(y, data, snpsubset, idsubset, times=1, quiet=FALSE,bcast=10,
+		clambda=TRUE,propPs=1.0)
 }
 \arguments{
   \item{y}{character name of the vector of case-control status. Cases are denoted as 1 and controls as 0.}

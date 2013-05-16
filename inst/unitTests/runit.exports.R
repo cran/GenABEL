@@ -27,7 +27,7 @@ test.exports <- function()
 	nTestSnps <- sample(c(10:min(1000,nsnps(ge03d2.clean))),1)
 	dta <- ge03d2.clean[sort(sample(1:nids(ge03d2.clean),nTestIds)),
 			sort(sample(1:nsnps(ge03d2.clean),nTestSnps))]
-
+	
 	export.plink(dta,filebasename="tmpOld",dpieceFun="old")
 	export.plink(dta,filebasename="tmpNew",dpieceFun="new")
 	xO <- read.table(file="tmpOld.ped",head=FALSE,strings=FALSE)
@@ -79,4 +79,20 @@ test.exports <- function()
 	
 	unlink("tmpTrans*")
 	
+}
+
+test.export.merlin.bug2525 <- function()
+{
+	data(srdta)
+	export.merlin(
+			srdta[,1:2],dpieceFun="new",
+			mapfile="tmpNew.map",pedfile="tmpNew.ped",datafile="tmpNew.dat"
+	)
+	export.merlin(
+			srdta[,1:2],dpieceFun="old",
+			mapfile="tmpOld.map",pedfile="tmpOld.ped",datafile="tmpOld.dat"
+	)
+	xO <- read.table(file="tmpOld.ped",head=FALSE,strings=FALSE)
+	xN <- read.table(file="tmpNew.ped",head=FALSE,strings=FALSE)
+	checkIdentical(xN,xO)
 }

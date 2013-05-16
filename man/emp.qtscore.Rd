@@ -6,8 +6,8 @@ Genome-wide significance for a GWA scan. Analysis
 function is \code{\link{qtscore}}. 
 }
 \usage{
-emp.qtscore(formula , data, snpsubset, idsubset, strata, trait.type="gaussian", times = 200, 
-		quiet=FALSE, bcast = 10)
+emp.qtscore(formula , data, snpsubset, idsubset, strata, trait.type="gaussian", 
+		times = 200, quiet=FALSE, bcast = 10)
 }
 \arguments{
   All arguments are the same as in and passed intact to the \code{\link{qtscore}}.

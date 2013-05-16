@@ -77,11 +77,14 @@ cor(x$y.true,imptra)
 # see what comes out of regression
 # analysis of true value
 summary(lm(y.true~sex+age+gt,data=x))
-# ignore treatment (as a rule, betas are underestimated; on average, power goes down)
+# ignore treatment (as a rule, betas are underestimated; 
+# on average, power goes down)
 summary(lm(y.obs~sex+age+gt,data=x))
-# treatment as covariate (as a rule, betas are underestimated; on average, power goes down)
+# treatment as covariate (as a rule, betas are underestimated; 
+# on average, power goes down)
 summary(lm(y.obs~sex+age+gt+medication,data=x))
-# analyse "imputed" trait (as a rule betas are better; power approaches that of analysis of "true" trait)
+# analyse "imputed" trait (as a rule betas are better; power 
+# approaches that of analysis of "true" trait)
 summary(lm(imptra~sex+age+gt,data=x))
 }
 \keyword{robust}

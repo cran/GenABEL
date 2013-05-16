@@ -1,8 +1,8 @@
 \docType{package}
 \name{GenABEL}
+\alias{genabel}
 \alias{GenABEL}
 \alias{GenABEL-package}
-\alias{genabel}
 \title{GWAS in R}
 \description{
   GenABEL: an R package for Genome Wide Association

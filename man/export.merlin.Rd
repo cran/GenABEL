@@ -5,9 +5,10 @@
 	Exports GenABEL data to Merlin and other pedigree formats
 }
 \usage{
-	export.merlin(data, pedfile = "merlin.ped", datafile = "merlin.dat", mapfile = "merlin.map", 
-	format = "merlin", fixstrand = "no", extendedmap = TRUE, traits = 1, order = TRUE, 
-	stepids = 100, dpieceFun = "new")
+	export.merlin(data, pedfile = "merlin.ped", datafile = "merlin.dat", 
+	     mapfile = "merlin.map", format = "merlin", fixstrand = "no", 
+	     extendedmap = TRUE, traits = 1, order = TRUE, stepids = 100, 
+	     dpieceFun = "new")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

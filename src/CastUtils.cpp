@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <R_ext/Arith.h>
 
 using namespace std;
 
@@ -183,10 +184,10 @@ bool checkNan(void *data, int dataType){
     	    return (*(unsigned int*) data) == UNSIGNED_INT_NAN;
     	case INT:
     	    return (*(int*) data) == INT_NAN;
-    	case FLOAT:
-    	    return isnan(*(float*) data);
+//    	case FLOAT:
+//    	    return ::isnan(*(float*) data);
     	case DOUBLE:
-    	    return isnan(*(double*) data);
+    	    return ISNAN(*(double*) data);
     	case UNSIGNED_CHAR:
     	    return (*(unsigned char*) data) == UNSIGNED_CHAR_NAN;
     	case SIGNED_CHAR:

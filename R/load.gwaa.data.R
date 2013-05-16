@@ -19,7 +19,7 @@ function(phenofile = "pheno.dat", genofile = "geno.raw",force = TRUE, makemap=FA
 	}
 ####
 	if (length(a) > 2)
-		stop("column named \"sex\" contains more then 2 codes")
+		stop("column named \"sex\" contains more than 2 codes")
 	if (length(a) == 1 && !(names(a)[1] == 0 || names(a)[1] == 1))
 		stop("the column named \"sex\" contains 1 code which is neither 0 (=female) or 1 (=male)")
 	if (length(a) == 2 && names(a)[1] != 0 && names(a)[2] != 1)

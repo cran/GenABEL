@@ -295,9 +295,10 @@
 			eigres <- eigenOfRel
 		else
 			eigres <- eigen(relmat,symmetric=TRUE)
-		if (any(eigres$values<0)) {
-			#eigres$values <- abs(eigres$values)
-			warning("some eigenvalues <=0, taking ABS for det; try option llfun='polylik'")
+		if (any(eigres$values<1e-16)) {
+			eigres$values[eigres$values<1e-16] <- 1e-16
+            msg <- paste("some eigenvalues close/less than 1e-16, setting them to 1e-16\nyou can also try option llfun='polylik' instead")
+			warning(msg)
 		}
 	} else stop("cannot be here...")
 	if (!quiet) {
@@ -568,7 +569,7 @@
 #	print(proc.time()-time0)
 # end old variant
 # new variant
-	a <- sum(log(abs(es))) # logarithm of determinant of sigma as sum of logarithm of eigenvalues
+	a <- sum(log(es)) # logarithm of determinant of sigma as sum of logarithm of eigenvalues
 # end new variant
 	b <- (t(resY) %*% InvSigma_x_residualY)
 # this is -2*lnLikelihood

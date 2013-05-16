@@ -59,7 +59,8 @@ data(ge03d2c)
 a <- ibs(data=ge03d2c,ids=c(1:10),snps=c(1:1000))
 a
 # compute IBS based on a random sample of 1000 autosomal marker
-a <- ibs(ge03d2c,snps=sample(ge03d2c@gtdata@snpnames[ge03d2c@gtdata@chromosome!="X"],1000,replace=FALSE),weight="freq")
+a <- ibs(ge03d2c,snps=sample(ge03d2c@gtdata@snpnames[ge03d2c@gtdata@chromosome!="X"],
+			1000,replace=FALSE),weight="freq")
 mds <- cmdscale(as.dist(1-a))
 plot(mds)
 # identify smaller cluster of outliers

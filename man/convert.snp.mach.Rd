@@ -6,7 +6,8 @@ Converts genotypic data from MACH format to internal genotypic data formated fil
 (NOT recommended)
 }
 \usage{
-convert.snp.mach(pedfile, mapfile, infofile, outfile, quality = 0.9, column.quality = 7, strand = "+", ...)
+convert.snp.mach(pedfile, mapfile, infofile, outfile, quality = 0.9, 
+					column.quality = 7, strand = "+", ...)
 }
 \arguments{
   \item{pedfile}{
