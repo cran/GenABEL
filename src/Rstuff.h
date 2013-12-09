@@ -1,5 +1,5 @@
-#ifndef __RSTAFF_H__
-#define __RSTAFF_H__
+#ifndef __RSTUFF_H__
+#define __RSTUFF_H__
 
 #include <string>
 #include <cstring>

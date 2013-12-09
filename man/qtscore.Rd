@@ -83,6 +83,7 @@
   performed (strata=sex).
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 #qtscore with stratification
 a <- qtscore(qt3~sex,data=srdta)

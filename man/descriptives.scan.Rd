@@ -26,6 +26,7 @@
 %\seealso{
 %}
 \examples{
+	require(GenABEL.data)
 	data(srdta)
 	x <- qtscore(qt2,srdta)
 	descriptives.scan(x)

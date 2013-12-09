@@ -51,6 +51,7 @@ analysis of the original (not permuted) data set
 \code{\link{scan.gwaa-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 a<-ccfast("bt",data=srdta,snps=c(500:800))
 plot(a)

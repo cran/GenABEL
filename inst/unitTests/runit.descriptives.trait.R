@@ -22,6 +22,7 @@ if(FALSE) {
 
 test.descriptives.trait <- function()
 {
+  	require(GenABEL.data)
     data(ge03d2ex)
 # this works
     descriptives.trait(ge03d2ex,by.var=phdata(ge03d2ex)$sex)

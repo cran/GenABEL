@@ -20,6 +20,7 @@ crnames(dnames,idx)
 %\references{
 %}
 \examples{
+	require(GenABEL.data)
 	data(ge03d2ex)
 	a <- as.numeric(ge03d2ex[1:20,1:3])
 	crnames(dimnames(a),a==1)

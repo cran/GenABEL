@@ -14,13 +14,15 @@
 
   \item{machbasename}{base name for MACH-formatted outputs}
 
-  \item{maketextdosefile}{whether text dosefile is to be
+  \item{maketextdosefile}{whether a text dosefile is to be
   generated (if not, only filevector (*.fvi / *.fvd) files,
-  usable with ProbABEL, will be generated)}
+  usable with ProbABEL/DatABEL, will be generated).
+  Default: TRUE}
 
   \item{...}{arguments passed to
-  \link{extract.annotation.impute} (DO CHECK documentation,
-  otherwise your annotation may be skrewed up!)}
+  \link{extract.annotation.impute} (DO CHECK the
+  documentation, otherwise your annotation may be skrewed
+  up!)}
 }
 \value{
   nothing returned except files generated on the disk

@@ -109,6 +109,7 @@
   parameter.
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2.clean)
 df <- ge03d2.clean[,autosomal(ge03d2.clean)]
 df <- df[,sort(sample(1:nsnps(df),1000))]

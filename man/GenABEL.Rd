@@ -126,7 +126,9 @@
   (heritability analysis), \code{\link{polygenic_hglm}}
   (another function for heritability analysis),
   \code{\link{mmscore}} (score test of Chen and Abecasis),
-  \code{\link{grammar}} (grammar test of Aulchenko et al.).
+  \code{\link{grammar}} (grammar, grammar-gc, and
+  garmmar-gamma tests of Aulchenko et al., Amin et al., and
+  Svishcheva et al.).
 
   For functions facilitating construction of tables for
   your manuscript, see \code{\link{descriptives.marker}},
@@ -202,6 +204,13 @@ demo(srdtawin)
   Aulchenko YS. Rapid variance components-based method for
   whole-genome association analysis. Nature Genetics. 2012
   44:1166-1170. doi:10.1038/ng.2410
+
+  for GRAMMAR+ transformation
+
+  Belonogova NM, Svishcheva GR, van Duijn CM, Aulchenko YS,
+  Axenovich TI (2013) Region-Based Association Analysis of
+  Human Quantitative Traits in Related Individuals. PLoS
+  ONE 8(6): e65395. doi:10.1371/journal.pone.0065395
 
   If you used \code{\link{mmscore}}, please cite
 

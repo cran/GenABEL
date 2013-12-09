@@ -58,6 +58,7 @@ Schaid DJ, Rowland CM, Tines DE, Jacobson RM, Poland GA. (2002) Score tests for 
 \code{\link[haplo.stats]{haplo.score.slide}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 a <- ccfast("bt",srdta,snps=(717:733),ids=(srdta@phdata$age<40))
 plot(a)

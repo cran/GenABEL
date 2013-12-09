@@ -28,6 +28,7 @@
 \code{\link{as.genotype.snp.data}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 as.data.frame(srdta[1:5,])
 }

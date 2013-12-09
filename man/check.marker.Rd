@@ -98,6 +98,7 @@ check.marker(data, snpsubset, idsubset, callrate = 0.95,
 }
 \examples{
 # usual way
+require(GenABEL.data)
 data(ge03d2c)
 # truncate the data to make the example faster
 ge03d2c <- ge03d2c[seq(from=1,to=nids(ge03d2c),by=2),seq(from=1,to=nsnps(ge03d2c),by=2)]
@@ -115,6 +116,7 @@ summary(mc2)
 # ready to use fixed1 for analysis
 
 # let us look into redundancy
+require(GenABEL.data)
 data(srdta)
 mc <- check.marker(data=srdta,ids=c(1:300),call=.92,perid.call=.92)
 names(mc)

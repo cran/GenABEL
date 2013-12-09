@@ -79,6 +79,7 @@
   people.
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2c)
 set.seed(7)
 # compute IBS based on a random sample of 1000 autosomal marker

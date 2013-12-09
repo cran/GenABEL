@@ -30,6 +30,7 @@
 \code{\link{as.genotype.snp.data}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 as.character(srdta@gtdata@coding[1:5])
 }

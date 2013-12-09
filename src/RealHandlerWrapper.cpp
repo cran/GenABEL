@@ -5,22 +5,23 @@
 bool RealHandlerWrapper::open(const string &iFileName, bool iReadOnly) {
     fileName = iFileName;
     if (useCount > 0) {
-        useCount++;    
+        useCount++;
         return true;
     }
 
-	if (iReadOnly) {
-		stream.open(fileName.c_str(), ios::in | ios::binary);
-	} else {
-		stream.open(fileName.c_str(), ios::out | ios::in | ios::binary);
-	}
+    if (iReadOnly) {
+        stream.open(fileName.c_str(), ios::in | ios::binary);
+    } else {
+        stream.open(fileName.c_str(), ios::out | ios::in | ios::binary);
+    }
 
     readOnly = iReadOnly;
 
-	useCount = 1;
+    useCount = 1;
 
-	return !!(stream);
+    return !!(stream);
 }
+
 
 void RealHandlerWrapper::close(){
     if (useCount > 1) {
@@ -31,7 +32,9 @@ void RealHandlerWrapper::close(){
     }
 }
 
-void RealHandlerWrapper::blockWriteOrRead(unsigned long iLength, char* data, bool writeAction) {
+
+void RealHandlerWrapper::blockWriteOrRead(unsigned long iLength, char* data,
+                                          bool writeAction) {
     ::blockWriteOrRead(stream, iLength, data, writeAction);
 }
 

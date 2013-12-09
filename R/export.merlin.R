@@ -11,7 +11,7 @@
 	} else {
 		if (dpieceFunInt==1) dump.piece=dump.piece
 		else if (dpieceFunInt==2) dump.piece=dump.piece.New
-		else stop("weird staff!")
+		else stop("weird stuff!")
 	}
 	formats <- c("merlin","plink")
 	if (!(match(format,formats,nomatch=0)>0)) {

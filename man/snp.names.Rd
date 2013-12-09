@@ -26,6 +26,7 @@ snp.names(data, begin, end, chromosome)
 %\note{}
 \seealso{\code{\link{snp.data-class}}}
 \examples{
+require(GenABEL.data)
 data(srdta)
 snp.names(srdta, begin = 50000, end = 100000)
 snp.names(srdta, begin = 50000, end = 100000, chromosome = "1")

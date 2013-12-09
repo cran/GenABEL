@@ -22,6 +22,7 @@ if(FALSE) {
 
 test.polylik <- function(tol = 2*.Machine$double.eps^0.5)
 {
+  	require(GenABEL.data)
     data(ge03d2.clean)
     df <- ge03d2.clean[1:150,autosomal(ge03d2.clean)]
     gkin <- ibs(df,w="freq")

@@ -63,6 +63,7 @@ people, across multiple markers. Can be used for Quality Control
 \code{\link{snp.data-class}}
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2)
 h <- hom(ge03d2[,c(1:100)])
 homsem <- h[,"Hom"]*(1-h[,"Hom"])/h[,"NoMeasured"]

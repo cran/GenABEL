@@ -22,6 +22,7 @@ if(FALSE) {
 
 test.polygenic.Bug1322 <- function()
 {
+  require(GenABEL.data)
 	data(ge03d2.clean)
 	df <- ge03d2.clean[1:200,autosomal(ge03d2.clean)]
 	gkin <- ibs(df,w="freq")
@@ -50,6 +51,7 @@ test.polygenic.Bug1322 <- function()
 
 test.polygenic.eigenOfRel <- function()
 {
+  require(GenABEL.data)
 	data(ge03d2.clean)
 	completeIds <- complete.cases(phdata(ge03d2.clean)[,c("height","sex","age")])
 	df <- ge03d2.clean[sample(which(completeIds),250),autosomal(ge03d2.clean)]

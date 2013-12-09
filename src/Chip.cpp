@@ -77,7 +77,7 @@ for(unsigned i=0 ; i<snp_amount ; i++)
 
 file.close();
 
-delete buf;
+delete[] buf;
 
 }
 //__________________________________________________________
@@ -277,7 +277,7 @@ while(1)
 
 
 file.close();
-delete buf;
+delete[] buf;
 }
 //__________________________________________________________
 

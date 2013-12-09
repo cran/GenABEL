@@ -36,6 +36,7 @@ scan.glm(formula, family = gaussian(), data, snpsubset, idsubset,
 	\code{\link{scan.gwaa-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 a <- scan.glm("bt~sex+age+CRSNP",family=binomial(),data=srdta,snps=(1:10),bcast=2)
 #plot(a)

@@ -38,10 +38,11 @@ add.plot(x, ..., df = 1,  col=c("lightgreen","lightblue"), sort=TRUE, delta = 1)
 	\code{\link{scan.glm.2D}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 a <- ccfast("bt",srdta,snps=c(1:100))
 plot(a)
 a1 <- qtscore(bt,srdta,snps=c(1:100))
 add.plot(a1,col="red",type="l")
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
+\keyword{aplot}% at least one, from doc/KEYWORDS

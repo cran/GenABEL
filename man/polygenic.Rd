@@ -100,11 +100,11 @@
   "environmental residuals"!}
   \item{pgresidualY}{Environmental residuals from analysis,
   based on covariate effects and predicted breeding value.
-  } \item{grresidualY}{GRAMMAR-transform trait
-  transformation} \item{grammarGamma}{list with
-  GRAMMAR-gamma correction factors} \item{InvSigma}{Inverse
-  of the variance-covariance matrix, computed at the MLEs
-  -- these are used in \code{\link{mmscore}} and
+  } \item{grresidualY}{GRAMMAR+ transformed trait
+  residuals} \item{grammarGamma}{list with GRAMMAR-gamma
+  correction factors} \item{InvSigma}{Inverse of the
+  variance-covariance matrix, computed at the MLEs -- these
+  are used in \code{\link{mmscore}} and
   \code{\link{grammar}} functions.} \item{call}{The details
   of call} \item{measuredIDs}{Logical values for IDs who
   were used in analysis (traits and all covariates
@@ -178,6 +178,7 @@
 }
 \examples{
 # note that procedure runs on CLEAN data
+require(GenABEL.data)
 data(ge03d2ex.clean)
 gkin <- ibs(ge03d2ex.clean,w="freq")
 h2ht <- polygenic(height ~ sex + age, kin=gkin, ge03d2ex.clean)
@@ -203,17 +204,33 @@ h2dm$h2an
   quantitative traits: variance components without matrix
   inversion. Biometrics 46, 399-413.
 
+  for original GRAMMAR
+
   Aulchenko YS, de Koning DJ, Haley C. Genomewide rapid
   association using mixed model and regression: a fast and
   simple method for genome-wide pedigree-based quantitative
   trait loci association analysis. Genetics. 2007
   177(1):577-85.
 
+  for GRAMMAR-GC
+
   Amin N, van Duijn CM, Aulchenko YS. A genomic background
   based method for association analysis in related
   individuals. PLoS ONE. 2007 Dec 5;2(12):e1274.
 
-  G. Svischeva et al. (in preparation)
+  for GRAMMAR-Gamma
+
+  Svischeva G, Axenovich TI, Belonogova NM, van Duijn CM,
+  Aulchenko YS. Rapid variance components-based method for
+  whole-genome association analysis. Nature Genetics. 2012
+  44:1166-1170. doi:10.1038/ng.2410
+
+  for GRAMMAR+ transformation
+
+  Belonogova NM, Svishcheva GR, van Duijn CM, Aulchenko YS,
+  Axenovich TI (2013) Region-Based Association Analysis of
+  Human Quantitative Traits in Related Individuals. PLoS
+  ONE 8(6): e65395. doi:10.1371/journal.pone.0065395
 }
 \seealso{
   \code{\link{polygenic_hglm}}, \code{\link{mmscore}},

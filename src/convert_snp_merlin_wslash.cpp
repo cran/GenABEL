@@ -76,7 +76,7 @@ void convert_snp_merlin_wslash (char** pedfilename, char** mapfilename,
 	///////////////////////
 
 	ifstream mapfile (mapfilename[0]);
-	if (mapfile.bad()) {
+	if( !mapfile.is_open()) {
 		error ("could not open file '%s' !",mapfilename[0]);
 	}
 
@@ -137,7 +137,7 @@ void convert_snp_merlin_wslash (char** pedfilename, char** mapfilename,
 	char* chgt[2*MAXIDS];
 
 	ifstream pedfile (pedfilename[0]);
-	if (pedfile.bad()) {
+	if( !pedfile.is_open()) {
 		error ("could not open file '%s' !",pedfilename[0]);
 	}
 
@@ -385,7 +385,7 @@ void convert_snp_merlin_wslash (char** pedfilename, char** mapfilename,
 	const ios_base::fmtflags hex = ios_base::hex;
 
 	ofstream outfile (outfilename[0]);
-	if (outfile.bad()) {
+	if( !outfile.is_open()) {
 		error ("could not open file '%s' !",outfilename[0]);
 	}
 
@@ -435,8 +435,10 @@ void convert_snp_merlin_wslash (char** pedfilename, char** mapfilename,
 		}
 		outfile << endl;
 
-		delete [] tmp_gtype;
 	}
+	
+	delete [] tmp_gtype;
+	delete [] gnum;
 
 	if (verbose) {
 		Rprintf("... done.\n");

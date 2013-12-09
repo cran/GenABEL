@@ -71,6 +71,7 @@
   choosen in the input parameter test is performed.
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 chis2_nocorrection <- cocohet(data=gtdata(srdta),
 trait=phdata(srdta)$bt, window=3, test="CHI2")

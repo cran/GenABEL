@@ -1,10 +1,11 @@
-\name{GC_ovdom}
-\alias{GC_ovdom}
-\title{Genomic control for overdimunant model of inheritance using VIF}
+\name{VIFGC_ovdom}
+\alias{VIFGC_ovdom}
+\title{Genomic control for over-dominant model of inheritance using VIF}
 \usage{
-  GC_ovdom(data, p, method = "regress", n,
+  VIFGC_ovdom(data, p, method = "regress", n,
     index.filter = NULL, proportion = 1, clust = 0,
-    vart0 = 0, tmp = 0)
+    vart0 = 0, tmp = 0, plot = TRUE, lmax = NULL,
+    color = "red")
 }
 \arguments{
   \item{data}{Input vector of Chi square statistic}
@@ -15,13 +16,20 @@
   \item{p}{Input vector of allele frequencies}
 
   \item{index.filter}{Indexes for variables that will be
-  use for analisis in data vector}
+  use for analysis in data vector}
 
   \item{n}{size of the sample}
 
   \item{proportion}{The proportion of lowest P (Chi2) to be
   used when estimating the inflation factor Lambda for
   "regress" method only}
+
+  \item{plot}{If TRUE, plot of lambda will be produced}
+
+  \item{lmax}{The threshold for lambda for plotting
+  (optional)}
+
+  \item{color}{The color of the plot}
 
   \item{clust}{For developers only}
 
@@ -38,11 +46,12 @@
 }
 \description{
   This function estimates the corrected statistic using
-  genomic control for overdimunant model, using VIF. VIF
-  coefficients are estimated by optimizing diffrent error
-  functions: regress, median and ks.test.
+  genomic control for the over-dominant model, using VIF.
+  VIF coefficients are estimated by optimizing different
+  error functions: regress, median and ks.test.
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2)
 # truncate the data to make the example faster
 ge03d2 <- ge03d2[seq(from=1,to=nids(ge03d2),by=2),seq(from=1,to=nsnps(ge03d2),by=3)]
@@ -50,7 +59,7 @@ qts <- mlreg(phdata(ge03d2)$dm2~1,data=ge03d2,gtmode = "overdominant")
 chi2.1df <- results(qts)$chi2.1df
 s <- summary(ge03d2)
 freq <- s$Q.2
-result <- GC_ovdom(p=freq,method = "median",data=chi2.1df,n=nids(ge03d2))
+result <- VIFGC_ovdom(p=freq,method = "median",data=chi2.1df,n=nids(ge03d2))
 }
 \author{
   Yakov Tsepilov

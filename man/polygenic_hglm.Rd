@@ -49,6 +49,7 @@
   value of REML.
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2ex.clean)
 set.seed(1)
 df <- ge03d2ex.clean[,sample(autosomal(ge03d2ex.clean),1000)]

@@ -39,6 +39,7 @@ computation procedure (BH95 by default).
 	\code{\link{check.marker}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 check.trait("qt3",data=srdta)
 n <- names(srdta@phdata)

@@ -38,6 +38,7 @@ redundant(data, pairs = "bychrom", minconcordance = 2.0)
 	\code{\link{check.marker}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 redundant(srdta@gtdata)
 redundant(srdta@gtdata[,1:50],minconcordance=0.8)

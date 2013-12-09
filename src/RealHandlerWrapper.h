@@ -1,7 +1,7 @@
 #ifndef __RealHandlerWrapper__
 #define __RealHandlerWrapper__
 
-class ReusableFileHandle; 
+class ReusableFileHandle;
 
 #include <string>
 #include <map>
@@ -11,15 +11,15 @@ class ReusableFileHandle;
 using namespace std;
 
 class RealHandlerWrapper {
-private:
+ private:
     int useCount;
     fstream stream;
     string fileName;
-    
+
     bool readOnly;
 
-public:
-    RealHandlerWrapper(): useCount(0) {}
+ public:
+RealHandlerWrapper(): useCount(0) {}
 
     void blockWriteOrRead(unsigned long length, char* data, bool writeAction);
     void fseek(unsigned long pos);

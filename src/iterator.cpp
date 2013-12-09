@@ -1,5 +1,5 @@
 #include <cstdarg>
-#include "Rstaff.h"
+#include "Rstuff.h"
 #include "iterator_functions.h"
 #include "iterator.h"
 #include "gwaa_cpp.h"
@@ -247,7 +247,7 @@ extern "C" {
 		if (argList == NULL) {error_R("can not allocate RAM for argList\n");return R_NilValue;}
 		va_list ap;
 		va_start(ap, nrarg); // nrarg is last known parameter
-		for (unsigned register int i = 0; i < narg; i++) {
+		for (unsigned int i = 0; i < narg; i++) {
 			argList[i] = va_arg(ap, SEXP);
 		}
 		va_end(ap);
@@ -265,6 +265,7 @@ extern "C" {
 
 		if ((ncol % step) != 0) {
 			error_R("ncol not divisable by step\n");
+			delete [] argList;
 			return R_NilValue;
 		}
 
@@ -409,7 +410,7 @@ extern "C" {
 
 	/**
 	// OLD STUFF BELOW HERE:
-	// iterator and other staff
+	// iterator and other stuff
 	SEXP databel_impute_prob_2_databel_mach_dose(SEXP imputedata, SEXP OutFileName, SEXP CacheSizeMb)
 	{
 		CHECK_PTR(imputedata);

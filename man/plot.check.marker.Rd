@@ -38,6 +38,7 @@ No value returned. Explanatory note is shown on the screen.
 	\code{\link{snp.subset}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 mc <- check.marker(data=srdta@gtdata[,1:100],redundant="all",maf=0.01,
 					minconcordance=0.9,fdr=.1,ibs.mrk=0)

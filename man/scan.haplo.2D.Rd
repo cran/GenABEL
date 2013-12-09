@@ -56,6 +56,7 @@ Schaid DJ, Rowland CM, Tines DE, Jacobson RM, Poland GA. (2002) Score tests for 
 \examples{
 if (require(haplo.stats)) {
 \dontrun{
+require(GenABEL.data)
 data(srdta)
 c <- scan.haplo.2D("bt~sex+age+CRSNP",data=srdta,snps=(717:733),
 	ids=(srdta@phdata$age<40))

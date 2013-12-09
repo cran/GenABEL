@@ -56,6 +56,7 @@ formetascore(formula, data, stat = qtscore, transform = "no",
 %}
 \seealso{\code{\link{ztransform}},\code{\link{qtscore}}}
 \examples{
+	require(GenABEL.data)
 	data(ge03d2c)
 	x <- formetascore(bmi ~ sex+age,ge03d2c)
 	x[1:10,]

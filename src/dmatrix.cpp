@@ -6,8 +6,8 @@
 
 double **dmatrix(double *array, int ncol, int nrow)
     {
-    register int i;
-    register double **pointer;
+    int i;
+    double **pointer;
 
 //    pointer = (double **) ALLOC(nrow, sizeof(double *));
     pointer = (double **) malloc(nrow*sizeof(double *));

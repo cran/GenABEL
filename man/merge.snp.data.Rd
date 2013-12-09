@@ -76,6 +76,7 @@
 	\code{\link{add.phdata}}
 }
 \examples{
+	require(GenABEL.data)
 	data(srdta)
 	x1 <- srdta[c(1,3,5,6),c(2,4,5,6)]@gtdata
 	x2 <- srdta[c(2,4,5,6),c(1,3,5,6)]@gtdata

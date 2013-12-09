@@ -82,6 +82,7 @@ public:
 
 	coxph_data(regdata regdat) 
 	{
+		maxiter = 0;
 		nids = regdat.nids;
 		ncov = regdat.ncov;
 		if (regdat.noutcomes != 2)
@@ -100,7 +101,7 @@ public:
 		{
 			stime[i] = (regdat.Y).get(i,0);
 			sstat[i] = int((regdat.Y).get(i,1));
-			if (sstat[i] != 1 & sstat[i]!=0) 
+			if (sstat[i] != 1 && sstat[i]!=0) 
 			{
 				//fprintf(stderr,"coxph_data: status not 0/1 (right order: id, fuptime, status ...)\n");
 				error("coxph_data: status not 0/1 (right order: id, fuptime, status ...)");

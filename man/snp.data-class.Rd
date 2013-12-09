@@ -131,6 +131,7 @@
 	\code{\link{snp.mx-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 class(srdta)
 x <- srdta@gtdata

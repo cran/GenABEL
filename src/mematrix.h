@@ -11,7 +11,7 @@ public:
 	int nelements;
 	DT * data;
 
-	mematrix() {nrow=ncol=nelements=0;}
+	mematrix() {nrow=ncol=nelements=0;data=NULL;}
 	mematrix(int nr, int nc);
 	mematrix(const mematrix &M);
 	~mematrix() {if (nelements>0) delete [] data;}

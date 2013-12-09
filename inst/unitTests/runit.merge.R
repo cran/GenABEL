@@ -22,6 +22,8 @@ if(FALSE) {
 
 test.merge.bug1641 <- function()
 {
+	
+  require(GenABEL.data)
 	data(srdta)
 	x1 <- srdta[1:4,1]
 	x2 <- srdta[5:10, 2]
@@ -30,6 +32,7 @@ test.merge.bug1641 <- function()
 
 test.merge.bug1676 <- function() 
 {
+  require(GenABEL.data)
 	data(srdta)
 	x1 <- srdta[1:4,1]
 	x2 <- srdta[5:10, 2]

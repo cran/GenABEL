@@ -55,6 +55,7 @@ is in matrix format as these P-values are generated for each pair of SNPs in tur
 }
 \examples{
 \dontrun{
+require(GenABEL.data)
 data(srdta)
 a <- scan.glm.2D("bt~sex+age+CRSNP",family=binomial(),data=srdta,snps=(1:10),bcast=2)
 plot(a)

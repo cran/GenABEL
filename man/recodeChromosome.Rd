@@ -30,6 +30,7 @@
   entries in 'to'
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2)
 table(chromosome(ge03d2))
 # merge chromosome 3 and X, call chromosome 2 as 15

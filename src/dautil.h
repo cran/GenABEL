@@ -3,7 +3,7 @@
 
 #include <Rdefines.h>
 
-#define error_R Rprintf("ERROR in Rstaff:"); Rprintf
+#define error_R Rprintf("ERROR in Rstuff:"); Rprintf
 
 #ifdef __cplusplus
 extern "C" {

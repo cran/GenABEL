@@ -86,6 +86,7 @@
   This test is defined only for 1 d.f.
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2c)
 #egscore with stratification
 gkin <- ibs(ge03d2c[,autosomal(ge03d2c)],w="freq")

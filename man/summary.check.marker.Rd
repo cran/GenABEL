@@ -26,6 +26,7 @@ of marker which did not pass this or that criteria
 \code{\link{check.marker-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 mc <- check.marker(srdta,ids=c(1:500))
 summary(mc)

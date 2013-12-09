@@ -21,6 +21,7 @@
   returned with 'makeTransitionMatrix').
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 # select 10 first SNPs
 df <- srdta[,1:10]

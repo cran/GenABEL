@@ -102,12 +102,12 @@ snp_snp_interaction_results::~snp_snp_interaction_results(void)
 //__________________________________________________________________________________________
 int snp_snp_interaction_results::push_chi2(float chi2, unsigned central_snp_position, unsigned window_snp_position)
 {
-static int window_current;
+static unsigned int window_current;
 window_current = snp_number - central_snp_position;
 if(window_current > window) window_current=window;
 
-if(central_snp_position >= snp_number || central_snp_position <0) {Rprintf("snp_snp_interaction_results::push_chi2: error: central_snp_position is out of bound"); return -1;}
-if(window_snp_position > window_current || window_snp_position<0) {Rprintf("snp_snp_interaction_results::push_chi2: error: window is out of bound"); return -1;}	
+if(central_snp_position >= snp_number) {Rprintf("snp_snp_interaction_results::push_chi2: error: central_snp_position is out of bound"); return -1;}
+if(window_snp_position > window_current) {Rprintf("snp_snp_interaction_results::push_chi2: error: window is out of bound"); return -1;}	
 chi2_results[central_snp_position][window_snp_position] = chi2;
 //std::cout<<"snp_snp_interaction_results::push_chi2 end\n";
 return 0;
@@ -141,7 +141,7 @@ return maximumValue(chi2_results[central_snp_position], get_current_window(centr
 //__________________________________________________________________________________________
 unsigned snp_snp_interaction_results::get_current_window(unsigned central_snp_position)
 {
-static int window_current;
+static unsigned int window_current;
 window_current = snp_number - central_snp_position - 1;
 if(window_current > window) window_current=window;
 
@@ -161,7 +161,7 @@ max = NA_REAL;
 
 //find first ellement which is not NA. If there is only NAs then return NA
 //_____________________________________________
-for(int i = 0 ; i<number; i++)
+for(unsigned i = 0 ; i<number; i++)
 	{
 	if(ISNAN(array[i])) 
 		{
@@ -178,7 +178,7 @@ if(ISNAN(max)) return max;
 //_____________________________________________
 
 
-for(int i = 1; i<number; i++)
+for(unsigned i = 1; i<number; i++)
 	{
 	if(ISNAN(array[i])) continue;
 	if(array[i] > max)
@@ -255,6 +255,8 @@ else if(test_name == YATES)
 	return chi2_test_yates(m);
 	}
 
+
+return -1;
 }	
 
 
@@ -309,7 +311,7 @@ double fisher_exact_test(double m[2][2])
 	}
 }
 
-double independence_test_2x2(int *x1, int *x2, int* y, int N, unsigned snp1_position, unsigned snp2_position, INDEPENDENCE_TEST_NAME_ENUM test_name, int min_expected_cut_off) 
+double independence_test_2x2(int *x1, int *x2, int* y, unsigned int N, unsigned snp1_position, unsigned snp2_position, INDEPENDENCE_TEST_NAME_ENUM test_name, int min_expected_cut_off) 
 	{
 	static double matrix[2][2];
 
@@ -417,10 +419,10 @@ SEXP interaction_rare_recesive_allele_C_(SEXP set_, SEXP num_ids_, SEXP num_snps
 
 
 
-int num_ids       							= INTEGER_VALUE(num_ids_);
-int num_snps     							  = INTEGER_VALUE(num_snps_);
+unsigned num_ids       					= unsigned(INTEGER_VALUE(num_ids_));
+unsigned num_snps     					= unsigned(INTEGER_VALUE(num_snps_));
 int *trait_binary								= INTEGER(trait_binary_);
-int window        							= INTEGER_VALUE(window_);
+unsigned window        					= unsigned(INTEGER_VALUE(window_));
 int min_expected_cut_off        = INTEGER_VALUE(min_expected_cut_off_); // if observed value less then min_expected_cut_off then perform fisfer or yates
 bool return_all_result 					= LOGICAL_VALUE(return_all_result_); //if true then returns vector with maximum chisq and for each snp and matrix with chi2s where each row corresponds to a snp and a column corresponds to a snp with which interaction is tested with
 
@@ -515,7 +517,7 @@ snp_snp_interaction_results results_all(window, num_snps);
 unsigned step=10000;
 
 float chi2;
-int window_current=window;
+unsigned window_current=window;
 
 //in this loop the tests between two snps within a window is done. In each iteration tests between a "central" snp and snp around (withn a window) are done.
 for(unsigned snp_counter=0 ; snp_counter<num_snps-1 ; snp_counter++) //enumerate eache snp in genome
@@ -616,7 +618,8 @@ else
 
 UNPROTECT(1);
 
-delete snp1, snp2;
+delete [] snp1;
+delete [] snp2;
 
 return(results_R);
 } //end of interaction_rare_recesive_allele_C_

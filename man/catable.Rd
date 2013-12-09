@@ -31,6 +31,7 @@ catable(data, categories = c(quantile(data,c(0.01,0.1,0.5,0.9,0.99),na.rm=TRUE))
 	\code{\link{perid.summary}}
 }
 \examples{
+	require(GenABEL.data)
 	data(srdta)
 	callr <- summary(srdta@gtdata)[,"CallRate"]
 	catable(callr,c(0.93,0.95,0.99))

@@ -44,6 +44,7 @@ to import strand info)
 }
 \examples{
 \dontrun{
+require(GenABEL.data)
 data(srdta)
 export.impute(srdta[1:50,1:3])
 }

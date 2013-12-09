@@ -19,13 +19,14 @@ using namespace std;
 
 class ErrorExit {};
 class Logger {
-public:
+ public:
 //    enum ErrorLevel {Message, Debug, Error};
     int errorLevel;
     bool enabled;
 
-    Logger(int iErrorLevel) : errorLevel(iErrorLevel), enabled(true) {}
-    Logger(int iErrorLevel, bool iEnabled) : errorLevel(iErrorLevel), enabled(iEnabled) {}
+Logger(int iErrorLevel) : errorLevel(iErrorLevel), enabled(true) {}
+Logger(int iErrorLevel, bool iEnabled) : errorLevel(iErrorLevel),
+        enabled(iEnabled) {}
     Logger &operator << (const char* s){
         sendString(s);
         return *this;
@@ -42,27 +43,28 @@ public:
         sendString("\n");
         return *this;
     }
-    Logger &operator<< (ErrorExit&) {
-        #ifdef R_R_H
-            throw 1;
-        #else
-	        exit(EXIT_FAILURE);
-        #endif
+    Logger &operator << (ErrorExit&) {
+#ifdef R_R_H
+        throw 1;
+#else
+        exit(EXIT_FAILURE);
+#endif
         return *this;
     }
-private:
+
+ private:
     void sendString(string s){
         if (!enabled)
             return;
-        #ifdef R_R_H
-            Rprintf("%s",s.c_str());
-        #else
+#ifdef R_R_H
+        Rprintf("%s",s.c_str());
+#else
         if (errorLevel == ERROR_LEVEL) {
             cerr << s;
         } else {
             cout << s;
         }
-        #endif
+#endif
     }
 };
 

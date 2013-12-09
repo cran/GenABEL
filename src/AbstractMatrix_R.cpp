@@ -1,4 +1,4 @@
-#include "Rstaff.h"
+#include "Rstuff.h"
 
 #include "FilteredMatrix.h"
 #include "Logger.h"
@@ -286,10 +286,10 @@ extern "C" {
 		unsigned long cachesizeMb = (unsigned long) INTEGER(cacheMb)[0];
 		bool readonly = LOGICAL(ReadOnly)[0];
 		string filename = CHAR(STRING_ELT(fname,0));
-		if (cachesizeMb<0) {
-			error_R("negative cache size\n");
-			return R_NilValue;
-		}
+//		if (cachesizeMb<0) {
+//			error_R("negative cache size\n");
+//			return R_NilValue;
+//		}
 
 		AbstractMatrix* p = NULL;
 
@@ -362,7 +362,8 @@ extern "C" {
 			return R_NilValue;
 		}
 
-		if (nvariable <0 || nvariable >= nvars) {
+		if (nvariable >= nvars) {
+//		if (nvariable <0 || nvariable >= nvars) {
 			error_R("nvar (%lu) out of range!\n",nvariable);
 			return R_NilValue;
 		}

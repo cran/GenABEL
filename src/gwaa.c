@@ -364,7 +364,7 @@ void fastcc_new(char *indata, int *cc, int *Nids, int *Nsnps, double *chi2) {
 	unsigned int nids = (*Nids);
 	unsigned int nsnps = (*Nsnps);
 	unsigned int gt[nids];
-	unsigned int count[2][4],R,S,N,r1,r2,n1,n2;
+	unsigned int count[2][4],R,N,r1,r2,n1,n2;//,S;
 	double mul, a, b, c, den;
 	char str;
 	unsigned int nbytes;
@@ -389,7 +389,7 @@ void fastcc_new(char *indata, int *cc, int *Nids, int *Nsnps, double *chi2) {
 		r1 = count[1][2]; r2 = count[1][3];
 		n1 = r1 + count[0][2]; n2 = r2 + count[0][3];
 		R = r1 + r2 + count[1][1];
-		S = count[0][1]+count[0][2]+count[0][3];
+		//S = count[0][1]+count[0][2]+count[0][3];
 		if (N>0 && R>0 && R<N) {
 			mul = (1.*N)/(1.*R*(N-R));
 			a = 1.*(n1+2.*n2);
@@ -513,7 +513,7 @@ void qtscore(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, int *
 	int nbytes;
 	double Ttotg, mx, bb, dgt, totg[nstra], x2[nstra], sumx[nstra];
 	double Tsg1, Tsg2, sg1[nstra], sg2[nstra], xg1[nstra], xg2[nstra];
-	double det, u, v, u1, u2, v11, v12, v22;
+	double u, v, u1, u2, v11, v12, v22,det;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	//	char chgt[nbytes];
 
@@ -1028,7 +1028,7 @@ void mmscore_20110915(char *gdata, double *pheno, double *invS, int *Nids, int *
 	double sumOmegaJ[nids];
 	double YiSumOmegaij[nids];
 	double sumOmega = 0.;
-	double sumYiSumOmegaij = 0.;
+//	double sumYiSumOmegaij = 0.;
 	for (i=0;i<nids;i++) {
 		sumOmegaJ[i] = 0.;
 		YiSumOmegaij[i] = 0.;
@@ -1040,7 +1040,7 @@ void mmscore_20110915(char *gdata, double *pheno, double *invS, int *Nids, int *
 		}
 		sumOmega += sumOmegaJ[i];
 		YiSumOmegaij[j] = pheno[i]*sumOmegaJ[i];
-		sumYiSumOmegaij += YiSumOmegaij[j];
+//		sumYiSumOmegaij += YiSumOmegaij[j];
 		ePH[j] = sph[j]/nIndividuals[j];
 	}
 
@@ -1074,8 +1074,8 @@ void mmscore_20110915(char *gdata, double *pheno, double *invS, int *Nids, int *
 		}
 		double sumYSumGOmega = 0.;
 		double sumGSumGOmega = 0.;
-		double sumGSumOmega = 0.;
-		double SumSumGOmega = 0.;
+//		double sumGSumOmega = 0.;
+//		double SumSumGOmega = 0.;
 		double summand2y, summand3y, summand2g, summand3g, summand4;
 		summand2y = summand3y = summand2g = summand3g = summand4 = 0.;
 		for (i=0;i<nids;i++) {
@@ -1086,8 +1086,8 @@ void mmscore_20110915(char *gdata, double *pheno, double *invS, int *Nids, int *
 			}
 			sumYSumGOmega += pheno[i]*svec[i];
 			sumGSumGOmega += gtctr[i]*svec[i];
-			sumGSumOmega += gtctr[i]*sumOmegaJ[i];
-			SumSumGOmega += svec[i];
+//			sumGSumOmega += gtctr[i]*sumOmegaJ[i];
+//			SumSumGOmega += svec[i];
 			summand2y += eG[cstr]*YiSumOmegaij[i];
 			summand2g += eG[cstr]*gtctr[i]*sumOmegaJ[i];
 			summand3y += ePH[cstr]*svec[i];
@@ -1130,7 +1130,7 @@ void mmscore_20110915_nostrat(char *gdata, double *pheno, double *invS, int *Nid
 	int gt[nids];
 	int i, j, igt, i1=1;
 	int nbytes;
-	double Ttotg,dgt,svec[nids],gtctr[nids];
+	double Ttotg,svec[nids],gtctr[nids];//,dgt;
 	double Tsg;
 	double u, v;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
@@ -1184,8 +1184,8 @@ void mmscore_20110915_nostrat(char *gdata, double *pheno, double *invS, int *Nid
 		double SumSumGOmega = 0.;
 		double summand2y, summand3y, summand2g, summand3g, summand4;
 		summand2y = summand3y = summand2g = summand3g = summand4 = 0.;
-		int gtOffs[4];
-		gtOffs[0]=0;gtOffs[1]=nids*nids;gtOffs[2]=nids*nids*2;gtOffs[3]=nids*nids*3;
+//		int gtOffs[4];
+//		gtOffs[0]=0;gtOffs[1]=nids*nids;gtOffs[2]=nids*nids*2;gtOffs[3]=nids*nids*3;
 		for (i=0;i<nids;i++) {
 			svec[i] = 0.;
 			//			double * offS = &invS[nids*i];
@@ -1350,7 +1350,8 @@ void hom(char *indata, unsigned int *Nids, unsigned int *Nsnps, double *freqs, d
 	unsigned int useFreq = (*UseFreq);
 	unsigned int gt[nids];
 	unsigned int count[4],sumgt=0.;
-	double varhomweight[4] = {0.,1.,1.,1.}, centgt[4], homweight[4] = {0.,1.,0.,1.},p0=0.,q0=0.,maf=0.;
+	double centgt[4], homweight[4] = {0.,1.,0.,1.},p0=0.,q0=0.,maf=0.;
+//	double varhomweight[4] = {0.,1.,1.,1.}, centgt[4], homweight[4] = {0.,1.,0.,1.},p0=0.,q0=0.,maf=0.;
 	double den, fel;
 	char str;
 	unsigned int nbytes;
@@ -1631,7 +1632,7 @@ void ibspar(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int 
 void comp_qval(double *p, int *Length, double *out) {
 	int length = (*Length);
 	int i; 
-	double sum,max=-1,min,minvec[length];
+	double sum,max=-1,minvec[length];//,min;
 	for (i=0;i<length;i++) out[i]=0.;
 	for (i=0;i<length;i++) {
 		sum = i+1;
@@ -1643,7 +1644,7 @@ void comp_qval(double *p, int *Length, double *out) {
 		if (out[i] < minvec[i+1]) minvec[i]=out[i]; else minvec[i]=minvec[i+1];
 	}
 	for (i=0;i<length;i++) {
-		min = max;
+		//min = max;
 		if (out[i]<minvec[i]) out[i]=out[i]; else out[i]=minvec[i];
 	}
 }
@@ -1653,7 +1654,7 @@ void comp_qval(double *p, int *Length, double *out) {
 void r2new(char *indata, unsigned int *Nids, unsigned int *Nsnps, unsigned int *Nsnps1, unsigned int *snps1, unsigned int *Nsnps2, unsigned int *snps2, double *out) {
 	unsigned int i,j,m1,m2,idx;
 	unsigned int nids = (*Nids);
-	unsigned int nsnps = (*Nsnps);
+//	unsigned int nsnps = (*Nsnps);
 	unsigned int nsnps1 = (*Nsnps1);
 	unsigned int nsnps2 = (*Nsnps2);
 	unsigned int gt[2][nids],cgt[4][4],nAA,nAB,nBA,nBB,nDH;
@@ -2090,12 +2091,13 @@ void qtscore_glob(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, 
 	int dgt;
 	double Ttotg, mx, bb, totg[nstra], x2[nstra], sumx[nstra];
 	double Tsg0, Tsg1, Tsg2, sg0[nstra], sg1[nstra], sg2[nstra], xg0[nstra], xg1[nstra], xg2[nstra];
-	double u, v, u0, u1, u2, m0, m1, m2, v00, v02, v11, v12, v22, det; 
+	double u, v, u0, u1, u2, m0, m1, m2, v00, v02, v11, v12, v22;//, det; 
 	mx = -999.99;
 	if ((nids % 4) == 0) nbytes = nids/4; else nbytes = ceil(1.*nids/4.);
 	//	char chgt[nbytes];
 
 	for (igt=0;igt<nsnps;igt++) {
+		//static double det;
 		get_snps_many(gdata+nbytes*igt,Nids,&i1,gt);
 		for (j=0;j<nstra;j++) {
 			totg[j] = 0.;
@@ -2183,7 +2185,7 @@ void qtscore_glob(char *gdata, double *pheno, int *Type, int *Nids, int *Nsnps, 
 					chi2[igt+3*nsnps]=u/(Tsg1+4.*Tsg2-Ttotg*((Tsg1+2.*Tsg2)/Ttotg)*((Tsg1+2.*Tsg2)/Ttotg));
 				}
 			}
-			det = v11*v22 - v12*v12;
+			//det = v11*v22 - v12*v12;
 			//			double rho2 = v12*v12/(v11*v22);
 			//			if (v00 <= 0. || v11<=0. || v22<=0. || rho2<1.e-16 || abs(det)<1.e-16) {
 			chi2[igt+nsnps] = -999.99;

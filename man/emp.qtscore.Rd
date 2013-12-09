@@ -59,6 +59,7 @@ emp.qtscore(formula , data, snpsubset, idsubset, strata, trait.type="gaussian",
 \code{\link{scan.gwaa-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 a<-qtscore(qt3~age+sex,data=srdta,snps=c(1:200))
 plot(a)

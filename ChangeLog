@@ -1,3 +1,47 @@
+***  v. 1.8-0
+(2013.12.06)
+
+
+Fixed memory leak in a number of functions and deleted unused variables.
+Moved data objects ge03d2.clean, ge03d2c, ge03d2ex.clean, ge03d2ex,  ge03d2 and srdta to a specially created new R package called GenABEL.data.
+
+***  v. 1.7-7
+(2013.11.04)
+Fixed bug #5040: Spelling of the name of G. Svischeva incorrect.
+	
+(2013.08.27)
+Removed CRAN version checks following the request from B. Ripley, 
+fixing other problems identified by --as-cran checks ("iterator" 
+package changed from "DatABEL" to "GenABEL"; renaming CHANGES.LOG to 
+ChangeLog), releasing this version on CRAN
+
+(2013.07.19)
+Added warning that *2databel's may not produce output in desired data type 
+and fall onto float 
+
+(2013.06.29)
+Changed the 'polygenic' nullification threshold to 1e-8
+
+Added references for Grammar+ transformation
+
+Allowed for user-specified output data type in '*2databel' functions
+
+Changed version number to 1.7-7
+
+(2013.06.06)
+Two new functions added: LiLog() and palinear2LiLog() for the
+estimation of logistic beta's from a linear regression. Thanks to
+Nicola Pirastu for this contribution. The paper that describes these
+methods has been submitted (see the help of both functions for the
+citation). 
+
+(2013.06.03)
+Fixed bug #2664 in export.merlin() (exported files differ when using
+different settings for the stepids argument). 
+
+(2013.05.30)
+Fixed memory leak in export.plink() when exporting to .ped format (Bug #2055).
+
 ***  v. 1.7-6
 
 (2013.05.16)
@@ -136,7 +180,7 @@ export.merlin, export.plink now runs much faster (exports on C++ code)
 Bug [#1641] (regression bug with merge.snp.data in version 1.6.9;
 filed in by Karl Froner) fixed. Now GenABEL deals with exceptional
 situation in merge.snp.data / monomorphic part; added case of no overlap
-in SNPs (skip monomorphic staff then). RUnit regression test
+in SNPs (skip monomorphic stuff then). RUnit regression test
 runit.merge.R/test.merge.bug1641 added.
 
 Modifications in 'estlambda': plot=FALSE by default, added option

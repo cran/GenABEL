@@ -26,6 +26,7 @@ HWE.show(data, idsubset = c(1:data@gtdata@nids),
 \code{\link{check.marker}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 mc <- check.marker(srdta,p.lev=0.01,ibs.mrk=0)
 mc$nohwe

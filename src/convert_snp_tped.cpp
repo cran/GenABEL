@@ -60,7 +60,7 @@ void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilen
 	///////////////////////
 
 	ifstream tfamfile (tfamfilename[0]);
-	if (tfamfile.bad()) {
+	if (!tfamfile.is_open()) {
 		error ("could not open file '%s' !",tfamfilename[0]);
 	}
 
@@ -98,7 +98,7 @@ void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilen
 
 
 	ifstream tpedfile (tpedfilename[0]);
-	if (tpedfile.bad()) {
+	if( !tpedfile.is_open()) {
 		error ("could not open file '%s' !",tpedfilename[0]);
 	}
 
@@ -240,7 +240,7 @@ void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilen
 	const ios_base::fmtflags hex = ios_base::hex;
 
 	ofstream outfile (outfilename[0]);
-	if (outfile.bad()) {
+	if( !outfile.is_open()) {
 		error ("could not open file '%s' !",outfilename[0]);
 	}
 
@@ -291,10 +291,12 @@ void convert_snp_tped (char** tpedfilename, char** tfamfilename, char** outfilen
 		}
 		outfile << endl;
 
-		delete [] tmp_gtype;
 
 		//      gtype.pop_front();
 	} //while (!gtype.empty());
+		
+	delete [] tmp_gtype;
+	delete [] gnum;
 
 	if (verbose) {
 		Rprintf("... done.\n");

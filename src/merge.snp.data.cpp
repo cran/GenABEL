@@ -188,7 +188,7 @@ else if(snp_position_error[*snp_error_counter-1] != snp_in_set1)
 	*found_error_amount_snp = *snp_error_counter;
 	}
 
-if(*snp_error_counter >= *error_amount_)
+if(int(*snp_error_counter) >= *error_amount_)
 	{	
 	Rprintf("ID:Error: Too many errors while merging sets (see error table). Change error_amount value to increase error-table size.\n");
 	*error_amount_=-1;
@@ -555,7 +555,7 @@ int error_amount_tmp = *error_amount_;
 unsigned snp_error_counter=0; //this is counter for function recoding_snp_data_under_coding_and_strand 
 
 
-for(int i=0 ; i<alleleID_amount_ ; i++)
+for(unsigned i=0 ; i<alleleID_amount_ ; i++)
 	{
 	coding_polymorphism_map[alleleID[i]] = alleleID_names[i];
 	}
@@ -566,7 +566,7 @@ for(int i=0 ; i<alleleID_amount_ ; i++)
 
 //---------------------------------
 std::map<char, char> alleleID_reverse;
-for(int i=0 ; i<*alleleID_amount ; i++)
+for(unsigned i=0 ; i<*alleleID_amount ; i++)
 	{
 	alleleID_reverse[alleleID[i]] = alleleID_reverse_array[i];
 	}

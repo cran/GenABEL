@@ -39,7 +39,6 @@
 extern "C" {
 
 
-std::string replace(std::string val, char what, char replace);
 
 
 
@@ -101,10 +100,21 @@ outfile << "#GenABEL raw data version 0.1\n";
 
 //save IDs
 Rprintf("saving Id names...\n");
+
+std::string filelist_str;
 for(unsigned id=0 ; id<files_amount ; id++)
 	{
-	outfile<<replace(std::string(filelist[id]), ' ', '_')<<" ";
+   filelist_str = filelist[id];
+   for(unsigned i=0 ; i<filelist_str.length() ; i++)
+      {
+      if(filelist_str[i]==' ') filelist_str[i]='_';
+      }
+
+	outfile<<filelist_str<<" ";
 	}
+
+
+
 outfile<<"\n";
 
 std::string snpname;
@@ -229,8 +239,8 @@ for(unsigned snp=0 ; snp<snp_amount ; snp++)
 	outfile<<"\n";
 	}
 
-delete gtps_for_one_snp;	
-delete rearrangement_array;
+delete[] gtps_for_one_snp;	
+delete[] rearrangement_array;
 
 Rprintf("%i SNPs excluded bacause of absent in annotation\n", snp_excludet_from_output_data);
 Rprintf("Total %i SNPs are written into output file\n", snp_amount-snp_excludet_from_output_data);
@@ -249,17 +259,17 @@ outfile.close();
 
 
 
-//_________________________________________________________________
-std::string replace(std::string val, char what, char replace='_')
-{
-unsigned length = val.length();
-
-for(unsigned i=0 ; i<length ; i++)
-	{
-	if(val[i]==what) val[i]=replace;
-	}
-return val;
-}
+////_________________________________________________________________
+//std::string replace(std::string val, char what, char replace='_')
+//{
+//unsigned length = val.length();
+//
+//for(unsigned i=0 ; i<length ; i++)
+//	{
+//	if(val[i]==what) val[i]=replace;
+//	}
+//return val;
+//}
 //_________________________________________________________________
 
 }//end of externl C

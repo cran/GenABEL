@@ -1,7 +1,7 @@
 #
 # loading the data
 #
-
+require(GenABEL.data)
 data(srdta)
 
 #

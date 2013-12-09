@@ -36,6 +36,7 @@ Hao K, Di X, Cawley S. (2006) LdCompare: rapid computation of single- and multip
 \code{\link{r2fast}}
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2)
 # rhos using rhofast
 a <- rhofast(ge03d2,snps=c(1:10))

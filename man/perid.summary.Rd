@@ -35,6 +35,7 @@ perid.summary(data, snpsubset, idsubset, ... )
 \code{\link{snp.data-class}}
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2c)
 a <- perid.summary(data=ge03d2c,snps=c(1:100),ids=c(1:10))
 a

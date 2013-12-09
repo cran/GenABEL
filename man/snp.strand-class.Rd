@@ -36,6 +36,7 @@
 	\code{\link{snp.data-class}}
 }
 \examples{
+	require(GenABEL.data)
 	data(srdta)
 	srdta@gtdata@strand[1:10]
 	as.character(srdta@gtdata@strand[1:10])

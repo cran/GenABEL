@@ -33,6 +33,7 @@ produces "genotypic" results.
 	\code{\link{scan.haplo.2D}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 a <- scan.glm.2D("qt3~CRSNP",data=srdta,snps=c(1:10))
 # "allelic" results

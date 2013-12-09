@@ -3,7 +3,7 @@
 \title{converts MACH-imputed files to DatABEL (filevector) format}
 \usage{
   mach2databel(imputedgenofile, mlinfofile, outfile,
-    isprobfile = FALSE)
+    isprobfile = FALSE, dataOutType = "FLOAT")
 }
 \arguments{
   \item{imputedgenofile}{MACH mldose (or mlprob) file name}
@@ -14,6 +14,9 @@
 
   \item{isprobfile}{whether imputedgenofile is a prob-file
   (default is FALSE, that is dose-file assumed)}
+
+  \item{dataOutType}{the output data type, either "FLOAT"
+  or "DOUBLE" (or other DatABEL/filevector type)}
 }
 \value{
   databel-class object

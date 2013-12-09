@@ -3,7 +3,7 @@
 \title{converts IMPUTE-imputed files to DatABEL (filevector) format}
 \usage{
   impute2databel(genofile, samplefile, outfile,
-    makeprob = TRUE, old = FALSE)
+    makeprob = TRUE, old = FALSE, dataOutType = "FLOAT")
 }
 \arguments{
   \item{genofile}{IMPUTE genotype file name}
@@ -12,10 +12,13 @@
 
   \item{outfile}{output file name}
 
-  \item{makeprob}{wheather probability-files are also to be
+  \item{makeprob}{whether probability-files are also to be
   arranged}
 
-  \item{old}{for developers' use}
+  \item{old}{for developers' use only}
+
+  \item{dataOutType}{the output data type, either "FLOAT"
+  or "DOUBLE" (or another DatABEL/filevector type)}
 }
 \value{
   'databel-class' object

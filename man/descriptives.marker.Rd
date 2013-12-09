@@ -32,6 +32,7 @@
 %\seealso{
 %}
 \examples{
+	require(GenABEL.data)
 	data(srdta)
 	descriptives.marker(srdta)
 }

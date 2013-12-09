@@ -25,6 +25,7 @@ autosomal(data)
 %}
 %\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
+	require(GenABEL.data)
 	data(ge03d2)
 	autosomal(ge03d2)[1:10]
 }

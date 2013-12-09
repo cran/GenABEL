@@ -21,6 +21,7 @@
   \code{\link{gwaa.data-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 phdata(srdta)[1:5,]
 srdta <- del.phdata(srdta,"qt1")

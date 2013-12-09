@@ -38,6 +38,7 @@ Hardy-Weinberg Equilibrium. American Journal of Human Genetics. 76: 887-93.
 \code{\link{snp.data-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 summary(gtdata(srdta[,1:20]))
 }

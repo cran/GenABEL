@@ -25,6 +25,7 @@ snp.subset(data, snpsubset)
 \code{\link{check.marker-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 # processing check.marker object
 #mc <- check.marker(data=srdta@gtdata[,1:100],redundant="all",maf=0.01,

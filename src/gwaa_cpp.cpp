@@ -154,7 +154,7 @@ extern "C" {
 		//unsigned int nids = (*Nids);
 		//char str;
 		unsigned int count[3];
-		double meaids,p,pmax,qmax,maf,fmax,loglik0,loglik1,chi2lrt;
+		double meaids,p;
 		count[0]=count[1]=count[2]=0;
 		p = 0.;
 		for (i=0;i<9;i++) out[i] = 0.;
@@ -175,6 +175,7 @@ extern "C" {
 		out[4] = count[1];
 		out[5] = count[2];
 		if (meaids>0) {
+			double qmax, maf, pmax, loglik0, loglik1, chi2lrt, fmax;
 			out[6] = SNPHWE(count[1],count[0],count[2]);
 			pmax = out[2];
 			qmax = 1.-pmax;

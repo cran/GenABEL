@@ -1,11 +1,11 @@
-.onAttach <- function(lib, pkg) {
+DISABLED.onAttach <- function(lib, pkg) {
 	## this is something which should be fixed: both version 
 	## and date can come from DESCRIPTION!
 	#pkgDescription <- packageDescription(pkg)
 	#pkgVersion <- pkgDescription$Version
 	#pkgDate <- pkgDescription$Date
-	pkgVersion <- "1.7-6"
-	pkgDate <- "May 16, 2013"
+	pkgVersion <- "1.7-7"
+	pkgDate <- "June 29, 2013"
 	welcomeMessage <- paste(pkg," v. ",pkgVersion," (",pkgDate,") loaded\n",sep="")
 	# check if CRAN version is the same as loaded
 	cranVersion <- try( checkPackageVersionOnCRAN(pkg) )

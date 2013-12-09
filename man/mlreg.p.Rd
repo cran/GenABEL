@@ -41,6 +41,7 @@ mlreg.p(formula, data, snpsubset, idsubset, gtmode = "additive", trait.type = "g
 \code{\link{qtscore}}
 }
 \examples{
+	require(GenABEL.data)
 	data(ge03d2)
 	dta <- ge03d2[,1:100]
 # analysis using linear model

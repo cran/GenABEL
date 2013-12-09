@@ -22,6 +22,7 @@ if(FALSE) {
 
 test.strandModify <- function()
 {
+  require(GenABEL.data)
 	data(ge03d2ex)
 	str <- strand(ge03d2ex)
 	dta1 <- ge03d2ex

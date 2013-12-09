@@ -83,6 +83,7 @@
   when estimating inbreeding/variance from marker data.
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2)
 h <- hom(ge03d2[,c(1:100)])
 h[1:5,]

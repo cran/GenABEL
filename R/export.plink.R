@@ -1,28 +1,28 @@
 #' Export GenABEL data in PLINK format
 #'
 #' Export GenABEL data in PLINK format. This function is
-#' a simple wrapper to \code{\link{export.merlin}} function
+#' a simple wrapper to the \code{\link{export.merlin}} function
 #' with specific arguments + few lines of code to
 #' export phenotypes
 #'
 #' @param data GenABEL data object of 'gwaa.data'-class to
-#' be exported
+#' be exported.
 #'
 #' @param filebasename base file name for exported data,
 #' extensions '.ped', '.map' and '.phe' (for phenotype file)
-#' are added for specific output files
+#' are added for specific output files.
 #'
-#' @param phenotypes NULL (no phenotypes exported), "all" for
-#' all phenotypes or a vector of character with names of phneotypes
-#' to be exported
+#' @param phenotypes NULL (no phenotypes exported), "all" (default) for
+#' all phenotypes or a vector of character with names of phenotypes
+#' to be exported.
 #'
-#' @param transpose if FALSE, regular 'tped' files produced, else
-#' 'ped' files are produced
+#' @param transpose if TRUE (default), 'tped' files will be produced, else
+#' 'ped' files are produced.
 #'
-#' @param export012na if true, export in numeric (0, 1, 2, NA) format
-#' (as opposed to ATGC format)
+#' @param export012na if TRUE, export in numeric (0, 1, 2, NA) format,
+#' as opposed to ATGC format (default: FALSE).
 #'
-#' @param ... arguments passed to \code{\link{export.merlin}}
+#' @param ... arguments passed to \code{\link{export.merlin}}.
 #'
 #' @author Yurii Aulchenko
 #'
@@ -53,8 +53,7 @@
   }
 
   if (!transpose) {
-    warning("Setting transpose=TRUE in export.plink() can lead to problems, ",
-            "especially for large data sets")
+    ## Export to .ped and .map
     pedf <- paste(filebasename, ".ped", sep="")
     mapf <- paste(filebasename, ".map", sep="")
 

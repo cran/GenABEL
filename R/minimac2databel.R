@@ -14,6 +14,8 @@
 #' @param outfile output file name
 #' @param cachesizeMb cache size for the resulting 'databel-class'
 #' object (gets passed directly to the \code{text2databel()} function)
+#' @param dataOutType the output data type, either "FLOAT" or "DOUBLE" (or
+#'        other DatABEL/filevector type) 
 #'
 #' @return databel-class object
 #'
@@ -24,14 +26,18 @@
 #'
 
 
-minimac2databel <- function(imputedgenofile, infofile, outfile, cachesizeMb=64)
+minimac2databel <- function(imputedgenofile, infofile, outfile,
+                            cachesizeMb=64, dataOutType = "FLOAT")
 {
   if (!require(DatABEL))
     stop("This function requires DatABEL package to be installed")
   if (missing(imputedgenofile))
     stop("A dose file must be specified")
   if (missing(outfile)) outfile <- imputedgenofile
-  ## extract snp names (varnames)
+  if (dataOutType != "FLOAT") 
+      warning("The non-float dataOutType os not fully supported; your outputs may be in 'FLOAT'...",
+              immediate. = TRUE);
+## extract snp names (varnames)
   tmpname <- ""
   if (!missing(infofile))
     {
@@ -52,7 +58,7 @@ minimac2databel <- function(imputedgenofile, infofile, outfile, cachesizeMb=64)
                            skipcols=2,
                            transpose=FALSE,
                            R_matrix=FALSE,
-                           type="FLOAT",
+                           type = dataOutType,
                            readonly=FALSE,
                            cachesizeMb=cachesizeMb)
   else
@@ -62,7 +68,7 @@ minimac2databel <- function(imputedgenofile, infofile, outfile, cachesizeMb=64)
                            skipcols=2,
                            transpose=FALSE,
                            R_matrix=FALSE,
-                           type="FLOAT",
+                           type = dataOutType,
                            readonly=FALSE,
                            cachesizeMb=cachesizeMb)
 

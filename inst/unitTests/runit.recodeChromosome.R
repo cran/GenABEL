@@ -22,6 +22,7 @@ if(FALSE) {
 
 test.recodeChromosome <- function()
 {
+  require(GenABEL.data)
 	data(ge03d2ex)
 	lst <- list("3"="X","2"=15)
 	dta0 <- chromosome(recodeChromosome(ge03d2ex,lst))

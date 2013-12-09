@@ -27,6 +27,7 @@
 \code{\link{as.hsgeno}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 as.genotype(srdta@gtdata[1:5,1:10])
 }

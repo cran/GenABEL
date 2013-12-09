@@ -14,8 +14,8 @@
 
 void chinv2(double **matrix , int n)
      {
-     register double temp;
-     register int i,j,k;
+     double temp;
+     int i,j,k;
 
      /*
      ** invert the cholesky in the lower triangle

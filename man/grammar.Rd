@@ -25,7 +25,7 @@
 }
 \description{
   Fast approximate test for association between a trait and
-  genetic polymorphism, in samples with genetic
+  genetic polymorphisms, in samples with genetic
   sub-structure (e.g. relatives). The function implements
   several varieties of GRAMMAR ('gamma','gc', and 'raw').
 }
@@ -36,34 +36,35 @@
   coefficients.
 
   With 'gc' argument, the GRAMMAR-GC (Amin et al., 2007) is
-  implemented. This method solves conservativity of the
+  implemented. This method solves the conservativity of the
   test, but the Genomic Control (GC) lambda is by
   definition "1" and can not serve as an indicator of
   goodness of the model; also, the estimates of regression
   coefficients are biased (the same as in 'raw' GRAMMAR).
 
   GRAMMAR-Gamma (default 'gamma' argument) solves these
-  problems, producing correct distribution of the test
+  problems, producing a correct distribution of the test
   statistic, interpretable value of GC Lambda, and unbiased
   estimates of the regression coefficients. All together,
   the default 'gamma' method is recommended for use.
 }
 \examples{
 # Using clean ge03d2 data
+require(GenABEL.data)
 data(ge03d2.clean)
-#take small piece for speed
+# take only a small piece for speed
 ge03d2.clean <- ge03d2.clean[1:200,]
 # estimate genomic kinship
-gkin <- ibs(ge03d2.clean[,sample(autosomal(ge03d2.clean),1000)],w="freq")
-# perform polygneic analysis
-h2ht <- polygenic(height ~ sex + age,kin=gkin,ge03d2.clean)
+gkin <- ibs(ge03d2.clean[,sample(autosomal(ge03d2.clean),1000)], w="freq")
+# perform polygenic analysis
+h2ht <- polygenic(height ~ sex + age, kin=gkin, ge03d2.clean)
 h2ht$est
 # compute mmscore stats
-mm <- mmscore(h2ht,data=ge03d2.clean)
+mm <- mmscore(h2ht, data=ge03d2.clean)
 # compute grammar-gc
-grGc <- grammar(h2ht,data=ge03d2.clean,method="gc")
-#compute grammar-gamma
-grGamma <- grammar(h2ht,data=ge03d2.clean,method="gamma")
+grGc <- grammar(h2ht, data=ge03d2.clean, method="gc")
+# compute grammar-gamma
+grGamma <- grammar(h2ht, data=ge03d2.clean, method="gamma")
 # compare lambdas
 lambda(mm)
 estlambda(mm[,"chi2.1df"])
@@ -71,13 +72,13 @@ lambda(grGamma)
 estlambda(grGamma[,"chi2.1df"])
 lambda(grGc)
 estlambda(grGc[,"chi2.1df"])
-#compare top results
+# compare top results
 summary(mm)
 summary(grGamma)
 summary(grGc)
 }
 \author{
-  Gulnara Svisheva, Yurii Aulchenko
+  Gulnara Svischeva, Yurii Aulchenko
 }
 \references{
   GRAMMAR-Raw: Aulchenko YS, de Koning DJ, Haley C.

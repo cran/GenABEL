@@ -26,6 +26,7 @@ qvaluebh95(p, fdrate=0.1)
 %\seealso{
 %}
 \examples{
+require(GenABEL.data)
 data(srdta)
 a<-qtscore(qt2,data=srdta)
 qv <- qvaluebh95(a[,"P1df"])

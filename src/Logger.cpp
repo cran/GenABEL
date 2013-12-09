@@ -1,6 +1,6 @@
 #include "Logger.h"
 
-                    
+
 ErrorExit errorExit;
 
 #define all true
@@ -13,8 +13,3 @@ Logger deepDbg(DEBUG_LEVEL,false);
 Logger fmDbg(DEBUG_LEVEL,false);
 Logger wrapperLog(DEBUG_LEVEL,false);
 Logger errorLog(ERROR_LEVEL,all);
-
-
-
-
-

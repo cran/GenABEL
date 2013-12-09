@@ -49,6 +49,7 @@ phenotypes, genotypes and other relevant information
 	\code{\link{snp.mx-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 srdta@phdata[1:10,]
 srdta@gtdata[1:10,1:12]

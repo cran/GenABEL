@@ -44,6 +44,7 @@ ccfast(y, data, snpsubset, idsubset, times=1, quiet=FALSE,bcast=10,
 \code{\link{scan.gwaa-class}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 a <- ccfast("bt",data=srdta,snps=c(1:10),ids=c(1:100))
 a

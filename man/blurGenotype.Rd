@@ -31,6 +31,7 @@
   epsilon*(1-epsilon), and both allelel differ = epsilon^2.
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 # select 10 first SNPs
 df <- srdta[,1:10]

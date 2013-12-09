@@ -22,6 +22,7 @@ Summary of phenotypic and genotypic parts of GWAA data
 %\note{}
 \seealso{\code{\link{summary.snp.data}}}
 \examples{
+require(GenABEL.data)
 data(srdta)
 # be prepared : long output!
 summary(srdta)

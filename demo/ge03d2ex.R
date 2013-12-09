@@ -7,6 +7,7 @@
 ###################
 
 ?"LOAD THE DATA"
+require(GenABEL.data)
 data(ge03d2ex)
 
 ?"ATTACH PHENOTYPIC DATA"
@@ -232,6 +233,7 @@ descriptives.scan(an4.eg.e,sort="Pc1df")
 top10 <- rownames(descriptives.scan(an4.sa,sort="Pc1df"))
 top10
 ?"TRY TO REPLICATE IN THE SMALL DATA SET"
+require(GenABEL.data)
 data(ge03d2c)
 confirm <- qtscore(dm2~sex+age,ge03d2c[,top10])
 descriptives.scan(confirm)

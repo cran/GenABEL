@@ -42,6 +42,7 @@ Plots results of GWA analysis
 	\code{\link{scan.haplo}}
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 a <- qtscore(bt,srdta,snps=c(1:250))
 plot(a)

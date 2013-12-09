@@ -55,6 +55,7 @@ ibs.old(data, snpsubset, idsubset, weight="no")
 \code{\link{snp.data-class}}
 }
 \examples{
+require(GenABEL.data)
 data(ge03d2c)
 a <- ibs(data=ge03d2c,ids=c(1:10),snps=c(1:1000))
 a

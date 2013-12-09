@@ -37,6 +37,7 @@
   'name' argument
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 # take a small subset for this example
 srdta <- srdta[1:10,1:5]

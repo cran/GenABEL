@@ -28,6 +28,7 @@ For SNPs, as identified by 'snpid', changes strand to strand specified by 'stran
 %	\code{\link{export.merlin}}.
 %}
 \examples{
+require(GenABEL.data)
 data(srdta)
 as.character(srdta@gtdata@strand[1:20])
 a <- patch_strand(srdta,srdta@gtdata@snpnames[1:10],rep("+",10))

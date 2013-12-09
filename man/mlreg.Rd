@@ -44,6 +44,7 @@ mlreg(formula, data, gtmode = "additive", trait.type = "guess", propPs = 1)
 \code{\link{qtscore}}
 }
 \examples{
+	require(GenABEL.data)
 	data(ge03d2)
 	dta <- ge03d2[,1:100]
 # analysis using linear model

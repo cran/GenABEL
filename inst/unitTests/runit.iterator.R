@@ -20,6 +20,7 @@ source(paste(path,"/shared_functions.R",sep=""))
 
 test.summary_snp_data <- function()
 {
+  require(GenABEL.data)
 	data(ge03d2)
 	srdta <- ge03d2 #[,autosomal(ge03d2)]
 	

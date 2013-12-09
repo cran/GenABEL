@@ -10,26 +10,29 @@
   assumed that this is a vector of P-values, else it is
   treated as a vector of chi-squares}
 
-  \item{plot}{Wether the prot should be presented}
+  \item{plot}{Whether the plot should be shown or not
+  (default).}
 
-  \item{proportion}{The proportion of lowest P (Chi2) to be
-  used when estimating the inflation factor Lambda}
+  \item{proportion}{The proportion of lowest P (or
+  \eqn{\chi^2}{chi^2}) values to be used when estimating the
+  inflation factor \eqn{\lambda}{lambda}.}
 
-  \item{method}{"regression", "median", or "KS" method to
-  be used for Lambda estimation}
+  \item{method}{"regression" (default), "median", or "KS":
+  method to be used for \eqn{\lambda}{lambda} estimation.}
 
   \item{filter}{if the test statistics with 0-value of
-  chi-square should be excluded prior to estimation of
-  Lambda}
+  \eqn{\chi^2}{chi^2} should be excluded prior to
+  estimation of \eqn{\lambda}{lambda}.}
 
-  \item{df}{Number of degrees of freedom}
+  \item{df}{Number of degrees of freedom.}
 
-  \item{...}{arguments passed to \code{\link{plot}}
-  function}
+  \item{...}{arguments passed to the \code{\link{plot}}
+  function.}
 }
 \value{
-  A list with elements \item{estimate}{Estimate of Lambda}
-  \item{se}{Standard error of the estimate}
+  A list with elements \item{estimate}{Estimate of
+  \eqn{\lambda}{lambda}} \item{se}{Standard error of the
+  estimate}
 }
 \description{
   Estimate the inflation factor for a distribution of
@@ -42,6 +45,7 @@
   fit by use of Kolmogorov-Smirnov test)
 }
 \examples{
+require(GenABEL.data)
 data(srdta)
 pex <- summary(gtdata(srdta))[,"Pexact"]
 estlambda(pex, plot=TRUE)

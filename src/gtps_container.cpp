@@ -33,6 +33,9 @@ rearrangement_array[3] = 0;
 
 
 
+local_person_number = 0; // Mr. Jenkins likes when everything is initilized in constructor
+our_byte_number = 1;
+
 
 
 gtps_array = gtps_array_;	
@@ -60,8 +63,10 @@ rearrangement_array[2] = 2;
 rearrangement_array[3] = 0;
 
 
-
-
+local_person_number = 0; // Mr. Jenkins likes when everything is initilized in constructor
+strand_array = NULL;
+our_byte_number = 1;
+coding_array = NULL;
 
 gtps_array = gtps_array_;	
 id_numbers = id_numbers_;
@@ -175,7 +180,8 @@ void gtps_container::set(unsigned id_position, unsigned snp_position, char data)
 //std::cout<<"rearrangement_array["<<i<<"]="<<rearrangement_array[i]<<"\n";
 
 		
-static const  unsigned char clear_info_for_person[]={63, 207, 243, 252};
+//static const char clear_info_for_person[]={63, 207, 243, 252};
+static const char clear_info_for_person[]={char(63), char(207), char(243), char(252)};
 		
 //std::cout<<"set: id_position="<<id_position<<", snp_position="<<snp_position<<", data="<<int(data)<<"\n";
 get_our_byte_number_and_local_person_number(id_position, snp_position);

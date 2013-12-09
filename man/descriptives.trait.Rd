@@ -30,6 +30,7 @@
 %\seealso{
 %}
 \examples{
+	require(GenABEL.data)
 	data(srdta)
 	descriptives.trait(srdta)
 	descriptives.trait(srdta,by.var=srdta@phdata$sex)

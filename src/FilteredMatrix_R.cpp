@@ -1,4 +1,4 @@
-#include "Rstaff.h"
+#include "Rstuff.h"
 #include <Rdefines.h>
 
 #include "FilteredMatrix.h"
@@ -107,10 +107,10 @@ extern "C" {
    		bool readonly = LOGICAL(ReadOnly)[0];
    		string filename = CHAR(STRING_ELT(fname,0));
 
-   		if (cachesizeMb<0) {
-   			error_R("negative cache size\n");
-   			return R_NilValue;
-   		}
+//   		if (cachesizeMb<0) {
+//   			error_R("negative cache size\n");
+//   			return R_NilValue;
+//   		}
 
    		FilteredMatrix* fm = NULL;
 

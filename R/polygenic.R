@@ -105,7 +105,7 @@
 #' \item{pgresidualY}{Environmental residuals from analysis, based on covariate effects 
 #' and predicted breeding value.
 #' }
-#' \item{grresidualY}{GRAMMAR-transform trait transformation}
+#' \item{grresidualY}{GRAMMAR+ transformed trait residuals}
 #' \item{grammarGamma}{list with GRAMMAR-gamma correction factors}
 #' \item{InvSigma}{Inverse of the variance-covariance matrix, computed at the 
 #' MLEs -- these are used in \code{\link{mmscore}} and \code{\link{grammar}}
@@ -121,14 +121,28 @@
 #' traits: variance components without matrix inversion. Biometrics 
 #' 46, 399-413.
 #' 
+#' for original GRAMMAR
+#' 
 #' Aulchenko YS, de Koning DJ, Haley C. Genomewide rapid association using mixed model 
 #' and regression: a fast and simple method for genome-wide pedigree-based quantitative 
 #' trait loci association analysis. Genetics. 2007 177(1):577-85.
 #' 
+#' for GRAMMAR-GC
+#' 
 #' Amin N, van Duijn CM, Aulchenko YS. A genomic background based method for 
 #' association analysis in related individuals. PLoS ONE. 2007 Dec 5;2(12):e1274.
 #' 
-#' G. Svischeva et al. (in preparation)
+#' for GRAMMAR-Gamma
+#' 
+#' Svischeva G, Axenovich TI, Belonogova NM, van Duijn CM, Aulchenko YS. Rapid 
+#' variance components-based method for whole-genome association analysis. 
+#' Nature Genetics. 2012 44:1166-1170. doi:10.1038/ng.2410 
+#' 
+#' for GRAMMAR+ transformation
+#' 
+#' Belonogova NM, Svishcheva GR, van Duijn CM, Aulchenko YS, Axenovich TI (2013) 
+#' Region-Based Association Analysis of Human Quantitative Traits in Related Individuals. 
+#' PLoS ONE 8(6): e65395. doi:10.1371/journal.pone.0065395 
 #' 
 #' @author Yurii Aulchenko, Gulnara Svischeva
 #' 
@@ -295,9 +309,9 @@
 			eigres <- eigenOfRel
 		else
 			eigres <- eigen(relmat,symmetric=TRUE)
-		if (any(eigres$values<1e-16)) {
-			eigres$values[eigres$values<1e-16] <- 1e-16
-            msg <- paste("some eigenvalues close/less than 1e-16, setting them to 1e-16\nyou can also try option llfun='polylik' instead")
+		if (any(eigres$values<1e-8)) {
+			eigres$values[eigres$values<1e-8] <- 1e-8
+            msg <- paste("some eigenvalues close/less than 1e-8, setting them to 1e-8\nyou can also try option llfun='polylik' instead")
 			warning(msg)
 		}
 	} else stop("cannot be here...")
