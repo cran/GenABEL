@@ -1,4 +1,5 @@
 #include <new>
+#include <Rdefines.h>
 #include "gwaa_cpp.h"
 
 
@@ -7,8 +8,26 @@
 extern "C" {
 #endif
 
+void sset(char *indata, int *Nsnps, int *Nids, int *outlist, int *Noutlist, char *out);
 
-	/*
+/*
+ * Wraps in .Call interface
+ * void sset(char *indata, int *Nsnps, int *Nids, int *outlist, int *Noutlist, char *out) {
+ */
+SEXP sset_call(SEXP indata, SEXP Nsnps, SEXP Nids,
+               SEXP outlist, SEXP Noutlist) {
+  SEXP out;
+  //cdata = raw(nsnps*ceiling(length(list)/4))
+  int n_outlist = INTEGER(Noutlist)[0];
+  int n_snps = INTEGER(Nsnps)[0];
+  int n_outlist_by_4 = (n_outlist % 4 == 0) ? n_outlist/4 : n_outlist/4 + 1; 
+  PROTECT(out = NEW_RAW(n_snps * n_outlist_by_4));
+  sset((char*)RAW(indata), INTEGER(Nsnps), INTEGER(Nids), INTEGER(outlist), INTEGER(Noutlist), (char*)RAW(out));
+  UNPROTECT(1);
+  return out;
+}
+  
+/*
 // This code implements an exact SNP test of Hardy-Weinberg Equilibrium as described in
 // Wigginton, JE, Cutler, DJ, and Abecasis, GR (2005) A Note on Exact Tests of
 // Hardy-Weinberg Equilibrium. American Journal of Human Genetics. 76: 000 - 000
